@@ -1,0 +1,43 @@
+{
+  "name": "nodex-aaa-oauth2",
+  "version": "0.0.0",
+  "description": "Injectable OAuth 2.0 implementation for Bixby.js.",
+  "keywords": [],
+  "author": {
+    "name": "Jared Hanson",
+    "email": "jaredhanson@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/modulate/nodex-aaa-oauth2.git"
+  },
+  "bugs": {
+    "url": "http://github.com/modulate/nodex-aaa-oauth2/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  ],
+  "main": "./lib",
+  "dependencies": {
+    "oauth2orize": "^1.0.1",
+    "oauth2orize-response-mode": "^0.1.0",
+    "passport-http": "^0.3.0",
+    "passport-oauth2-client-password": "^0.1.2",
+    "passport-oauth2-client-public": "0.0.1",
+    "uid2": "0.0.3",
+    "visa": "0.0.1"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.2.5"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/mocha --reporter spec --require test/bootstrap/node test/*.test.js"
+  }
+}
