@@ -20,7 +20,7 @@
       "url": "http://www.opensource.org/licenses/MIT"
     }
   ],
-  "main": "./lib",
+  "main": "./index.js",
   "dependencies": {
     "oauth2orize": "^1.0.1",
     "oauth2orize-response-mode": "^0.1.0",
