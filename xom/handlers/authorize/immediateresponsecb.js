@@ -1,7 +1,12 @@
 exports = module.exports = function(Audience, services) {
   var oauth2orize = require('oauth2orize');
   
-  return function immediateResponse(client, user, scope, type, areq, cb) {
+  return function immediateResponse(client, user, scope, type, areq, locals, cb) {
+    if (!user) {
+      return cb(null, false, { prompt: 'login' });
+    }
+    
+    
     Audience.infer(client, user, areq, function(err, audience) {
       if (err) { return cb(err); }
       
