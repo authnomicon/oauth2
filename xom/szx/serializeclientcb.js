@@ -4,5 +4,4 @@ exports = module.exports = function() {
   };
 };
 
-exports['@provides'] = 'io.modulate.security.oauth2.serializeClientCallback';
 exports['@require'] = [];
