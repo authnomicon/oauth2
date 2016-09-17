@@ -17,11 +17,11 @@ exports = module.exports = function(Audience, services) {
         // TODO: Metadata about the service needed when issuing a token should be
         //       serailized for later use, as an optimization to avoid a query.
         
-        var info = {
+        var locals = {
           service: service
         }
         // TODO: Implement a way to check for already existing policies/grants
-        return cb(null, false, info);
+        return cb(null, false, { prompt: 'consent' }, locals);
       });
     });
     
