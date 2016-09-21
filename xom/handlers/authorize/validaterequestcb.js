@@ -11,7 +11,7 @@ exports = module.exports = function(directory) {
   // http://www.simplecloud.info/specs/draft-scim-core-schema-01.html
   // https://github.com/andreassolberg/voot/wiki/Protocol-SCIM
   
-  return function validateRequest(clientID, redirectURI, cb) {
+  return function validateRequest(clientID, redirectURI, _scope, _type, areq, cb) {
     directory.query(clientID, function(err, client) {
       if (err) { return cb(err); }
       if (!client) {
@@ -42,6 +42,20 @@ exports = module.exports = function(directory) {
       authorization request using the "redirect_uri" request parameter.
       */
       
+      // TODO: Validate this stuff
+      var locals = {}
+      
+      if (areq.responseMode == 'web_message') {
+        // TODO: Validate these things.
+        locals.webMessaging = {
+          targetOrigin: 'http://127.0.0.1:3001'
+        }
+      }
+      
+      
+      // FIXME: Temp hack, remove
+      return cb(null, client, redirectURI, locals);
+      
       if (!redirectURI) {
         // If the request did not explicitly specify a redirect URI, use the
         // higest priority URI specified in the client's registration.
@@ -50,7 +64,7 @@ exports = module.exports = function(directory) {
         return cb(new oauth2orize.AuthorizationError('Client not allowed to use redirect URI: ' + redirectURI, 'unauthorized_client'));
       }
       
-      return cb(null, client, redirectURI);
+      return cb(null, client, redirectURI, locals);
     });
   };
 };

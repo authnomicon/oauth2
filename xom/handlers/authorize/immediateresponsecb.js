@@ -2,9 +2,17 @@ exports = module.exports = function(pdp, resourcesDir, Audience) {
   var oauth2orize = require('oauth2orize');
   
   return function immediateResponse(client, user, scope, type, areq, locals, cb) {
+    if (areq.prompt && areq.prompt.indexOf('none') !== -1) {
+      // FIXME: Do this properly
+      //return cb(null, true);
+      return cb(new oauth2orize.AuthorizationError('Interaction with user is required to proceed', 'interaction_required', null, 400));
+    }
+    
+    
     if (!user) {
       return cb(null, false, { prompt: 'login' });
     }
+    
     
     // TODO: reference undefined variable causes bad stack trace.  find and fix
     //push(consent)

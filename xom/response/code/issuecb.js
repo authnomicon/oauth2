@@ -1,12 +1,12 @@
 exports = module.exports = function(acs) {
   
-  return function issueCode(client, redirectURI, user, ares, areq, info, cb) {
+  return function issueCode(client, redirectURI, user, ares, areq, locals, cb) {
     var bound = {
       client: client,
       redirectURI: redirectURI,
       user: user,
-      service: info.service,
-      grant: info.grant,
+      service: locals.service,
+      grant: locals.grant,
       scope: ares.scope
     };
     

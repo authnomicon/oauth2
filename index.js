@@ -3,6 +3,7 @@ exports = module.exports = {
   'acs': require('./lib/acs'),
   'transactionstore': require('./xom/transactionstore'),
   'response/code': require('./xom/response/code'),
+  'response/token': require('./xom/response/token'),
   'exchange/authorizationCode': require('./lib/exchange/authorizationCode')
 };
 
