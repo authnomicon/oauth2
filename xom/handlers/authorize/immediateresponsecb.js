@@ -6,6 +6,9 @@ exports = module.exports = function(pdp, resourcesDir, Audience) {
       return cb(null, false, { prompt: 'login' });
     }
     
+    // TODO: reference undefined variable causes bad stack trace.  find and fix
+    //push(consent)
+    
     var consents = locals.consents || [];
     if (locals.consent) {
       consents.push(locals.consent);
