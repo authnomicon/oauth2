@@ -49,8 +49,6 @@ exports = module.exports = function(pdp, resourcesDir, Audience) {
         }
         
         resourcesDir.query(audience, function(err, resource) {
-          console.log(resource);
-          
           if (err) { return iter(err); }
           // TODO: Check if !resource and handle appropriately
           
