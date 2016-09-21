@@ -1,4 +1,4 @@
-exports = module.exports = function(Audience, services) {
+exports = module.exports = function(pdp, resourcesDir, Audience) {
   var oauth2orize = require('oauth2orize');
   
   return function immediateResponse(client, user, scope, type, areq, locals, cb) {
@@ -6,24 +6,88 @@ exports = module.exports = function(Audience, services) {
       return cb(null, false, { prompt: 'login' });
     }
     
+    var consents = locals.consents || [];
+    if (locals.consent) {
+      consents.push(locals.consent);
+    }
     
-    Audience.infer(client, user, areq, function(err, audience) {
+    
+    function onDecisionReached(resources, decisions) {
+      var locals = {
+        resources: resources,
+        decisions: decisions,
+        consents: consents
+      }
+      
+      if (consents.length == 1) {
+        return cb(null, true, { scope: [ 'foo' ]});
+      }
+      
+      return cb(null, false, { prompt: 'consent', scope: [ 'foo', 'bar' ] }, locals);
+    }
+    
+    function onAudienceInferred(err, audiences) {
       if (err) { return cb(err); }
       
-      services.query(audience, function(err, service) {
+      var resources = []
+        , decisions = []
+        , audience
+        , i = 0;
+      
+      (function iter(err) {
         if (err) { return cb(err); }
-        // TODO: Return error if no service or use defaults???
+      
+        audience = audiences[i++];
+        // TODO: Parse audience as identifier, select directory based on realm
         
-        // TODO: Metadata about the service needed when issuing a token should be
-        //       serailized for later use, as an optimization to avoid a query.
-        
-        var locals = {
-          service: service
+        if (!audience) {
+          onDecisionReached(resources, decisions);
+          return;
         }
-        // TODO: Implement a way to check for already existing policies/grants
-        return cb(null, false, { prompt: 'consent' }, locals);
-      });
-    });
+        
+        resourcesDir.query(audience, function(err, resource) {
+          console.log(resource);
+          
+          if (err) { return iter(err); }
+          // TODO: Check if !resource and handle appropriately
+          
+          resources.push(resource);
+          pdp.eval(user, resource, client, function(err, decision, info) {
+            if (err) { return iter(err); }
+            
+            decisions.push({ result: decision });
+            return iter();
+          });
+        });
+        
+        
+        /*
+        services.query(audience, function(err, service) {
+          if (err) { return cb(err); }
+          // TODO: Return error if no service or use defaults???
+        
+          // TODO: Metadata about the service needed when issuing a token should be
+          //       serailized for later use, as an optimization to avoid a query.
+        
+          var locals = {
+            service: service
+          }
+          // TODO: Implement a way to check for already existing policies/grants
+          return cb(null, false, { prompt: 'consent', scope: [ 'foo', 'bar' ] }, locals);
+        });
+        */
+      })();
+    }
+    
+    
+    
+    var iopts = {
+      audience: areq.audience,
+      resource: areq.resource,
+      scope: areq.scope,
+    };
+    
+    Audience.infer(iopts, onAudienceInferred);
     
     /*
     if (areq.webMessageTarget) {
@@ -81,6 +145,7 @@ exports = module.exports = function(Audience, services) {
 };
 
 exports['@require'] = [
-  'http://schemas.modulate.io/js/aaa/audience',
-  'http://schemas.modulate.io/js/aaa/services/Directory'
+  'http://schema.modulate.io/js/aaa/PolicyDecisionPoint',
+  'http://schemas.modulate.io/js/aaa/services/Directory',
+  'http://schema.modulate.io/js/aaa/audience'
 ];
