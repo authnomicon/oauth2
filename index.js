@@ -2,8 +2,7 @@ exports = module.exports = {
   'server': require('./lib/server'),
   'acs': require('./lib/acs'),
   'transactionstore': require('./xom/transactionstore'),
-  'endpoints/token': require('./lib/endpoints/token'),
-  'response/code': require('./lib/response/code'),
+  'response/code': require('./xom/response/code'),
   'exchange/authorizationCode': require('./lib/exchange/authorizationCode')
 };
 

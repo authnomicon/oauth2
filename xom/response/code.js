@@ -10,5 +10,5 @@ exports = module.exports = function(issueCb) {
   }, issueCb);
 };
 
-exports['@require'] = [ './_code/issuecb' ];
-exports['@implements'] = 'http://schemas.modulate.io/js/aaa/oauth2/Response';
+exports['@implements'] = 'http://schema.modulate.io/js/aaa/oauth2/Response';
+exports['@require'] = [ './code/issuecb' ];
