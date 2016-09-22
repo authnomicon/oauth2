@@ -6,7 +6,7 @@ exports = module.exports = function(verifyCb) {
 };
 
 
-exports['@require'] = [ './_none/verifycb' ];
+exports['@require'] = [ './none/verifycb' ];
 
 exports['@implements'] = 'http://i.bixbyjs.org/http/auth/Scheme';
 exports['@scheme'] = 'none';

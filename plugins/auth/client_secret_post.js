@@ -1,4 +1,4 @@
-var internals = require('./internals');
+var internals = require('../../lib/auth/internals');
 
 
 exports = module.exports = function(verifyCb) {
@@ -9,7 +9,7 @@ exports = module.exports = function(verifyCb) {
 };
 
 
-exports['@require'] = [ './_secret/verifycb' ];
+exports['@require'] = [ './secret/verifycb' ];
 
 exports['@implements'] = 'http://i.bixbyjs.org/http/auth/Scheme';
 exports['@scheme'] = 'client_secret_post';

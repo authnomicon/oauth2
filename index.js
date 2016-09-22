@@ -24,6 +24,3 @@ exports.load = function(id) {
     }
   }
 };
-
-
-exports.plugins = require('./lib/plugins');
