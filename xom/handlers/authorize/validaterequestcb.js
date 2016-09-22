@@ -45,11 +45,12 @@ exports = module.exports = function(directory) {
       // TODO: Validate this stuff
       var locals = {}
       
+      // TODO: Always set webOrigin, if client has that property.  Dont' base it
+      //       on response mode.
       if (areq.responseMode == 'web_message') {
+        // https://tools.ietf.org/html/rfc6454
         // TODO: Validate these things.
-        locals.webMessaging = {
-          targetOrigin: 'http://127.0.0.1:3001'
-        }
+        locals.webOrigin = 'http://127.0.0.1:3001';
       }
       
       
