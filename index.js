@@ -1,5 +1,5 @@
 exports = module.exports = {
-  'server': require('./lib/server'),
+  'server': require('./xom/server'),
   'acs': require('./lib/acs'),
   'transactionstore': require('./xom/transactionstore'),
   'response/code': require('./xom/response/code'),
