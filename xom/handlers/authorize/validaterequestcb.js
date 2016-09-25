@@ -17,7 +17,7 @@ exports = module.exports = function(directory) {
     directory.get(clientID, function(err, client) {
       if (err) { return cb(err); }
       if (!client) {
-        return cb(new oauth2orize.AuthorizationError('Client not found', 'unauthorized_client'));
+        return cb(new oauth2orize.AuthorizationError('Unknown client', 'unauthorized_client'));
       }
       if (!client.redirectURIs || !client.redirectURIs.length) {
         // `redirectURIs` is an optional property, and may not be present on
