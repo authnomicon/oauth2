@@ -5,7 +5,8 @@ exports = module.exports = function(issueCb) {
   return oauth2orize.grant.token({
     modes: {
       //form_post: require('oauth2orize-fprm'),
-      web_message: require('oauth2orize-wmrm')
+      web_message: require('oauth2orize-wmrm'),
+      idpiframe: require('oauth2orize-idpiframerm')
     }
   }, issueCb);
 };

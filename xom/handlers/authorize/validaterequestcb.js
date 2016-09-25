@@ -45,13 +45,15 @@ exports = module.exports = function(directory) {
       // TODO: Validate this stuff
       var locals = {}
       
+      // TODO: Will need to special case support for storagerelay URLs
       // TODO: Always set webOrigin, if client has that property.  Dont' base it
       //       on response mode.
-      if (areq.responseMode == 'web_message') {
+      //if (areq.responseMode == 'web_message') {
         // https://tools.ietf.org/html/rfc6454
         // TODO: Validate these things.
-        locals.webOrigin = 'http://127.0.0.1:3001';
-      }
+        //locals.webOrigin = 'http://127.0.0.1:3001';
+        locals.webOrigin = 'http://localhost:3001';
+      //}
       
       
       // FIXME: Temp hack, remove

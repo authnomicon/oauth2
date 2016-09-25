@@ -1,6 +1,6 @@
 exports = module.exports = function() {
   
-  return function issueCode(client, user, ares, areq, locals, cb) {
+  return function issueToken(client, user, ares, areq, locals, cb) {
     return cb(null, 'AN-ACCESS-TOKEN-SSSSSHHHH')
   };
 };
