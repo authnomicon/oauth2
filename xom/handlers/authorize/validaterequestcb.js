@@ -9,7 +9,7 @@ exports = module.exports = function(directory) {
   // purpose of this it to verify the redirect URI in the request, so we are not an open redirector
   // Implements 3.1.2.4.  Invalid Endpoint
   
-  return function validateRequest(clientID, redirectURI, __scope__, __type__, areq, cb) {
+  return function validateRequest(clientID, redirectURI, cb) {
     directory.get(clientID, function(err, client) {
       if (err) { return cb(err); }
       if (!client) {
@@ -41,21 +41,11 @@ exports = module.exports = function(directory) {
       */
       
       // TODO: Validate this stuff
-      var locals = {}
       
-      // TODO: Will need to special case support for storagerelay URLs
-      // TODO: Always set webOrigin, if client has that property.  Dont' base it
-      //       on response mode.
-      //if (areq.responseMode == 'web_message') {
-        // https://tools.ietf.org/html/rfc6454
-        // TODO: Validate these things.
-        //locals.webOrigin = 'http://127.0.0.1:3001';
-        //locals.webOrigin = 'http://localhost:3001';
-      //}
       
       
       // FIXME: Temp hack, remove
-      return cb(null, client, redirectURI, locals);
+      //return cb(null, client, redirectURI);
       
       if (!redirectURI) {
         // If the request did not explicitly specify a redirect URI, use the
@@ -65,7 +55,7 @@ exports = module.exports = function(directory) {
         return cb(new oauth2orize.AuthorizationError('Client not allowed to use redirect URI: ' + redirectURI, 'unauthorized_client'));
       }
       
-      return cb(null, client, redirectURI, locals);
+      return cb(null, client, redirectURI);
     });
   };
 };

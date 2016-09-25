@@ -26,14 +26,14 @@ describe('handlers/authorize/validaterequestcb', function() {
     };
     
     describe('validating a valid client request', function() {
-      var client, redirectURI, locals;
+      var client, redirectURI;
     
       before(function() {
         sinon.stub(directory, 'get').yields(null, {
           id: '1',
           name: 'Example Client',
           redirectURIs: [
-            'http://localhost:3000/return'
+            'https://www.example.com/return'
           ]
         });
       });
@@ -44,11 +44,10 @@ describe('handlers/authorize/validaterequestcb', function() {
     
       before(function(done) {
         var validateFuncCb = factory(directory);
-        validateFuncCb('1', 'https://www.example.com/return', null, null, {}, function(e, c, r, l) {
-          if (e) { return done(err); }
+        validateFuncCb('1', 'https://www.example.com/return', function(e, c, r) {
+          if (e) { return done(e); }
           client = c;
           redirectURI = r;
-          locals = l;
           done()
         });
       });
@@ -62,7 +61,7 @@ describe('handlers/authorize/validaterequestcb', function() {
           id: '1',
           name: 'Example Client',
           redirectURIs: [
-            'http://localhost:3000/return'
+            'https://www.example.com/return'
           ]
         });
       });
@@ -70,14 +69,10 @@ describe('handlers/authorize/validaterequestcb', function() {
       it('should yield redirectURI', function() {
         expect(redirectURI).to.equal('https://www.example.com/return');
       });
-      
-      it('should yield locals', function() {
-        expect(locals).to.deep.equal({});
-      });
     }); // validating a valid client request
     
     describe('validating an invalid client request caused by unknown client', function() {
-      var err, client, redirectURI, locals;
+      var err, client, redirectURI;
     
       before(function() {
         sinon.stub(directory, 'get').yields(null);
@@ -89,11 +84,10 @@ describe('handlers/authorize/validaterequestcb', function() {
       
       before(function(done) {
         var validateFuncCb = factory(directory);
-        validateFuncCb('1', 'https://www.example.com/return', null, null, {}, function(e, c, r, l) {
+        validateFuncCb('1', 'https://www.example.com/return', function(e, c, r) {
           err = e;
           client = c;
           redirectURI = r;
-          locals = l;
           done()
         });
       });
@@ -115,7 +109,7 @@ describe('handlers/authorize/validaterequestcb', function() {
     }); // validating an invalid client request caused by unknown client
     
     describe('validating an invalid client request caused by no registered redirect URIs', function() {
-      var err, client, redirectURI, locals;
+      var err, client, redirectURI;
     
       before(function() {
         sinon.stub(directory, 'get').yields(null, {
@@ -130,11 +124,10 @@ describe('handlers/authorize/validaterequestcb', function() {
       
       before(function(done) {
         var validateFuncCb = factory(directory);
-        validateFuncCb('1', 'https://www.example.com/return', null, null, {}, function(e, c, r, l) {
+        validateFuncCb('1', 'https://www.example.com/return', function(e, c, r) {
           err = e;
           client = c;
           redirectURI = r;
-          locals = l;
           done()
         });
       });
@@ -156,7 +149,7 @@ describe('handlers/authorize/validaterequestcb', function() {
     }); // validating an invalid client request caused by no registered redirect URIs
     
     describe('validating an invalid client request caused by empty set of redirect URIs', function() {
-      var err, client, redirectURI, locals;
+      var err, client, redirectURI;
     
       before(function() {
         sinon.stub(directory, 'get').yields(null, {
@@ -172,11 +165,10 @@ describe('handlers/authorize/validaterequestcb', function() {
       
       before(function(done) {
         var validateFuncCb = factory(directory);
-        validateFuncCb('1', 'https://www.example.com/return', null, null, {}, function(e, c, r, l) {
+        validateFuncCb('1', 'https://www.example.com/return', function(e, c, r) {
           err = e;
           client = c;
           redirectURI = r;
-          locals = l;
           done()
         });
       });
@@ -198,7 +190,7 @@ describe('handlers/authorize/validaterequestcb', function() {
     }); // validating an invalid client request caused by empty set of redirect URIs
     
     describe('error encountered during directory lookup', function() {
-      var err, client, redirectURI, locals;
+      var err, client, redirectURI;
     
       before(function() {
         sinon.stub(directory, 'get').yields(new Error('Directory lookup failed'));
@@ -210,11 +202,10 @@ describe('handlers/authorize/validaterequestcb', function() {
     
       before(function(done) {
         var validateFuncCb = factory(directory);
-        validateFuncCb('1', 'https://www.example.com/return', null, null, {}, function(e, c, r, l) {
+        validateFuncCb('1', 'https://www.example.com/return', function(e, c, r) {
           err = e;
           client = c;
           redirectURI = r;
-          locals = l;
           done()
         });
       });

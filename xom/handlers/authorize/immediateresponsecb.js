@@ -13,6 +13,20 @@ exports = module.exports = function(pdp, resourcesDir, Audience) {
       return cb(null, false, { prompt: 'login' });
     }
     
+    // TODO: In oauth2orize-permission, parse `storagerelay` URLs and set req.origin.
+    // TODO: Implement registered webOrigin check in immediateModeCb.  It is safe to use
+    //       unregistered value to reply to clients, as redirect is not involved
+    /*
+    if (client.webOrigins && client.webOrigins.length) {
+      if (!areq.origin) {
+        locals.webOrigin = client.webOrigins[0];
+      } else if (client.webOrigins.indexOf(areq.origin) != -1) {
+        locals.webOrigin = areq.origin;
+        locals.webOrigin = 'http://localhost:3001';
+      }
+    }
+    */
+    
     
     // TODO: reference undefined variable causes bad stack trace.  find and fix
     //push(consent)
