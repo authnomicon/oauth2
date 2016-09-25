@@ -44,7 +44,7 @@ describe('handlers/authorize/validaterequestcb', function() {
     
       before(function(done) {
         var validateFuncCb = factory(directory);
-        validateFuncCb('1', 'https://www.example.com/return', function(e, c, r, l) {
+        validateFuncCb('1', 'https://www.example.com/return', null, null, {}, function(e, c, r, l) {
           if (e) { return done(err); }
           client = c;
           redirectURI = r;
@@ -89,7 +89,7 @@ describe('handlers/authorize/validaterequestcb', function() {
       
       before(function(done) {
         var validateFuncCb = factory(directory);
-        validateFuncCb('1', 'https://www.example.com/return', function(e, c, r, l) {
+        validateFuncCb('1', 'https://www.example.com/return', null, null, {}, function(e, c, r, l) {
           err = e;
           client = c;
           redirectURI = r;
@@ -130,7 +130,7 @@ describe('handlers/authorize/validaterequestcb', function() {
       
       before(function(done) {
         var validateFuncCb = factory(directory);
-        validateFuncCb('1', 'https://www.example.com/return', function(e, c, r, l) {
+        validateFuncCb('1', 'https://www.example.com/return', null, null, {}, function(e, c, r, l) {
           err = e;
           client = c;
           redirectURI = r;
@@ -172,7 +172,7 @@ describe('handlers/authorize/validaterequestcb', function() {
       
       before(function(done) {
         var validateFuncCb = factory(directory);
-        validateFuncCb('1', 'https://www.example.com/return', function(e, c, r, l) {
+        validateFuncCb('1', 'https://www.example.com/return', null, null, {}, function(e, c, r, l) {
           err = e;
           client = c;
           redirectURI = r;
@@ -210,7 +210,7 @@ describe('handlers/authorize/validaterequestcb', function() {
     
       before(function(done) {
         var validateFuncCb = factory(directory);
-        validateFuncCb('1', 'https://www.example.com/return', function(e, c, r, l) {
+        validateFuncCb('1', 'https://www.example.com/return', null, null, {}, function(e, c, r, l) {
           err = e;
           client = c;
           redirectURI = r;

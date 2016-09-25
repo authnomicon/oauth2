@@ -9,7 +9,7 @@ exports = module.exports = function(directory) {
   // purpose of this it to verify the redirect URI in the request, so we are not an open redirector
   // Implements 3.1.2.4.  Invalid Endpoint
   
-  return function validateRequest(clientID, redirectURI, cb) {
+  return function validateRequest(clientID, redirectURI, __scope__, __type__, areq, cb) {
     directory.get(clientID, function(err, client) {
       if (err) { return cb(err); }
       if (!client) {
