@@ -2,17 +2,19 @@
   "name": "nodex-aaa-oauth2",
   "version": "0.0.0",
   "description": "Injectable OAuth 2.0 implementation for Bixby.js.",
-  "keywords": [],
+  "keywords": [
+    "oauth2"
+  ],
   "author": {
     "name": "Jared Hanson",
     "email": "jaredhanson@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/modulate/nodex-aaa-oauth2.git"
+    "url": "git://github.com/authnomicon/nodex-aaa-oauth2.git"
   },
   "bugs": {
-    "url": "http://github.com/modulate/nodex-aaa-oauth2/issues"
+    "url": "http://github.com/authnomicon/nodex-aaa-oauth2/issues"
   },
   "licenses": [
     {
