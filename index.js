@@ -4,7 +4,7 @@ exports = module.exports = {
   'transactionstore': require('./xom/transactionstore'),
   'response/code': require('./xom/response/code'),
   'response/token': require('./xom/response/token'),
-  'exchange/authorizationCode': require('./xom/exchange/authorizationCode')
+  'exchange/authorizationcode': require('./xom/exchange/authorizationcode')
 };
 
 exports.load = function(id) {

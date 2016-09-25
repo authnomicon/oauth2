@@ -6,4 +6,4 @@ exports = module.exports = function(issueCb) {
 
 exports['@implements'] = 'http://schema.modulate.io/js/aaa/oauth2/exchange';
 exports['@type'] = 'authorization_code';
-exports['@require'] = [ './authorizationCode/issuecb' ];
+exports['@require'] = [ './authorizationcode/issuecb' ];

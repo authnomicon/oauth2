@@ -1,11 +1,18 @@
 /* global describe, it, expect */
 
-var pkg = require('..');
+var expect = require('chai').expect;
+var source = require('..');
 
-describe('nodex-security-oauth2', function() {
+
+describe('nodex-aaa-oauth2', function() {
   
-  it.skip('should export object', function() {
-    expect(pkg).to.be.an('object');
+  it('should export manifest', function() {
+    expect(source).to.be.an('object');
+    expect(source['server']).to.be.a('function');
+    expect(source['transactionstore']).to.be.a('function');
+    expect(source['response/code']).to.be.a('function');
+    expect(source['response/token']).to.be.a('function');
+    expect(source['exchange/authorizationcode']).to.be.a('function');
   });
   
 });
