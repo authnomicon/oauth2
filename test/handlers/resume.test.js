@@ -5,7 +5,7 @@ var sinon = require('sinon');
 var factory = require('../../xom/handlers/resume');
 
 
-describe('handlers/authorize', function() {
+describe('handlers/resume', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
@@ -23,7 +23,7 @@ describe('handlers/authorize', function() {
     ]);
     var handler = factory(server, immediateResponseCb);
     
-    it('should invoke Server#resume with callbacks', function() {
+    it('should invoke Server#resume with callback', function() {
       expect(stub).to.have.been.calledWithExactly(immediateResponseCb);
     });
     
