@@ -1,18 +1,20 @@
+/**
+ * OAuth 2.0 request validation.
+ *
+ * 
+ */
 exports = module.exports = function(directory) {
   var oauth2orize = require('oauth2orize');
   
   // purpose of this it to verify the redirect URI in the request, so we are not an open redirector
   // Implements 3.1.2.4.  Invalid Endpoint
   
-  // http://nimbusds.com/blog/openid-connect-ldap-schema-update/
-  // https://bitbucket.org/connect2id/server-ldap-schemas
-  
   // https://tools.ietf.org/html/draft-hunt-oauth-scim-client-reg-00
   // http://www.simplecloud.info/specs/draft-scim-core-schema-01.html
   // https://github.com/andreassolberg/voot/wiki/Protocol-SCIM
   
-  return function validateRequest(clientID, redirectURI, _scope, _type, areq, cb) {
-    directory.query(clientID, function(err, client) {
+  return function validateRequest(clientID, redirectURI, cb) {
+    directory.get(clientID, function(err, client) {
       if (err) { return cb(err); }
       if (!client) {
         return cb(new oauth2orize.AuthorizationError('Client not found', 'unauthorized_client'));
