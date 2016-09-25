@@ -9,10 +9,6 @@ exports = module.exports = function(directory) {
   // purpose of this it to verify the redirect URI in the request, so we are not an open redirector
   // Implements 3.1.2.4.  Invalid Endpoint
   
-  // https://tools.ietf.org/html/draft-hunt-oauth-scim-client-reg-00
-  // http://www.simplecloud.info/specs/draft-scim-core-schema-01.html
-  // https://github.com/andreassolberg/voot/wiki/Protocol-SCIM
-  
   return function validateRequest(clientID, redirectURI, cb) {
     directory.get(clientID, function(err, client) {
       if (err) { return cb(err); }
