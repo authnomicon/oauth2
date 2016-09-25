@@ -7,7 +7,8 @@
   ],
   "author": {
     "name": "Jared Hanson",
-    "email": "jaredhanson@gmail.com"
+    "email": "jaredhanson@gmail.com",
+    "url": "http://www.jaredhanson.net/"
   },
   "repository": {
     "type": "git",
@@ -16,10 +17,11 @@
   "bugs": {
     "url": "http://github.com/authnomicon/nodex-aaa-oauth2/issues"
   },
+  "license": "MIT",
   "licenses": [
     {
       "type": "MIT",
-      "url": "http://www.opensource.org/licenses/MIT"
+      "url": "http://opensource.org/licenses/MIT"
     }
   ],
   "main": "./index.js",
