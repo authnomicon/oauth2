@@ -54,7 +54,7 @@ exports = module.exports = function(directory) {
         // https://tools.ietf.org/html/rfc6454
         // TODO: Validate these things.
         //locals.webOrigin = 'http://127.0.0.1:3001';
-        locals.webOrigin = 'http://localhost:3001';
+        //locals.webOrigin = 'http://localhost:3001';
       //}
       
       
