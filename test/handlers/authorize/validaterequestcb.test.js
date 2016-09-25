@@ -12,8 +12,7 @@ describe('handlers/authorize/validaterequestcb', function() {
   });
   
   describe('factory', function() {
-    var directory = new Object();
-    var func = factory(directory);
+    var func = factory();
     
     it('should return function', function() {
       expect(func).to.be.a('function');
