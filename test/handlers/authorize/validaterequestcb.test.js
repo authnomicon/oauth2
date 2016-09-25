@@ -71,6 +71,102 @@ describe('handlers/authorize/validaterequestcb', function() {
       });
     }); // validating a valid client request
     
+    describe('validating a valid client request when multiple URIs are registered', function() {
+      var client, redirectURI;
+    
+      before(function() {
+        sinon.stub(directory, 'get').yields(null, {
+          id: '1',
+          name: 'Example Client',
+          redirectURIs: [
+            'https://www.example.com/login/return',
+            'https://www.example.com/return'
+          ]
+        });
+      });
+    
+      after(function() {
+        directory.get.restore();
+      });
+    
+      before(function(done) {
+        var validateFuncCb = factory(directory);
+        validateFuncCb('1', 'https://www.example.com/return', function(e, c, r) {
+          if (e) { return done(e); }
+          client = c;
+          redirectURI = r;
+          done()
+        });
+      });
+      
+      it('should call Directory#get', function() {
+        expect(directory.get).to.have.been.calledWith('1');
+      });
+    
+      it('should yield client', function() {
+        expect(client).to.deep.equal({
+          id: '1',
+          name: 'Example Client',
+          redirectURIs: [
+            'https://www.example.com/login/return',
+            'https://www.example.com/return'
+          ]
+        });
+      });
+      
+      it('should yield redirectURI', function() {
+        expect(redirectURI).to.equal('https://www.example.com/return');
+      });
+    }); // validating a valid client request when multiple URIs are registered
+    
+    describe('validating a valid client request without redirect URI when multiple URIs are registered', function() {
+      var client, redirectURI;
+    
+      before(function() {
+        sinon.stub(directory, 'get').yields(null, {
+          id: '1',
+          name: 'Example Client',
+          redirectURIs: [
+            'https://www.example.com/login/return',
+            'https://www.example.com/return'
+          ]
+        });
+      });
+    
+      after(function() {
+        directory.get.restore();
+      });
+    
+      before(function(done) {
+        var validateFuncCb = factory(directory);
+        validateFuncCb('1', undefined, function(e, c, r) {
+          if (e) { return done(e); }
+          client = c;
+          redirectURI = r;
+          done()
+        });
+      });
+      
+      it('should call Directory#get', function() {
+        expect(directory.get).to.have.been.calledWith('1');
+      });
+    
+      it('should yield client', function() {
+        expect(client).to.deep.equal({
+          id: '1',
+          name: 'Example Client',
+          redirectURIs: [
+            'https://www.example.com/login/return',
+            'https://www.example.com/return'
+          ]
+        });
+      });
+      
+      it('should yield primary redirectURI', function() {
+        expect(redirectURI).to.equal('https://www.example.com/login/return');
+      });
+    }); // validating a valid client request without redirect URI when multiple URIs are registered
+    
     describe('validating an invalid client request caused by unknown client', function() {
       var err, client, redirectURI;
     
@@ -188,6 +284,50 @@ describe('handlers/authorize/validaterequestcb', function() {
         expect(redirectURI).to.be.undefined;
       });
     }); // validating an invalid client request caused by empty set of redirect URIs
+    
+    describe('validating an invalid client request caused by using unregistered redirect URI', function() {
+      var err, client, redirectURI;
+    
+      before(function() {
+        sinon.stub(directory, 'get').yields(null, {
+          id: '1',
+          name: 'Example Client',
+          redirectURIs: [
+            'https://www.example.com/login/return',
+            'https://www.example.com/return'
+          ]
+        });
+      });
+    
+      after(function() {
+        directory.get.restore();
+      });
+      
+      before(function(done) {
+        var validateFuncCb = factory(directory);
+        validateFuncCb('1', 'https://www.example.test/return', function(e, c, r) {
+          err = e;
+          client = c;
+          redirectURI = r;
+          done()
+        });
+      });
+      
+      it('should yield error', function() {
+        expect(err).to.be.an.instanceOf(Error);
+        expect(err.message).to.equal('Client not permitted to use redirect URI');
+        expect(err.code).to.equal('unauthorized_client');
+        expect(err.status).to.equal(403);
+      });
+    
+      it('should not yield client', function() {
+        expect(client).to.be.undefined;
+      });
+      
+      it('should not yield redirectURI', function() {
+        expect(redirectURI).to.be.undefined;
+      });
+    }); // validating an invalid client request caused by using unregistered redirect URI
     
     describe('error encountered during directory lookup', function() {
       var err, client, redirectURI;

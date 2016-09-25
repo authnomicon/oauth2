@@ -52,7 +52,7 @@ exports = module.exports = function(directory) {
         // higest priority URI specified in the client's registration.
         redirectURI = client.redirectURIs[0];
       } else if (client.redirectURIs.indexOf(redirectURI) == -1) {
-        return cb(new oauth2orize.AuthorizationError('Client not allowed to use redirect URI: ' + redirectURI, 'unauthorized_client'));
+        return cb(new oauth2orize.AuthorizationError('Client not permitted to use redirect URI', 'unauthorized_client'));
       }
       
       return cb(null, client, redirectURI);
