@@ -17,7 +17,7 @@ exports = module.exports = function(acs, services, Tokens, TokensNegotiator, rsg
           //       itself, which may just support Bearer or not, etc.
   
   return function issueCode(client, code, redirectURI, cb) {
-    acs.load(code, function(err, info) {
+    acs.get(code, function(err, info) {
       if (err) { return cb(err); }
     
       if (typeof info.user == 'string') {
@@ -80,7 +80,7 @@ exports = module.exports = function(acs, services, Tokens, TokensNegotiator, rsg
     
       // TODO: This directory query can be optimized way if things are serialized into
       //       th requestToken
-      services.query(info.service, onServiceLoaded);
+      services.get(info.service, onServiceLoaded);
     });
   };
 };
