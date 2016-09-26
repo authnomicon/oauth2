@@ -1,4 +1,4 @@
-exports = module.exports = function(acs, services, Tokens, TokensNegotiator, rsg) {
+exports = module.exports = function(acs, services, Tokens, rsg) {
     
     // TODO: If the issued access token scope
    // is different from the one requested by the client, the authorization
@@ -36,7 +36,7 @@ exports = module.exports = function(acs, services, Tokens, TokensNegotiator, rsg
         var grant = info.grant;
         
         // TODO: Possibly negotiate this based on client alg support as well.
-        var params = TokensNegotiator.negotiate(service.tokenTypes);
+        var params = Tokens.negotiate(service.tokenTypesSupported);
         if (!params) { return cb(new Error('Failed to negotiate token type')); }
         
         // TODO: This should be set in `info`, in milliseconds.
@@ -59,28 +59,35 @@ exports = module.exports = function(acs, services, Tokens, TokensNegotiator, rsg
         // TODO: ONly add confirmation if negotiated auth scheme (Hawk, PoP, etc, requires it)
         // TODO: the key size should be based off requirements of the negotiated algorithm
         // idm.sectorize(subject, audience, function(err, id) {, etc
+          /*
         var confirmation = {
           use: 'signing',
           key: rsg.generate(32)
         }
         //claims.confirmation = confirmation;
+        */
         
         // TODO: Need a way to indicate that confirmation goes into a  `mac_key`
         //       in the JWT, rather than `cnf`.  This is a property of the
         //       resource server.  Such a claim only support symmetric algs (?)
       
+        var type = params.type;
+        delete params.type;
+          
         params.peer = service;
         //params.algorithm = 'hmac-sha256';
-        params.algorithm = 'rsa-sha256';
+        
         Tokens.encode(params.type, claims, params, function(err, token) {
           if (err) { return cb(err); }
-          return cb(null, token, confirmation.key);
+          // TODO: offline access, params with scope and expires in
+          return cb(null, token);
+          //return cb(null, token, confirmation.key);
         });
       } // onServiceLoaded
     
       // TODO: This directory query can be optimized way if things are serialized into
       //       th requestToken
-      services.get(info.service, onServiceLoaded);
+      services.get(info.resources[0].id, onServiceLoaded);
     });
   };
 };
@@ -91,6 +98,6 @@ exports['@require'] = [
   'http://schemas.modulate.io/js/aaa/services/Directory',
   'http://i.bixbyjs.org/tokens/Encoder',
   // TODO: Collaps this into the facade that combines Encoder and Negotiator
-  'http://i.bixbyjs.org/tokens/Negotiator',
+  //'http://i.bixbyjs.org/tokens/Negotiator',
   'http://i.bixbyjs.org/crypto/RSG'
 ];

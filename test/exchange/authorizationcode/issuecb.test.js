@@ -31,56 +31,103 @@ describe('handlers/exchange/issuecb', function() {
     var directory = {
       get: function(){}
     };
+    var tokens = {
+      encode: function(){},
+      negotiate: function(){}
+    };
     
-    describe.skip('issuing something', function() {
+    describe('issuing something', function() {
       var accessToken, refreshToken, params;
     
       before(function() {
         sinon.stub(acs, 'get').yields(null, {
           user: '1',
-          client: 's6BhdRkqt3'
+          client: 's6BhdRkqt3',
+          resources: [ {
+            id: 'https://api.example.com/',
+            scope: [ 'read:foo', 'write:foo', 'read:bar' ]
+          } ]
         });
         
         sinon.stub(directory, 'get').yields(null, {
-          id: '1',
-          name: 'Example Client',
-          redirectURIs: [
-            'https://www.example.com/return'
+          id: 'https://api.example.com/',
+          name: 'Example API',
+          tokenTypesSupported: [ {
+            type: 'urn:ietf:params:oauth:token-type:jwt',
+            signingAlgorithmsSupported: [
+              'sha256', 'sha384', 'RSA-SHA256', 'RSA-SHA384'
+            ]
+          } ]
+        });
+        
+        sinon.stub(tokens, 'negotiate').returns({
+          type: 'urn:ietf:params:oauth:token-type:jwt',
+          signingAlgorithms: [
+            'sha256', 'RSA-SHA256'
           ]
         });
+        
+        sinon.stub(tokens, 'encode').yields(null, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIi.TJVA95Or');
       });
     
       after(function() {
+        tokens.negotiate.restore();
         directory.get.restore();
         acs.get.restore();
       });
     
       before(function(done) {
-        var validateFuncCb = factory(acs, directory);
-        validateFuncCb(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', function(e, c, r) {
+        var issueCb = factory(acs, directory, tokens);
+        issueCb(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', function(e, a, r, p) {
           if (e) { return done(e); }
-          client = c;
-          redirectURI = r;
+          accessToken = a;
+          refreshToken = r;
+          params = p;
           done()
         });
       });
       
-      it('should call Directory#get', function() {
-        expect(directory.get).to.have.been.calledWith('1');
+      it('should call ACS#get', function() {
+        expect(acs.get).to.have.been.calledOnce;
+        expect(acs.get).to.have.been.calledWith('SplxlOBeZQQYbYS6WxSbIA');
       });
-    
-      it('should yield client', function() {
-        expect(client).to.deep.equal({
-          id: '1',
-          name: 'Example Client',
-          redirectURIs: [
-            'https://www.example.com/return'
+      
+      it('should call Directory#get', function() {
+        expect(directory.get).to.have.been.calledOnce;
+        expect(directory.get).to.have.been.calledWith('https://api.example.com/');
+      });
+      
+      it.skip('should call tokens.negotiate', function() {
+        expect(tokens.negotiate).to.have.been.calledOnce;
+        expect(tokens.negotiate).to.have.been.calledWith([ {
+          type: 'urn:ietf:params:oauth:token-type:jwt',
+          signingAlgorithmsSu: [
+            'sha256', 'sha384', 'RSA-SHA256', 'RSA-SHA384'
           ]
+        } ]);
+      });
+      
+      it.skip('should call tokens.encode', function() {
+        expect(tokens.encode).to.have.been.calledOnce;
+        expect(tokens.negotiate).to.have.been.calledWith({
+          signingAlgorithms: [ 'sha256', 'RSA-SHA256' ],
+          peer: {
+            id: 'https://api.example.com/',
+            name: 'Example API',
+            tokenTypesSupported: [ {
+              type: 'urn:ietf:params:oauth:token-type:jwt',
+              signingAlgorithmsSupported: [ 'sha256', 'sha384', 'RSA-SHA256', 'RSA-SHA384' ]
+            } ]
+          }
         });
       });
       
-      it('should yield redirectURI', function() {
-        expect(redirectURI).to.equal('https://www.example.com/return');
+      it('should yield accessToken', function() {
+        expect(accessToken).to.equal('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIi.TJVA95Or');
+      });
+      
+      it('should not yield refreshToken', function() {
+        expect(refreshToken).to.be.undefined;
       });
     }); // validating a valid client request
     
