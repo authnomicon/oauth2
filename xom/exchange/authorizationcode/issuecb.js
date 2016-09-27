@@ -49,7 +49,7 @@ exports = module.exports = function(acs, services, Tokens, rsg) {
           subject: info.user.id,
           authorizedParty: client.id,
           audience: service.id,
-          scope: info.scope,
+          scope: info.resources[0].scope,
           expiresAt: exp
         }
         if (grant) {
@@ -77,7 +77,7 @@ exports = module.exports = function(acs, services, Tokens, rsg) {
         params.peer = service;
         //params.algorithm = 'hmac-sha256';
         
-        Tokens.encode(params.type, claims, params, function(err, token) {
+        Tokens.encode(type, claims, params, function(err, token) {
           if (err) { return cb(err); }
           // TODO: offline access, params with scope and expires in
           return cb(null, token);

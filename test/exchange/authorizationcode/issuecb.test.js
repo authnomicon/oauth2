@@ -97,19 +97,41 @@ describe('handlers/exchange/issuecb', function() {
         expect(directory.get).to.have.been.calledWith('https://api.example.com/');
       });
       
-      it.skip('should call tokens.negotiate', function() {
+      it('should call tokens.negotiate', function() {
         expect(tokens.negotiate).to.have.been.calledOnce;
         expect(tokens.negotiate).to.have.been.calledWith([ {
           type: 'urn:ietf:params:oauth:token-type:jwt',
-          signingAlgorithmsSu: [
+          signingAlgorithmsSupported: [
             'sha256', 'sha384', 'RSA-SHA256', 'RSA-SHA384'
           ]
         } ]);
       });
       
-      it.skip('should call tokens.encode', function() {
+      it('should call tokens.encode', function() {
         expect(tokens.encode).to.have.been.calledOnce;
-        expect(tokens.negotiate).to.have.been.calledWith({
+        var call = tokens.encode.getCall(0);
+        expect(call.args[0]).to.equal('urn:ietf:params:oauth:token-type:jwt');
+
+        var claims = call.args[1];
+        var expiresAt = claims.expiresAt;
+        delete claims.expiresAt;
+        
+        expect(call.args[1]).to.deep.equal({
+          subject: '1',
+          authorizedParty: 's6BhdRkqt3',
+          audience: 'https://api.example.com/',
+          scope: [ 'read:foo', 'write:foo', 'read:bar' ]
+        });
+        expect(expiresAt).to.be.an.instanceOf(Date);
+        // TODO: Validate expiration times
+        /*
+        var now = Date.now();
+        expect(expiresAt.getTime).to.be.within(
+          Date.now(), Date.now()
+        )
+        */
+
+        expect(call.args[2]).to.deep.equal({
           signingAlgorithms: [ 'sha256', 'RSA-SHA256' ],
           peer: {
             id: 'https://api.example.com/',
