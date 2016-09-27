@@ -41,7 +41,7 @@ exports = module.exports = function(acs, services, Tokens, rsg) {
         
         // TODO: This should be set in `info`, in milliseconds.
         var exp = new Date();
-        exp.setMinutes(exp.getMinutes() + 30);
+        exp.setHours(exp.getHours() + 2);
 
         // TODO: Externalize all IDs (user and client) - probably best via a decorator
         // TODO: Pass options containing sector identifier, etc.

@@ -83,7 +83,7 @@ describe('handlers/exchange/issuecb', function() {
           accessToken = a;
           refreshToken = r;
           params = p;
-          done()
+          done();
         });
       });
       
@@ -123,13 +123,10 @@ describe('handlers/exchange/issuecb', function() {
           scope: [ 'read:foo', 'write:foo', 'read:bar' ]
         });
         expect(expiresAt).to.be.an.instanceOf(Date);
-        // TODO: Validate expiration times
-        /*
-        var now = Date.now();
-        expect(expiresAt.getTime).to.be.within(
-          Date.now(), Date.now()
-        )
-        */
+        
+        var expectedExpiresAt = new Date();
+        expectedExpiresAt.setHours(expectedExpiresAt.getHours() + 2);
+        expect(expiresAt).to.be.closeToDate(expectedExpiresAt, 2, 'seconds');
 
         expect(call.args[2]).to.deep.equal({
           signingAlgorithms: [ 'sha256', 'RSA-SHA256' ],
