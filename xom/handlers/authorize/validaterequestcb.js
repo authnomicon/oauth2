@@ -34,17 +34,6 @@ exports = module.exports = function(directory) {
         return cb(new oauth2orize.AuthorizationError('Client not permitted to use redirect URI', 'unauthorized_client'));
       }
       
-      /*
-      if (!redirectURI) {
-        // The client did not include a redirection URI with the authorization
-        // request, and it has a single registered redirect URI.  The registered
-        // redirect URI will be used to respond to the authorization request.
-        redirectURI = client.redirectURIs[0];
-      } else if (client.redirectURIs.indexOf(redirectURI) == -1) {
-        return cb(new oauth2orize.AuthorizationError('Client not permitted to use redirect URI', 'unauthorized_client'));
-      }
-      */
-      
       return cb(null, client, redirectURI || client.redirectURIs[0]);
     });
   };
