@@ -2,10 +2,10 @@
 
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../xom/handlers/token');
+var factory = require('../../xom/handlers/authorizeerrorhandler');
 
 
-describe('handlers/token', function() {
+describe('handlers/authorizeerrorhandler', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
@@ -13,13 +13,13 @@ describe('handlers/token', function() {
   
   describe('factory', function() {
     var server = {
-      token: function(){}
+      authorizationErrorHandler: function(){}
     };
     
-    var stub = sinon.stub(server, 'token').returns(function middleware(req, res, next){});
+    var stub = sinon.stub(server, 'authorizationErrorHandler').returns(function middleware(req, res, next){});
     var handler = factory(server);
     
-    it('should invoke Server#token', function() {
+    it('should invoke Server#authorizationErrorHandler', function() {
       expect(stub).to.have.been.calledOnce;
     });
     
