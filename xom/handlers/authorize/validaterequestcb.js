@@ -1,13 +1,18 @@
 /**
  * OAuth 2.0 request validation.
  *
- * 
+ * This function validates a client's authorization request.  If the request is
+ * valid, the function yeilds a `client` object and a `redirectURI`.  The client
+ * object provides metadata about the client, such as name and logo, used during
+ * processing of the authorization request.  The redirect URI is used when
+ * responding to the authorization request using HTTP redirections.
+ *
+ * If the request is invalid, the function yeilds an error.  It is expected that
+ * the application will inform the user of the error, and must not automatically
+ * redirect the user to an invalid redirection URI.
  */
 exports = module.exports = function(directory) {
   var oauth2orize = require('oauth2orize');
-  
-  // purpose of this it to verify the redirect URI in the request, so we are not an open redirector
-  // Implements 3.1.2.4.  Invalid Endpoint
   
   return function validateRequest(clientID, redirectURI, cb) {
     directory.get(clientID, function(err, client) {
