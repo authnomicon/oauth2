@@ -28,6 +28,8 @@ exports = module.exports = function(acs, services, Tokens, rsg) {
       }
       
       if (client.id !== info.client.id) { return cb(null, false); }
+      
+      // TODO: Check that redirect URI matches
     
       function onServiceLoaded(err, service) {
         if (err) { return cb(err); }

@@ -71,6 +71,7 @@ describe('handlers/exchange/issuecb', function() {
       });
     
       after(function() {
+        tokens.encode.restore();
         tokens.negotiate.restore();
         directory.get.restore();
         acs.get.restore();
