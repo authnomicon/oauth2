@@ -50,8 +50,16 @@ describe('response/code/issuecb', function() {
       });
       
       before(function(done) {
+        var ares = {
+          allow: true,
+          access: {
+            resource: 'https://api.example.com/',
+            scope: [ 'read:foo', 'write:foo', 'read:bar' ]
+          }
+        }
+        
         var issueCb = factory(acs);
-        issueCb(client, 'https://client.example.com/cb', user, {}, {}, {}, function(e, c) {
+        issueCb(client, 'https://client.example.com/cb', user, ares, {}, {}, function(e, c) {
           if (e) { return done(e); }
           code = c;
           done();
@@ -69,6 +77,10 @@ describe('response/code/issuecb', function() {
           user: {
             id: '1',
             displayName: 'John Doe'
+          },
+          access: {
+            resource: 'https://api.example.com/',
+            scope: [ 'read:foo', 'write:foo', 'read:bar' ]
           }
         });
       });

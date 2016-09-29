@@ -43,8 +43,8 @@ describe('handlers/exchange/issuecb', function() {
         sinon.stub(acs, 'get').yields(null, {
           user: '1',
           client: 's6BhdRkqt3',
-          resources: [ {
-            id: 'https://api.example.com/',
+          access: [ {
+            resource: 'https://api.example.com/',
             scope: [ 'read:foo', 'write:foo', 'read:bar' ]
           } ]
         });
