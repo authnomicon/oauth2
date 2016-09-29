@@ -5,12 +5,14 @@ exports = module.exports = function(acs) {
       client: client,
       redirectURI: redirectURI,
       user: user,
-      service: locals.service,
-      grant: locals.grant,
-      scope: ares.scope
+      // TODO
+      //service: locals.service,
+      //grant: locals.grant,
+      //scope: ares.scope
     };
     
-    acs.store(bound, function(err, code) {
+    // TODO: Ensure that code has a TTL of 10 minutes
+    acs.set(bound, function(err, code) {
       if (err) { return cb(err); }
       return cb(null, code);
     });
