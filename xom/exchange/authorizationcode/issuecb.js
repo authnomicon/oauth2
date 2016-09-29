@@ -21,6 +21,7 @@ exports = module.exports = function(acs, services, Tokens, rsg) {
   return function issueCode(client, code, redirectURI, cb) {
     acs.get(code, function(err, info) {
       if (err) { return cb(err); }
+      // TODO: if(!info)
     
       if (typeof info.user == 'string') {
         info.user = { id: info.user };
@@ -29,9 +30,17 @@ exports = module.exports = function(acs, services, Tokens, rsg) {
         info.client = { id: info.client };
       }
       
-      if (client.id !== info.client.id) { return cb(null, false); }
+      if (client.id !== info.client.id) {
+        // Verify that the authorization code was issued to the client that is
+        // attempting to exchange it.
+        return cb(null, false);
+      }
       
       if (info.redirectURI !== redirectURI) {
+        // Verify that the redirect URI matches the value sent in the initial
+        // authorization request.
+        // 
+        // Refer to Section 4.1.3 of RFC 6749 for further details.
         return cb(new oauth2orize.TokenError('Mismatched redirect URI', 'invalid_grant'));
       }
       
