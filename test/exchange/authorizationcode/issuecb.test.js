@@ -58,9 +58,9 @@ describe('handlers/exchange/issuecb', function() {
           id: 'https://api.example.com/',
           name: 'Example API',
           authenticationSchemes: [ { type: 'bearer' } ],
-          tokenTypesSupported: [ {
+          tokenTypes: [ {
             type: 'urn:ietf:params:oauth:token-type:jwt',
-            signingAlgorithmsSupported: [
+            signingAlgorithms: [
               'sha256', 'sha384', 'RSA-SHA256', 'RSA-SHA384'
             ]
           } ]
@@ -117,7 +117,7 @@ describe('handlers/exchange/issuecb', function() {
         expect(tokens.negotiate).to.have.been.calledOnce;
         expect(tokens.negotiate).to.have.been.calledWith([ {
           type: 'urn:ietf:params:oauth:token-type:jwt',
-          signingAlgorithmsSupported: [
+          signingAlgorithms: [
             'sha256', 'sha384', 'RSA-SHA256', 'RSA-SHA384'
           ]
         } ]);
@@ -150,9 +150,9 @@ describe('handlers/exchange/issuecb', function() {
             id: 'https://api.example.com/',
             name: 'Example API',
             authenticationSchemes: [ { type: 'bearer' } ],
-            tokenTypesSupported: [ {
+            tokenTypes: [ {
               type: 'urn:ietf:params:oauth:token-type:jwt',
-              signingAlgorithmsSupported: [ 'sha256', 'sha384', 'RSA-SHA256', 'RSA-SHA384' ]
+              signingAlgorithms: [ 'sha256', 'sha384', 'RSA-SHA256', 'RSA-SHA384' ]
             } ]
           }
         });

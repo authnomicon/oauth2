@@ -54,7 +54,7 @@ exports = module.exports = function(acs, services, Schemes, Tokens, rsg) {
         var sparms = Schemes.negotiate(client.authenticationSchemes, service.authenticationSchemes)
         
         // TODO: Possibly negotiate this based on client alg support as well.
-        var params = Tokens.negotiate(service.tokenTypesSupported);
+        var params = Tokens.negotiate(service.tokenTypes);
         if (!params) { return cb(new Error('Failed to negotiate token type')); }
         
         // TODO: This should be set in `info`, in milliseconds.
