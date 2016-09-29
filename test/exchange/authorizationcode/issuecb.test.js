@@ -41,8 +41,9 @@ describe('handlers/exchange/issuecb', function() {
     
       before(function() {
         sinon.stub(acs, 'get').yields(null, {
-          user: '1',
           client: 's6BhdRkqt3',
+          redirectURI: 'https://client.example.com/cb',
+          user: '1',
           access: [ {
             resource: 'https://api.example.com/',
             scope: [ 'read:foo', 'write:foo', 'read:bar' ]
@@ -150,6 +151,55 @@ describe('handlers/exchange/issuecb', function() {
         expect(refreshToken).to.be.undefined;
       });
     }); // validating a valid client request
+    
+    describe('failing due to mismatched redirect URI', function() {
+      var err, accessToken, refreshToken, params;
+    
+      before(function() {
+        sinon.stub(acs, 'get').yields(null, {
+          client: 's6BhdRkqt3',
+          redirectURI: 'https://client.example.com/cb',
+          user: '1',
+          access: [ {
+            resource: 'https://api.example.com/',
+            scope: [ 'read:foo', 'write:foo', 'read:bar' ]
+          } ]
+        });
+      });
+    
+      after(function() {
+        acs.get.restore();
+      });
+    
+      before(function(done) {
+        var issueCb = factory(acs, directory, tokens);
+        issueCb(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/not/cb', function(e, a, r, p) {
+          err = e;
+          accessToken = a;
+          refreshToken = r;
+          params = p;
+          done();
+        });
+      });
+      
+      it('should call ACS#get', function() {
+        expect(acs.get).to.have.been.calledOnce;
+        expect(acs.get).to.have.been.calledWith('SplxlOBeZQQYbYS6WxSbIA');
+      });
+      
+      it('should yield error', function() {
+        expect(err).to.be.an.instanceOf(Error);
+        expect(err.message).to.equal('Mismatched redirect URI');
+        expect(err.code).to.equal('invalid_grant');
+        expect(err.status).to.equal(403);
+      });
+      
+      it('should not yield tokens', function() {
+        expect(accessToken).to.be.undefined;
+        expect(refreshToken).to.be.undefined;
+        expect(params).to.be.undefined;
+      });
+    }); // failing due to mismatched redirect URI
     
   }); // issueCb
   

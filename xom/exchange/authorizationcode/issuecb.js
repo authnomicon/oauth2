@@ -1,4 +1,6 @@
 exports = module.exports = function(acs, services, Tokens, rsg) {
+  var oauth2orize = require('oauth2orize');
+    
     
     // TODO: If the issued access token scope
    // is different from the one requested by the client, the authorization
@@ -29,7 +31,10 @@ exports = module.exports = function(acs, services, Tokens, rsg) {
       
       if (client.id !== info.client.id) { return cb(null, false); }
       
-      // TODO: Check that redirect URI matches
+      if (info.redirectURI !== redirectURI) {
+        return cb(new oauth2orize.TokenError('Mismatched redirect URI', 'invalid_grant'));
+      }
+      
     
       function onServiceLoaded(err, service) {
         if (err) { return cb(err); }
