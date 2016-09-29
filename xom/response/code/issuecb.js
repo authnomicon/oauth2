@@ -17,4 +17,5 @@ exports = module.exports = function(acs) {
   };
 };
 
+exports['@implements'] = 'http://schema.modulate.io/js/aaa/oauth2/issueCodeFunc';
 exports['@require'] = [ 'http://schemas.modulate.io/js/aaa/oauth2/ACS' ];

@@ -5,4 +5,5 @@ exports = module.exports = function() {
   };
 };
 
+exports['@implements'] = 'http://schema.modulate.io/js/aaa/oauth2/issueTokenFunc';
 exports['@require'] = [];
