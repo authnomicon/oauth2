@@ -152,6 +152,56 @@ describe('handlers/exchange/issuecb', function() {
       });
     }); // validating a valid client request
     
+    describe('failing due to code not issued to client', function() {
+      var accessToken, refreshToken, params;
+    
+      before(function() {
+        sinon.stub(acs, 'get').yields(null, {
+          client: 's6BhdRkqt3',
+          redirectURI: 'https://client.example.com/cb',
+          user: '1',
+          access: [ {
+            resource: 'https://api.example.com/',
+            scope: [ 'read:foo', 'write:foo', 'read:bar' ]
+          } ]
+        });
+      });
+    
+      after(function() {
+        acs.get.restore();
+      });
+    
+      before(function(done) {
+        var client = {
+          id: 's6BhdRkqt4',
+          name: 'Another Example Client'
+        }
+        
+        var issueCb = factory(acs, directory, tokens);
+        issueCb(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/not/cb', function(e, a, r, p) {
+          if (e) { return done(e); }
+          accessToken = a;
+          refreshToken = r;
+          params = p;
+          done();
+        });
+      });
+      
+      it('should call ACS#get', function() {
+        expect(acs.get).to.have.been.calledOnce;
+        expect(acs.get).to.have.been.calledWith('SplxlOBeZQQYbYS6WxSbIA');
+      });
+      
+      it('should not yield an access token', function() {
+        expect(accessToken).to.equal(false);
+      });
+      
+      it('should not yield other tokens', function() {
+        expect(refreshToken).to.be.undefined;
+        expect(params).to.be.undefined;
+      });
+    }); // failing due to code not issued to client
+    
     describe('failing due to mismatched redirect URI', function() {
       var err, accessToken, refreshToken, params;
     
