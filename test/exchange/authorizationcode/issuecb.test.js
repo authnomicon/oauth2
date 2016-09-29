@@ -22,7 +22,8 @@ describe('handlers/exchange/issuecb', function() {
   describe('issueCb', function() {
     var client = {
       id: 's6BhdRkqt3',
-      name: 'Example Client'
+      name: 'Example Client',
+      authenticationSchemes: [ { type: 'bearer' } ]
     }
     
     var acs = {
@@ -30,6 +31,9 @@ describe('handlers/exchange/issuecb', function() {
     };
     var directory = {
       get: function(){}
+    };
+    var schemes = {
+      negotiate: function(){}
     };
     var tokens = {
       encode: function(){},
@@ -53,12 +57,17 @@ describe('handlers/exchange/issuecb', function() {
         sinon.stub(directory, 'get').yields(null, {
           id: 'https://api.example.com/',
           name: 'Example API',
+          authenticationSchemes: [ { type: 'bearer' } ],
           tokenTypesSupported: [ {
             type: 'urn:ietf:params:oauth:token-type:jwt',
             signingAlgorithmsSupported: [
               'sha256', 'sha384', 'RSA-SHA256', 'RSA-SHA384'
             ]
           } ]
+        });
+        
+        sinon.stub(schemes, 'negotiate').returns({
+          type: 'bearer'
         });
         
         sinon.stub(tokens, 'negotiate').returns({
@@ -79,7 +88,7 @@ describe('handlers/exchange/issuecb', function() {
       });
     
       before(function(done) {
-        var issueCb = factory(acs, directory, tokens);
+        var issueCb = factory(acs, directory, schemes, tokens);
         issueCb(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', function(e, a, r, p) {
           if (e) { return done(e); }
           accessToken = a;
@@ -97,6 +106,11 @@ describe('handlers/exchange/issuecb', function() {
       it('should call Directory#get', function() {
         expect(directory.get).to.have.been.calledOnce;
         expect(directory.get).to.have.been.calledWith('https://api.example.com/');
+      });
+      
+      it('should call schemes.negotiate', function() {
+        expect(schemes.negotiate).to.have.been.calledOnce;
+        expect(schemes.negotiate).to.have.been.calledWith([{ type: "bearer" }], [{ type: "bearer" }]);
       });
       
       it('should call tokens.negotiate', function() {
@@ -135,6 +149,7 @@ describe('handlers/exchange/issuecb', function() {
           peer: {
             id: 'https://api.example.com/',
             name: 'Example API',
+            authenticationSchemes: [ { type: 'bearer' } ],
             tokenTypesSupported: [ {
               type: 'urn:ietf:params:oauth:token-type:jwt',
               signingAlgorithmsSupported: [ 'sha256', 'sha384', 'RSA-SHA256', 'RSA-SHA384' ]

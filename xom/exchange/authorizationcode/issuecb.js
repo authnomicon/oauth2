@@ -1,4 +1,4 @@
-exports = module.exports = function(acs, services, Tokens, rsg) {
+exports = module.exports = function(acs, services, Schemes, Tokens, rsg) {
   var oauth2orize = require('oauth2orize');
     
     
@@ -50,6 +50,8 @@ exports = module.exports = function(acs, services, Tokens, rsg) {
         
         // TODO: Load this from directory if necessary
         var grant = info.grant;
+        
+        var sparms = Schemes.negotiate(client.authenticationSchemes, service.authenticationSchemes)
         
         // TODO: Possibly negotiate this based on client alg support as well.
         var params = Tokens.negotiate(service.tokenTypesSupported);
@@ -112,6 +114,8 @@ exports = module.exports = function(acs, services, Tokens, rsg) {
 exports['@require'] = [
   'http://schemas.modulate.io/js/aaa/oauth2/ACS',
   'http://schemas.modulate.io/js/aaa/services/Directory',
+  'http://schema.modulate.io/js/aaa/schemes',
+  'http://i.bixbyjs.org/tokens/Encoder',
   'http://i.bixbyjs.org/tokens/Encoder',
   // TODO: Collaps this into the facade that combines Encoder and Negotiator
   //'http://i.bixbyjs.org/tokens/Negotiator',
