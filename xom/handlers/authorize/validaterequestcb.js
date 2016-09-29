@@ -5,7 +5,7 @@
  * valid, the function yeilds a `client` object and a `redirectURI`.  The client
  * object provides metadata about the client, such as name and logo, used during
  * processing of the authorization request.  The redirect URI is used when
- * responding to the authorization request using HTTP redirections.
+ * responding to the authorization request via HTTP redirections.
  *
  * If the request is invalid, the function yeilds an error.  It is expected that
  * the application will inform the user of the error, and must not automatically
