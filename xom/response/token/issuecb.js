@@ -3,7 +3,6 @@ exports = module.exports = function(services, Schemes, Tokens, rsg) {
   // NOTE: Do not issue refresh tokens.
   
   return function issueToken(client, user, ares, areq, locals, cb) {
-    //return cb(null, 'AN-ACCESS-TOKEN-SSSSSHHHH')
     
     function onServiceLoaded(err, service) {
       if (err) { return cb(err); }
