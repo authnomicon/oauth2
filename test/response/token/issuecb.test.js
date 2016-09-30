@@ -94,6 +94,60 @@ describe('response/token/issuecb', function() {
         expect(directory.get).to.have.been.calledWith('https://api.example.com/');
       });
       
+      it('should call schemes.negotiate', function() {
+        expect(schemes.negotiate).to.have.been.calledOnce;
+        expect(schemes.negotiate).to.have.been.calledWith([{ type: "bearer" }], [{ type: "bearer" }]);
+      });
+      
+      it('should call tokens.negotiate', function() {
+        expect(tokens.negotiate).to.have.been.calledOnce;
+        expect(tokens.negotiate).to.have.been.calledWith([ {
+          type: 'urn:ietf:params:oauth:token-type:access_token'
+        } ]);
+      });
+      
+      it('should call tokens.encode', function() {
+        expect(tokens.encode).to.have.been.calledOnce;
+        var call = tokens.encode.getCall(0);
+        expect(call.args[0]).to.equal('urn:ietf:params:oauth:token-type:access_token');
+
+        var claims = call.args[1];
+        var expiresAt = claims.expiresAt;
+        delete claims.expiresAt;
+        
+        expect(call.args[1]).to.deep.equal({
+          subject: '1',
+          authorizedParty: 's6BhdRkqt3',
+          audience: 'https://api.example.com/',
+          scope: [ 'read:foo', 'write:foo', 'read:bar' ]
+        });
+        expect(expiresAt).to.be.an.instanceOf(Date);
+        
+        var expectedExpiresAt = new Date();
+        expectedExpiresAt.setHours(expectedExpiresAt.getHours() + 2);
+        expect(expiresAt).to.be.closeToDate(expectedExpiresAt, 2, 'seconds');
+
+        expect(call.args[2]).to.deep.equal({
+          peer: {
+            id: 'https://api.example.com/',
+            name: 'Example API',
+            authenticationSchemes: [ { type: 'bearer' } ],
+            tokenTypes: [ {
+              type: 'urn:ietf:params:oauth:token-type:access_token',
+            } ]
+          }
+        });
+      });
+      
+      it('should yield an access token', function() {
+        expect(accessToken).to.equal('2YotnFZFEjr1zCsicMWpAA');
+      });
+      
+      it('should yield parameters', function() {
+        expect(params).to.deep.equal({
+          token_type: 'bearer'
+        });
+      });
     }); // issuing something
     
   }); // issueCb

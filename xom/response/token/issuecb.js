@@ -42,8 +42,7 @@ exports = module.exports = function(services, Schemes, Tokens, rsg) {
         var tparms = {
           token_type: sparms.type
         };
-        return cb(null, token, null, tparms);
-        //return cb(null, token, confirmation.key);
+        return cb(null, token, tparms);
       });
     }
     
