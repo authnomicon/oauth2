@@ -52,10 +52,10 @@ describe('response/code/issuecb', function() {
       before(function(done) {
         var ares = {
           allow: true,
-          access: {
+          access: [ {
             resource: 'https://api.example.com/',
             scope: [ 'read:foo', 'write:foo', 'read:bar' ]
-          }
+          } ]
         }
         
         var issueCb = factory(acs);
@@ -78,10 +78,10 @@ describe('response/code/issuecb', function() {
             id: '1',
             displayName: 'John Doe'
           },
-          access: {
+          access: [ {
             resource: 'https://api.example.com/',
             scope: [ 'read:foo', 'write:foo', 'read:bar' ]
-          }
+          } ]
         });
       });
       
