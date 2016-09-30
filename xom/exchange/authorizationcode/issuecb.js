@@ -58,6 +58,7 @@ exports = module.exports = function(acs, services, Schemes, Tokens, rsg) {
         if (!params) { return cb(new Error('Failed to negotiate token type')); }
         
         // TODO: This should be set in `info`, in milliseconds.
+        // TODO: Set this to resource's default, if not less by user
         var exp = new Date();
         exp.setHours(exp.getHours() + 2);
 
@@ -98,7 +99,11 @@ exports = module.exports = function(acs, services, Schemes, Tokens, rsg) {
         Tokens.encode(type, claims, params, function(err, token) {
           if (err) { return cb(err); }
           // TODO: offline access, params with scope and expires in
-          return cb(null, token);
+          
+          var tparms = {
+            token_type: sparms.type
+          };
+          return cb(null, token, null, tparms);
           //return cb(null, token, confirmation.key);
         });
       } // onServiceLoaded

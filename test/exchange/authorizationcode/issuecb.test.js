@@ -158,12 +158,18 @@ describe('handlers/exchange/issuecb', function() {
         });
       });
       
-      it('should yield accessToken', function() {
+      it('should yield an access token', function() {
         expect(accessToken).to.equal('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIi.TJVA95Or');
       });
       
-      it('should not yield refreshToken', function() {
-        expect(refreshToken).to.be.undefined;
+      it('should not yield a refresh token', function() {
+        expect(refreshToken).to.be.null;
+      });
+      
+      it('should yield parameters', function() {
+        expect(params).to.deep.equal({
+          token_type: 'bearer'
+        });
       });
     }); // validating a valid client request
     
