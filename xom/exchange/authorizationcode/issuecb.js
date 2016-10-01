@@ -62,6 +62,10 @@ exports = module.exports = function(acs, services, Schemes, Tokens, rsg) {
         var exp = new Date();
         exp.setHours(exp.getHours() + 2);
 
+        // TODO: Add a ClaimsGenerator here, which takes the user and target entity, yields
+        //       claims to pass to tokenizer.  tokenParams should be an input (for JWT profile
+        //       support, etc)
+
         // TODO: Externalize all IDs (user and client) - probably best via a decorator
         // TODO: Pass options containing sector identifier, etc.
         var claims = {

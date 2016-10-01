@@ -9,31 +9,31 @@ exports = module.exports = function(container, store, logger) {
   server.grant(require('oauth2orize-wmrm').extensions());
   server.grant(require('oauth2orize-openid').extensions());
   
-  // WIP: https://tools.ietf.org/html/rfc6749
-  //      @ 4.1.  Authorization Code Grant
   
+  var responseDecls = container.specs('http://schema.modulate.io/js/aaa/oauth2/Response')
+    , exchangeDecls = container.specs('http://schema.modulate.io/js/aaa/oauth2/exchange')
   
-  var specs = container.specs()
-    , spec, plugin, i, len;
-  for (i = 0, len = specs.length; i < len; ++i) {
-    spec = specs[i];
-    
-    if ((spec.implements || []).indexOf('http://schema.modulate.io/js/aaa/oauth2/Response') !== -1) {
-      // This specification declares an OAuth 2.0 authorization response type.
-      // Create the type and plug it in to the oauth2orize `Server` instance.
-      plugin = container.create(spec.id);
-      server.grant(spec.a['@type'] || plugin.name, plugin);
-      logger.info('Registered OAuth 2.0 response type: ' + (spec.a['@type'] || plugin.name));
-    }
-    
-    if ((spec.implements || []).indexOf('http://schema.modulate.io/js/aaa/oauth2/exchange') !== -1) {
-      // This specification declares an OAuth 2.0 token exchange.  Create the
-      // exchange and plug it in to the oauth2orize `Server` instance.
-      plugin = container.create(spec.id);
-      server.exchange(spec.a['@type'] || plugin.name, plugin);
-      logger.info('Registered OAuth 2.0 exchange type: ' + (spec.a['@type'] || plugin.name));
-    }
-  }
+  return Promise.all(responseDecls.map(function(spec) { return container.create(spec.id); } ))
+    .then(function(plugins) {
+      // Register response type plugins with the OAuth 2.0 server.
+      plugins.forEach(function(plugin, i) {
+        server.grant(responseDecls[i].a['@type'] || plugin.name, plugin);
+        logger.info('Registered OAuth 2.0 response type: ' + (responseDecls[i].a['@type'] || plugin.name));
+      });
+    })
+    .then(function() {
+      return Promise.all(exchangeDecls.map(function(spec) { return container.create(spec.id); } ));
+    })
+    .then(function(plugins) {
+      // Register exchange plugins with the OAuth 2.0 server.
+      plugins.forEach(function(plugin, i) {
+        server.exchange(exchangeDecls[i].a['@type'] || plugin.name, plugin);
+        logger.info('Registered OAuth 2.0 exchange type: ' + (exchangeDecls[i].a['@type'] || plugin.name));
+      });
+    })
+    .then(function() {
+      return server;
+    })
   
   
   // TODO: When implementing refresh_token exchange, need an ack'ing strategy
