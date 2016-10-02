@@ -33,7 +33,7 @@ exports = module.exports = function(container, store, logger) {
     })
     .then(function() {
       return server;
-    })
+    });
   
   
   // TODO: When implementing refresh_token exchange, need an ack'ing strategy
