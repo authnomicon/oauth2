@@ -13,6 +13,10 @@ exports = module.exports = function(pdp, resourcesDir, Audience) {
       return cb(null, false, { prompt: 'login' });
     }
     
+    // TODO: OIDC parameters to understand here:
+    // display, ui_locales, 
+    
+    
     // TODO: In oauth2orize-permission, parse `storagerelay` URLs and set req.origin.
     // TODO: Implement registered webOrigin check in immediateModeCb.  It is safe to use
     //       unregistered value to reply to clients, as redirect is not involved
