@@ -18,7 +18,11 @@ exports = module.exports = function(acs, services, Schemes, Tokens, rsg) {
           //       implicit in OAuth.  Also, may need to negotiate this three ways, factoring in the client
           //       itself, which may just support Bearer or not, etc.
   
-  return function issueCode(client, code, redirectURI, cb) {
+  return function issueToken(client, code, redirectURI, cb) {
+    // FIXME: Hardcode to skip this.
+    //return cb(null, 'SOME-A-TOKEN')
+    
+    
     acs.get(code, function(err, info) {
       if (err) { return cb(err); }
       // TODO: if(!info)
