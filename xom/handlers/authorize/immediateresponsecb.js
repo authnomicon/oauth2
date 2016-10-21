@@ -14,7 +14,10 @@ exports = module.exports = function(pdp, resourcesDir, Audience) {
     }
     
     // TODO: OIDC parameters to understand here:
-    // display, ui_locales, 
+    // display, ui_locales, acr_values
+    // TODO: If sub claim is requested with specific value, must only reply with that user,
+    // otherwise error.  OIDC 3.1.2.2
+    // TODO: Must have nonce if oidc implicit flow.  see 3.2.2.1.
     
     
     // TODO: In oauth2orize-permission, parse `storagerelay` URLs and set req.origin.
