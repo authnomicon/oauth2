@@ -20,7 +20,7 @@ exports = module.exports = function(Code, services, Schemes, Tokens, rsg) {
   
   return function issueToken(client, code, redirectURI, cb) {
     // FIXME: Hardcode to skip this.
-    return cb(null, 'SOME-A-TOKEN')
+    //return cb(null, 'SOME-A-TOKEN')
     
     
     Code.decode(code, function(err, info) {

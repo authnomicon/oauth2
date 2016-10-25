@@ -34,19 +34,19 @@ describe('response/code/issuecb', function() {
       displayName: 'John Doe'
     };
     
-    var acs = {
-      set: function(){}
+    var Code = {
+      encode: function(){}
     };
     
     describe('issuing something', function() {
       var code;
       
       before(function() {
-        sinon.stub(acs, 'set').yields(null, 'SplxlOBeZQQYbYS6WxSbIA');
+        sinon.stub(Code, 'encode').yields(null, 'SplxlOBeZQQYbYS6WxSbIA');
       });
       
       after(function() {
-        acs.set.restore();
+        Code.encode.restore();
       });
       
       before(function(done) {
@@ -58,7 +58,7 @@ describe('response/code/issuecb', function() {
           } ]
         }
         
-        var issueCb = factory(acs);
+        var issueCb = factory(Code);
         issueCb(client, 'https://client.example.com/cb', user, ares, {}, {}, function(e, c) {
           if (e) { return done(e); }
           code = c;
@@ -67,8 +67,8 @@ describe('response/code/issuecb', function() {
       });
       
       it('should call AuthorizationCodeStore#set', function() {
-        expect(acs.set).to.have.been.calledOnce;
-        expect(acs.set).to.have.been.calledWith({
+        expect(Code.encode).to.have.been.calledOnce;
+        expect(Code.encode).to.have.been.calledWith({
           client: {
             id: 's6BhdRkqt3',
             name: 'Example Client'

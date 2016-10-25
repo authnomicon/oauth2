@@ -5,7 +5,7 @@ var sinon = require('sinon');
 var factory = require('../../../xom/exchange/authorizationcode/issuecb');
 
 
-describe('handlers/exchange/issuecb', function() {
+describe('exchange/authorizationcode/issuecb', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
@@ -26,8 +26,8 @@ describe('handlers/exchange/issuecb', function() {
       authenticationSchemes: [ { type: 'bearer' } ]
     }
     
-    var acs = {
-      get: function(){}
+    var Code = {
+      decode: function(){}
     };
     var directory = {
       get: function(){}
@@ -44,7 +44,7 @@ describe('handlers/exchange/issuecb', function() {
       var accessToken, refreshToken, params;
     
       before(function() {
-        sinon.stub(acs, 'get').yields(null, {
+        sinon.stub(Code, 'decode').yields(null, {
           client: 's6BhdRkqt3',
           redirectURI: 'https://client.example.com/cb',
           user: '1',
@@ -84,11 +84,11 @@ describe('handlers/exchange/issuecb', function() {
         tokens.encode.restore();
         tokens.negotiate.restore();
         directory.get.restore();
-        acs.get.restore();
+        Code.decode.restore();
       });
     
       before(function(done) {
-        var issueCb = factory(acs, directory, schemes, tokens);
+        var issueCb = factory(Code, directory, schemes, tokens);
         issueCb(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', function(e, a, r, p) {
           if (e) { return done(e); }
           accessToken = a;
@@ -99,8 +99,8 @@ describe('handlers/exchange/issuecb', function() {
       });
       
       it('should call ACS#get', function() {
-        expect(acs.get).to.have.been.calledOnce;
-        expect(acs.get).to.have.been.calledWith('SplxlOBeZQQYbYS6WxSbIA');
+        expect(Code.decode).to.have.been.calledOnce;
+        expect(Code.decode).to.have.been.calledWith('SplxlOBeZQQYbYS6WxSbIA');
       });
       
       it('should call Directory#get', function() {
@@ -177,7 +177,7 @@ describe('handlers/exchange/issuecb', function() {
       var accessToken, refreshToken, params;
     
       before(function() {
-        sinon.stub(acs, 'get').yields(null, {
+        sinon.stub(Code, 'decode').yields(null, {
           client: 's6BhdRkqt3',
           redirectURI: 'https://client.example.com/cb',
           user: '1',
@@ -189,7 +189,7 @@ describe('handlers/exchange/issuecb', function() {
       });
     
       after(function() {
-        acs.get.restore();
+        Code.decode.restore();
       });
     
       before(function(done) {
@@ -198,7 +198,7 @@ describe('handlers/exchange/issuecb', function() {
           name: 'Another Example Client'
         }
         
-        var issueCb = factory(acs, directory, tokens);
+        var issueCb = factory(Code, directory, tokens);
         issueCb(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/not/cb', function(e, a, r, p) {
           if (e) { return done(e); }
           accessToken = a;
@@ -209,8 +209,8 @@ describe('handlers/exchange/issuecb', function() {
       });
       
       it('should call ACS#get', function() {
-        expect(acs.get).to.have.been.calledOnce;
-        expect(acs.get).to.have.been.calledWith('SplxlOBeZQQYbYS6WxSbIA');
+        expect(Code.decode).to.have.been.calledOnce;
+        expect(Code.decode).to.have.been.calledWith('SplxlOBeZQQYbYS6WxSbIA');
       });
       
       it('should not yield an access token', function() {
@@ -227,7 +227,7 @@ describe('handlers/exchange/issuecb', function() {
       var err, accessToken, refreshToken, params;
     
       before(function() {
-        sinon.stub(acs, 'get').yields(null, {
+        sinon.stub(Code, 'decode').yields(null, {
           client: 's6BhdRkqt3',
           redirectURI: 'https://client.example.com/cb',
           user: '1',
@@ -239,11 +239,11 @@ describe('handlers/exchange/issuecb', function() {
       });
     
       after(function() {
-        acs.get.restore();
+        Code.decode.restore();
       });
     
       before(function(done) {
-        var issueCb = factory(acs, directory, tokens);
+        var issueCb = factory(Code, directory, tokens);
         issueCb(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/not/cb', function(e, a, r, p) {
           err = e;
           accessToken = a;
@@ -254,8 +254,8 @@ describe('handlers/exchange/issuecb', function() {
       });
       
       it('should call ACS#get', function() {
-        expect(acs.get).to.have.been.calledOnce;
-        expect(acs.get).to.have.been.calledWith('SplxlOBeZQQYbYS6WxSbIA');
+        expect(Code.decode).to.have.been.calledOnce;
+        expect(Code.decode).to.have.been.calledWith('SplxlOBeZQQYbYS6WxSbIA');
       });
       
       it('should yield error', function() {
