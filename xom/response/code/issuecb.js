@@ -1,4 +1,4 @@
-exports = module.exports = function(acs) {
+exports = module.exports = function(Code) {
   
   return function issueCode(client, redirectURI, user, ares, areq, locals, cb) {
     var bound = {
@@ -13,7 +13,7 @@ exports = module.exports = function(acs) {
     };
     
     // TODO: Ensure that code has a TTL of 10 minutes
-    acs.set(bound, function(err, code) {
+    Code.encode(bound, function(err, code) {
       if (err) { return cb(err); }
       return cb(null, code);
     });
@@ -21,4 +21,4 @@ exports = module.exports = function(acs) {
 };
 
 exports['@implements'] = 'http://schema.modulate.io/js/aaa/oauth2/issueCodeFunc';
-exports['@require'] = [ 'http://schemas.modulate.io/js/aaa/oauth2/ACS' ];
+exports['@require'] = [ 'http://schemas.authnomicon.org/js/aaa/oauth2/code' ];

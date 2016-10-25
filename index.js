@@ -1,10 +1,11 @@
 exports = module.exports = {
   'server': require('./xom/server'),
-  'acs': require('./lib/acs'),
   'transactionstore': require('./xom/transactionstore'),
   'response/code': require('./xom/response/code'),
   'response/token': require('./xom/response/token'),
-  'exchange/authorizationcode': require('./xom/exchange/authorizationcode')
+  'exchange/authorizationcode': require('./xom/exchange/authorizationcode'),
+  'code': require('./xom/code'),
+  'code/codec': require('./xom/code/codec')
 };
 
 exports.load = function(id) {

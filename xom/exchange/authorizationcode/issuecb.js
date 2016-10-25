@@ -1,4 +1,4 @@
-exports = module.exports = function(acs, services, Schemes, Tokens, rsg) {
+exports = module.exports = function(Code, services, Schemes, Tokens, rsg) {
   var oauth2orize = require('oauth2orize');
     
     
@@ -20,10 +20,10 @@ exports = module.exports = function(acs, services, Schemes, Tokens, rsg) {
   
   return function issueToken(client, code, redirectURI, cb) {
     // FIXME: Hardcode to skip this.
-    //return cb(null, 'SOME-A-TOKEN')
+    return cb(null, 'SOME-A-TOKEN')
     
     
-    acs.get(code, function(err, info) {
+    Code.decode(code, function(err, info) {
       if (err) { return cb(err); }
       // TODO: if(!info)
     
@@ -125,7 +125,7 @@ exports = module.exports = function(acs, services, Schemes, Tokens, rsg) {
 
 
 exports['@require'] = [
-  'http://schemas.modulate.io/js/aaa/oauth2/ACS',
+  'http://schemas.authnomicon.org/js/aaa/oauth2/code',
   'http://schemas.modulate.io/js/aaa/services/Directory',
   'http://schema.modulate.io/js/aaa/schemes',
   'http://i.bixbyjs.org/tokens/Encoder',
