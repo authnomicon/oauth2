@@ -13,5 +13,5 @@ exports['@singleton'] = true;
 exports['@require'] = [
   './szx/serializeclientcb',
   './szx/deserializeclientcb',
-  'http://i.bixbyjs.org/http/flows/StateStore'
+  'http://i.bixbyjs.org/http/ua/flows/StateStore'
 ];
