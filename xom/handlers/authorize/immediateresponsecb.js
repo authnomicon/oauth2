@@ -38,10 +38,10 @@ exports = module.exports = function(pdp, resourcesDir, Audience) {
     // TODO: reference undefined variable causes bad stack trace.  find and fix
     //push(consent)
     
-    var consents = locals.consents || [];
-    if (locals.consent) {
-      consents.push(locals.consent);
-    }
+    var consents = locals.consent || [];
+    //if (locals.consent) {
+    //  consents.push(locals.consent);
+    //}
     
     
     function onDecisionReached(resources, decisions) {
