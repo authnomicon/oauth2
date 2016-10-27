@@ -5,7 +5,6 @@ exports = module.exports = function() {
     req.state.consent.push(res.locals.consent);
     
     delete res.locals;
-    
     return next();
   };
 };
