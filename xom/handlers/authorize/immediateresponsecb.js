@@ -13,6 +13,12 @@ exports = module.exports = function(pdp, resourcesDir, Audience) {
       return cb(null, false, { prompt: 'login' });
     }
     
+    /*
+    if (locals.authN && locals.authN.methods.length == 1) {
+      return cb(null, false, { prompt: 'mfa' });
+    }
+    */
+    
     // TODO: OIDC parameters to understand here:
     // display, ui_locales, acr_values
     // TODO: If sub claim is requested with specific value, must only reply with that user,
