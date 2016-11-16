@@ -10,6 +10,9 @@ exports = module.exports = function(pdp, resourcesDir, Audience) {
     
     
     if (!user) {
+      if (locals && locals.authN && locals.authN.failureCount >= 3) {
+        return cb(new oauth2orize.AuthorizationError('Too many login failures', 'access_denied'));
+      }
       return cb(null, false, { prompt: 'login' });
     }
     
