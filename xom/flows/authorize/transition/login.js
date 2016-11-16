@@ -11,21 +11,17 @@ exports = module.exports = function() {
     return next();
   }
   
-  function unauthorizedError(err, req, res, next) {
-    console.log('LOGIN ERROR');
-    console.log(err);
-    console.log(req.state);
-    
+  function unauthorizedErrorHandler(err, req, res, next) {
     if (err.status !== 401) { return next(err); }
     // Unauthorized
     
-    console.log('INCREMENT IT');
-    
+    // Increment the counter for failed authentication attempts and `next()`
+    // _without_ an error.  When the authorization transaction is resumed, it
+    // will inspect the counter and react appropriately.  This allows the
+    // ceremony to re-prompt the user for credentials a configurable number of
+    // times, redirecting back to the client if and when the limit is exceeded.
     req.state.authN = req.state.authN || { failureCount: 0 };
     req.state.authN.failureCount++;
-    
-    console.log(req.state);
-    
     next();
   }
   
@@ -33,7 +29,7 @@ exports = module.exports = function() {
   
   return [
     transition,
-    unauthorizedError
+    unauthorizedErrorHandler
   ]
   
 };
