@@ -45,7 +45,8 @@ describe('handlers/authorize/immediateresponsecb', function() {
       
       it('should yield info', function() {
         expect(info).to.deep.equal({
-          prompt: 'login'
+          prompt: 'login',
+          maxAttempts: 3
         });
       });
       
