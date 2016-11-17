@@ -24,7 +24,7 @@ exports = module.exports = function() {
   return [
     transition,
     errorHandler
-  ]
+  ];
   
 };
 
