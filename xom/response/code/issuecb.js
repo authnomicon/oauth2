@@ -5,7 +5,7 @@ exports = module.exports = function(Code) {
       client: client,
       redirectURI: redirectURI,
       user: user,
-      access: ares.access
+      permissions: ares.permissions
       // TODO
       //service: locals.service,
       //grant: locals.grant,

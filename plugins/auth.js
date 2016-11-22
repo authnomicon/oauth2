@@ -1,3 +1,4 @@
+// TODO: Create scheme components underneath these namespaces
 exports = module.exports = {
   'client_secret_basic': require('./auth/client_secret_basic'),
   'client_secret_post': require('./auth/client_secret_post'),

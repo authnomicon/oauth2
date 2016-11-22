@@ -76,7 +76,7 @@ exports = module.exports = function(Code, services, Schemes, Tokens, rsg) {
           subject: info.user.id,
           authorizedParty: client.id,
           audience: service.id,
-          scope: info.access[0].scope,
+          scope: info.permissions[0].scope,
           expiresAt: exp
         }
         if (grant) {
@@ -118,7 +118,7 @@ exports = module.exports = function(Code, services, Schemes, Tokens, rsg) {
     
       // TODO: This directory query can be optimized way if things are serialized into
       //       th requestToken
-      services.get(info.access[0].resource, onServiceLoaded);
+      services.get(info.permissions[0].resource, onServiceLoaded);
     });
   };
 };

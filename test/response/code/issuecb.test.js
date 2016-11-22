@@ -52,7 +52,7 @@ describe('response/code/issuecb', function() {
       before(function(done) {
         var ares = {
           allow: true,
-          access: [ {
+          permissions: [ {
             resource: 'https://api.example.com/',
             scope: [ 'read:foo', 'write:foo', 'read:bar' ]
           } ]
@@ -78,7 +78,7 @@ describe('response/code/issuecb', function() {
             id: '1',
             displayName: 'John Doe'
           },
-          access: [ {
+          permissions: [ {
             resource: 'https://api.example.com/',
             scope: [ 'read:foo', 'write:foo', 'read:bar' ]
           } ]

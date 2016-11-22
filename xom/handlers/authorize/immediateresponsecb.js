@@ -61,7 +61,7 @@ exports = module.exports = function(pdp, resourcesDir, Audience) {
       }
       
       if (consents.length == 1) {
-        return cb(null, true, { scope: [ 'foo' ]});
+        return cb(null, true, { permissions: [ { resource: resources[0], scope: 'foo' } ]});
       }
       
       return cb(null, false, { prompt: 'consent', scope: [ 'foo', 'bar' ] }, locals);

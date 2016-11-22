@@ -11,7 +11,7 @@ exports = module.exports = function(serializeClientCb, deserializeClientCb, s) {
 exports['@implements'] = 'http://schema.modulate.io/js/aaa/oauth2/TransactionStore';
 exports['@singleton'] = true;
 exports['@require'] = [
-  './szx/serializeclientcb',
+  './szx/serializeclientcb',  // TODO: rename folder to txn
   './szx/deserializeclientcb',
   'http://i.bixbyjs.org/http/ua/flows/StateStore'
 ];

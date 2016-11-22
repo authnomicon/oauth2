@@ -48,7 +48,7 @@ describe('exchange/authorizationcode/issuecb', function() {
           client: 's6BhdRkqt3',
           redirectURI: 'https://client.example.com/cb',
           user: '1',
-          access: [ {
+          permissions: [ {
             resource: 'https://api.example.com/',
             scope: [ 'read:foo', 'write:foo', 'read:bar' ]
           } ]
@@ -181,7 +181,7 @@ describe('exchange/authorizationcode/issuecb', function() {
           client: 's6BhdRkqt3',
           redirectURI: 'https://client.example.com/cb',
           user: '1',
-          access: [ {
+          permissions: [ {
             resource: 'https://api.example.com/',
             scope: [ 'read:foo', 'write:foo', 'read:bar' ]
           } ]
@@ -231,7 +231,7 @@ describe('exchange/authorizationcode/issuecb', function() {
           client: 's6BhdRkqt3',
           redirectURI: 'https://client.example.com/cb',
           user: '1',
-          access: [ {
+          permissions: [ {
             resource: 'https://api.example.com/',
             scope: [ 'read:foo', 'write:foo', 'read:bar' ]
           } ]
