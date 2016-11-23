@@ -128,8 +128,7 @@ exports['@require'] = [
   'http://schemas.authnomicon.org/js/aaa/oauth2/code',
   'http://schemas.modulate.io/js/aaa/services/Directory',
   'http://schema.modulate.io/js/aaa/schemes',
-  'http://i.bixbyjs.org/tokens/Encoder',
-  'http://i.bixbyjs.org/tokens/Encoder',
+  'http://i.bixbyjs.org/tokens',
   // TODO: Collaps this into the facade that combines Encoder and Negotiator
   //'http://i.bixbyjs.org/tokens/Negotiator',
   'http://i.bixbyjs.org/crypto/RSG'
