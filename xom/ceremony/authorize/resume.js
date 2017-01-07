@@ -28,5 +28,5 @@ exports = module.exports = function(resume, errorHandler, ceremony) {
 exports['@require'] = [
   '../../handlers/resume',
   '../../handlers/authorizeErrorHandler',
-  'http://i.bixbyjs.org/http/ua/flows/Dispatcher'
+  'http://i.bixbyjs.org/www/ceremony/Dispatcher'
 ];

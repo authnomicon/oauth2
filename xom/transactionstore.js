@@ -13,5 +13,5 @@ exports['@singleton'] = true;
 exports['@require'] = [
   './szx/serializeclientcb',  // TODO: rename folder to txn
   './szx/deserializeclientcb',
-  'http://i.bixbyjs.org/http/ua/flows/StateStore'
+  'http://i.bixbyjs.org/www/ceremony/StateStore'
 ];
