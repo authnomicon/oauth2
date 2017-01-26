@@ -2,7 +2,7 @@
 
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../xom/handlers/authorize/immediateresponsecb');
+var factory = require('../../../lib/handlers/authorize/immediateresponsecb');
 
 
 describe('handlers/authorize/immediateresponsecb', function() {

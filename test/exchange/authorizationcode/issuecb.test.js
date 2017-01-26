@@ -2,7 +2,7 @@
 
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../xom/exchange/authorizationcode/issuecb');
+var factory = require('../../../lib/exchange/authorizationcode/issuecb');
 
 
 describe('exchange/authorizationcode/issuecb', function() {
