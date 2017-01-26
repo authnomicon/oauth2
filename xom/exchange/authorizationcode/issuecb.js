@@ -1,4 +1,4 @@
-exports = module.exports = function(Code, services, Schemes, Tokens, rsg) {
+exports = module.exports = function(Code, services, Schemes, translate, Tokens, rsg) {
   var oauth2orize = require('oauth2orize');
     
     
@@ -65,6 +65,9 @@ exports = module.exports = function(Code, services, Schemes, Tokens, rsg) {
         // TODO: Set this to resource's default, if not less by user
         var exp = new Date();
         exp.setHours(exp.getHours() + 2);
+        
+        // TODO: Negotiate token type (format) as well as claims/dialect
+        
 
         // TODO: Add a ClaimsGenerator here, which takes the user and target entity, yields
         //       claims to pass to tokenizer.  tokenParams should be an input (for JWT profile
@@ -104,15 +107,37 @@ exports = module.exports = function(Code, services, Schemes, Tokens, rsg) {
         params.peer = service;
         //params.algorithm = 'hmac-sha256';
         
-        Tokens.encode(type, claims, params, function(err, token) {
+        console.log('ENCODE THESE CLAIMS!');
+        console.log(type);
+        console.log(claims);
+        console.log(params);
+        console.log('--');
+        
+        
+        var ctx = {};
+        ctx.user = info.user;
+        ctx.client = client;
+        ctx.resources = [ service ];
+        
+        translate(ctx, function(err, claims) {
           if (err) { return cb(err); }
-          // TODO: offline access, params with scope and expires in
           
-          var tparms = {
-            token_type: sparms.type
-          };
-          return cb(null, token, null, tparms);
-          //return cb(null, token, confirmation.key);
+          Tokens.encode(type, claims, params, function(err, token) {
+            if (err) { return cb(err); }
+            // TODO: offline access, params with scope and expires in
+          
+            var tparms = {
+              token_type: sparms.type
+            };
+            
+            console.log('ENCODED TOKEN!');
+            console.log(token);
+            
+            return cb(null, token, null, tparms);
+            //return cb(null, token, confirmation.key);
+          });
+          
+          
         });
       } // onServiceLoaded
     
@@ -128,6 +153,7 @@ exports['@require'] = [
   'http://schemas.authnomicon.org/js/aaa/oauth2/code',
   'http://schemas.modulate.io/js/aaa/services/Directory',
   'http://schema.modulate.io/js/aaa/schemes',
+  'http://i.bixbyjs.org/tokens/dialect/jwt-access-token/translate',
   'http://i.bixbyjs.org/tokens',
   // TODO: Collaps this into the facade that combines Encoder and Negotiator
   //'http://i.bixbyjs.org/tokens/Negotiator',
