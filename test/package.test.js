@@ -10,13 +10,13 @@ describe('nodex-aaa-oauth2', function() {
     expect(source).to.be.an('object');
     expect(source['server']).to.be.a('function');
     expect(source['transactionstore']).to.be.a('function');
-    expect(source['response/code']).to.be.a('function');
+    expect(source['code/response']).to.be.a('function');
+    expect(source['code/grant']).to.be.a('function');
     expect(source['token/response']).to.be.a('function');
-    expect(source['exchange/authorizationcode']).to.be.a('function');
   });
   
-  describe('oauth2/response/code', function() {
-    var response = source['response/code'];
+  describe('oauth2/code/response', function() {
+    var response = source['code/response'];
     
     it('should be annotated', function() {
       expect(response['@implements']).to.equal('http://schema.modulate.io/js/aaa/oauth2/Response');

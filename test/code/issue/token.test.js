@@ -2,10 +2,10 @@
 
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../lib/exchange/authorizationcode/issuecb');
+var factory = require('../../../lib/code/issue/token');
 
 
-describe('exchange/authorizationcode/issuecb', function() {
+describe('code/issue/token', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');

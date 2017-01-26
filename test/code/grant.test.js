@@ -3,10 +3,10 @@
 var $require = require('proxyquire');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../lib/exchange/authorizationcode');
+var factory = require('../../lib/code/grant');
 
 
-describe('exchange/authorizationcode', function() {
+describe('code/grant', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
@@ -22,7 +22,7 @@ describe('exchange/authorizationcode', function() {
     var issueCb = function(){};
     
     var spy = sinon.spy(function(){ return function(req, res, next){} });
-    var factory = $require('../../lib/exchange/authorizationcode',
+    var factory = $require('../../lib/code/grant',
       { 'oauth2orize': { exchange: { code: spy } } });
     var exchange = factory(issueCb);
     
