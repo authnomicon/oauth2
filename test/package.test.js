@@ -11,7 +11,7 @@ describe('nodex-aaa-oauth2', function() {
     expect(source['server']).to.be.a('function');
     expect(source['transactionstore']).to.be.a('function');
     expect(source['response/code']).to.be.a('function');
-    expect(source['response/token']).to.be.a('function');
+    expect(source['token/response']).to.be.a('function');
     expect(source['exchange/authorizationcode']).to.be.a('function');
   });
   
