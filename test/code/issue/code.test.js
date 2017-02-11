@@ -16,15 +16,7 @@ describe('code/issue/code', function() {
     expect(factory['@singleton']).to.be.undefined;
   });
   
-  describe('factory', function() {
-    var func = factory();
-    
-    it('should return function', function() {
-      expect(func).to.be.a('function');
-    });
-  });
-  
-  describe('issueCb', function() {
+  describe('issue', function() {
     var client = {
       id: 's6BhdRkqt3',
       name: 'Example Client'
@@ -34,19 +26,22 @@ describe('code/issue/code', function() {
       displayName: 'John Doe'
     };
     
-    var Code = {
-      encode: function(){}
+    var translate;
+    var Tokens = {
+      seal: function(){}
     };
     
-    describe('issuing something', function() {
+    
+    describe('issuing an authorization code', function() {
       var code;
       
       before(function() {
-        sinon.stub(Code, 'encode').yields(null, 'SplxlOBeZQQYbYS6WxSbIA');
+        translate = sinon.stub().yields(null, { sub: '1', cid: 's6BhdRkqt3' });
+        sinon.stub(Tokens, 'seal').yields(null, 'SplxlOBeZQQYbYS6WxSbIA');
       });
       
       after(function() {
-        Code.encode.restore();
+        Tokens.seal.restore();
       });
       
       before(function(done) {
@@ -58,7 +53,7 @@ describe('code/issue/code', function() {
           } ]
         }
         
-        var issueCb = factory(Code);
+        var issueCb = factory(translate, Tokens);
         issueCb(client, 'https://client.example.com/cb', user, ares, {}, {}, function(e, c) {
           if (e) { return done(e); }
           code = c;
@@ -66,30 +61,41 @@ describe('code/issue/code', function() {
         });
       });
       
-      it('should call AuthorizationCodeStore#set', function() {
-        expect(Code.encode).to.have.been.calledOnce;
-        expect(Code.encode).to.have.been.calledWith({
-          client: {
-            id: 's6BhdRkqt3',
-            name: 'Example Client'
-          },
-          redirectURI: 'https://client.example.com/cb',
+      it('should translate context into claims', function() {
+        expect(translate).to.have.been.calledOnce;
+        var call = translate.getCall(0);
+        expect(call.args[0]).to.deep.equal({
           user: {
             id: '1',
             displayName: 'John Doe'
           },
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'Example Client'
+          },
           permissions: [ {
             resource: 'https://api.example.com/',
             scope: [ 'read:foo', 'write:foo', 'read:bar' ]
-          } ]
+          } ],
+          redirectURI: 'https://client.example.com/cb'
+        });
+      });
+      
+      it('should seal claims into token', function() {
+        expect(Tokens.seal).to.have.been.calledOnce;
+        var call = Tokens.seal.getCall(0);
+        expect(call.args[0]).to.equal('application/jwt');
+        expect(call.args[1]).to.deep.equal({
+          sub: '1',
+          cid: 's6BhdRkqt3'
         });
       });
       
       it('should yield authorization code', function() {
         expect(code).to.equal('SplxlOBeZQQYbYS6WxSbIA');
       });
-    });
+    }); // issuing an authorization code
     
-  });
+  }); // issue
   
 });
