@@ -102,6 +102,7 @@ describe('code/issue/token', function() {
       });
     
       after(function() {
+        tokens.unseal.restore();
         tokens.seal.restore();
         tokens.negotiate.restore();
         directory.get.restore();
@@ -195,10 +196,28 @@ describe('code/issue/token', function() {
       });
     }); // validating a valid client request
     
-    describe.skip('failing due to code not issued to client', function() {
+    describe('failing due to code not issued to client', function() {
       var accessToken, refreshToken, params;
     
       before(function() {
+        sinon.stub(tokens, 'unseal').yields(null, {
+          sub: '1',
+          cid: 's6BhdRkqt3',
+          prm: [ { rid: 'https://api.example.com/', scp: [ 'read:foo', 'write:foo', 'read:bar' ] } ],
+          cnf: { redirect_uri: 'https://client.example.com/cb' }
+        });
+        
+        interpret = sinon.stub().yields(null, {
+          userID: '1',
+          clientID: 's6BhdRkqt3',
+          permissions: [
+            { resourceID: 'https://api.example.com/', scope: [ 'read:foo', 'write:foo', 'read:bar' ] }
+          ],
+          confirmation: [
+            { method: 'redirect-uri', uri: 'https://client.example.com/cb' }
+          ]
+        });
+        
         sinon.stub(Code, 'decode').yields(null, {
           client: 's6BhdRkqt3',
           redirectURI: 'https://client.example.com/cb',
@@ -211,6 +230,7 @@ describe('code/issue/token', function() {
       });
     
       after(function() {
+        tokens.unseal.restore();
         Code.decode.restore();
       });
     
@@ -220,8 +240,8 @@ describe('code/issue/token', function() {
           name: 'Another Example Client'
         }
         
-        var issueCb = factory(Code, undefined, directory, undefined, tokens);
-        issueCb(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/not/cb', function(e, a, r, p) {
+        var issueCb = factory(Code, interpret, directory, undefined, undefined, tokens);
+        issueCb(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/not/cb', {}, {}, function(e, a, r, p) {
           if (e) { return done(e); }
           accessToken = a;
           refreshToken = r;
@@ -231,8 +251,8 @@ describe('code/issue/token', function() {
       });
       
       it('should call ACS#get', function() {
-        expect(Code.decode).to.have.been.calledOnce;
-        expect(Code.decode).to.have.been.calledWith('SplxlOBeZQQYbYS6WxSbIA');
+        expect(tokens.unseal).to.have.been.calledOnce;
+        expect(tokens.unseal).to.have.been.calledWith('SplxlOBeZQQYbYS6WxSbIA');
       });
       
       it('should not yield an access token', function() {
