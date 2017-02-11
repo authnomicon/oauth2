@@ -18,9 +18,6 @@ describe('code/issue/token', function() {
       authenticationSchemes: [ { type: 'bearer' } ]
     }
     
-    var Code = {
-      decode: function(){}
-    };
     var directory = {
       get: function(){}
     };
@@ -39,15 +36,6 @@ describe('code/issue/token', function() {
       var accessToken, refreshToken, params;
     
       before(function() {
-        sinon.stub(Code, 'decode').yields(null, {
-          client: 's6BhdRkqt3',
-          redirectURI: 'https://client.example.com/cb',
-          user: '1',
-          permissions: [ {
-            resource: 'https://api.example.com/',
-            scope: [ 'read:foo', 'write:foo', 'read:bar' ]
-          } ]
-        });
         
         sinon.stub(directory, 'get').yields(null, {
           id: 'https://api.example.com/',
@@ -106,11 +94,10 @@ describe('code/issue/token', function() {
         tokens.seal.restore();
         tokens.negotiate.restore();
         directory.get.restore();
-        Code.decode.restore();
       });
     
       before(function(done) {
-        var issueCb = factory(Code, interpret, directory, schemes, translate, tokens);
+        var issueCb = factory(interpret, directory, schemes, translate, tokens);
         issueCb(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(e, a, r, p) {
           if (e) { return done(e); }
           accessToken = a;
@@ -217,21 +204,10 @@ describe('code/issue/token', function() {
             { method: 'redirect-uri', uri: 'https://client.example.com/cb' }
           ]
         });
-        
-        sinon.stub(Code, 'decode').yields(null, {
-          client: 's6BhdRkqt3',
-          redirectURI: 'https://client.example.com/cb',
-          user: '1',
-          permissions: [ {
-            resource: 'https://api.example.com/',
-            scope: [ 'read:foo', 'write:foo', 'read:bar' ]
-          } ]
-        });
       });
     
       after(function() {
         tokens.unseal.restore();
-        Code.decode.restore();
       });
     
       before(function(done) {
@@ -240,7 +216,7 @@ describe('code/issue/token', function() {
           name: 'Another Example Client'
         }
         
-        var issueCb = factory(Code, interpret, directory, undefined, undefined, tokens);
+        var issueCb = factory(interpret, directory, undefined, undefined, tokens);
         issueCb(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/not/cb', {}, {}, function(e, a, r, p) {
           if (e) { return done(e); }
           accessToken = a;
@@ -286,25 +262,14 @@ describe('code/issue/token', function() {
             { method: 'redirect-uri', uri: 'https://client.example.com/cb' }
           ]
         });
-        
-        sinon.stub(Code, 'decode').yields(null, {
-          client: 's6BhdRkqt3',
-          redirectURI: 'https://client.example.com/cb',
-          user: '1',
-          permissions: [ {
-            resource: 'https://api.example.com/',
-            scope: [ 'read:foo', 'write:foo', 'read:bar' ]
-          } ]
-        });
       });
     
       after(function() {
         tokens.unseal.restore();
-        Code.decode.restore();
       });
     
       before(function(done) {
-        var issueCb = factory(Code, interpret, directory, undefined, undefined, tokens);
+        var issueCb = factory(interpret, directory, undefined, undefined, tokens);
         issueCb(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/not/cb', {}, {}, function(e, a, r, p) {
           err = e;
           accessToken = a;
