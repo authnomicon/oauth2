@@ -18,15 +18,15 @@ describe('code/issue/token', function() {
       authenticationSchemes: [ { type: 'bearer' } ]
     }
     
+    var Tokens = {
+      seal: function(){},
+      unseal: function(){},
+      negotiate: function(){}
+    };
     var directory = {
       get: function(){}
     };
     var schemes = {
-      negotiate: function(){}
-    };
-    var tokens = {
-      seal: function(){},
-      unseal: function(){},
       negotiate: function(){}
     };
     var translate;
@@ -36,6 +36,24 @@ describe('code/issue/token', function() {
       var accessToken, refreshToken, params;
     
       before(function() {
+        sinon.stub(Tokens, 'unseal').yields(null, {
+          sub: '1',
+          cid: 's6BhdRkqt3',
+          prm: [ { rid: 'https://api.example.com/', scp: [ 'read:foo', 'write:foo', 'read:bar' ] } ],
+          cnf: { redirect_uri: 'https://client.example.com/cb' }
+        });
+        
+        interpret = sinon.stub().yields(null, {
+          userID: '1',
+          clientID: 's6BhdRkqt3',
+          permissions: [
+            { resourceID: 'https://api.example.com/', scope: [ 'read:foo', 'write:foo', 'read:bar' ] }
+          ],
+          confirmation: [
+            { method: 'redirect-uri', uri: 'https://client.example.com/cb' }
+          ]
+        });
+        
         
         sinon.stub(directory, 'get').yields(null, {
           id: 'https://api.example.com/',
@@ -61,43 +79,25 @@ describe('code/issue/token', function() {
           scp: [ 'read:foo', 'write:foo', 'read:bar']
         });
         
-        sinon.stub(tokens, 'negotiate').returns({
+        sinon.stub(Tokens, 'negotiate').returns({
           type: 'urn:ietf:params:oauth:token-type:jwt',
           signingAlgorithms: [
             'sha256', 'RSA-SHA256'
           ]
         });
         
-        sinon.stub(tokens, 'seal').yields(null, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIi.TJVA95Or');
-        
-        sinon.stub(tokens, 'unseal').yields(null, {
-          sub: '1',
-          cid: 's6BhdRkqt3',
-          prm: [ { rid: 'https://api.example.com/', scp: [ 'read:foo', 'write:foo', 'read:bar' ] } ],
-          cnf: { redirect_uri: 'https://client.example.com/cb' }
-        });
-        
-        interpret = sinon.stub().yields(null, {
-          userID: '1',
-          clientID: 's6BhdRkqt3',
-          permissions: [
-            { resourceID: 'https://api.example.com/', scope: [ 'read:foo', 'write:foo', 'read:bar' ] }
-          ],
-          confirmation: [
-            { method: 'redirect-uri', uri: 'https://client.example.com/cb' }
-          ]
-        });
+        sinon.stub(Tokens, 'seal').yields(null, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIi.TJVA95Or');
       });
     
       after(function() {
-        tokens.unseal.restore();
-        tokens.seal.restore();
-        tokens.negotiate.restore();
+        Tokens.seal.restore();
+        Tokens.negotiate.restore();
         directory.get.restore();
+        Tokens.unseal.restore();
       });
     
       before(function(done) {
-        var issueCb = factory(interpret, directory, schemes, translate, tokens);
+        var issueCb = factory(interpret, directory, schemes, translate, Tokens);
         issueCb(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(e, a, r, p) {
           if (e) { return done(e); }
           accessToken = a;
@@ -108,8 +108,8 @@ describe('code/issue/token', function() {
       });
       
       it('should unseal authorization code', function() {
-        expect(tokens.unseal).to.have.been.calledOnce;
-        expect(tokens.unseal).to.have.been.calledWith('SplxlOBeZQQYbYS6WxSbIA');
+        expect(Tokens.unseal).to.have.been.calledOnce;
+        expect(Tokens.unseal).to.have.been.calledWith('SplxlOBeZQQYbYS6WxSbIA');
       });
       
       it('should obtain resource object from directory', function() {
@@ -123,8 +123,8 @@ describe('code/issue/token', function() {
       });
       
       it('should negotiate token type with resource', function() {
-        expect(tokens.negotiate).to.have.been.calledOnce;
-        expect(tokens.negotiate).to.have.been.calledWith([ {
+        expect(Tokens.negotiate).to.have.been.calledOnce;
+        expect(Tokens.negotiate).to.have.been.calledWith([ {
           type: 'urn:ietf:params:oauth:token-type:jwt',
           signingAlgorithms: [
             'sha256', 'sha384', 'RSA-SHA256', 'RSA-SHA384'
@@ -133,8 +133,8 @@ describe('code/issue/token', function() {
       });
       
       it('should seal claims into token', function() {
-        expect(tokens.seal).to.have.been.calledOnce;
-        var call = tokens.seal.getCall(0);
+        expect(Tokens.seal).to.have.been.calledOnce;
+        var call = Tokens.seal.getCall(0);
         expect(call.args[0]).to.equal('urn:ietf:params:oauth:token-type:jwt');
 
         var claims = call.args[1];
@@ -187,7 +187,7 @@ describe('code/issue/token', function() {
       var accessToken, refreshToken, params;
     
       before(function() {
-        sinon.stub(tokens, 'unseal').yields(null, {
+        sinon.stub(Tokens, 'unseal').yields(null, {
           sub: '1',
           cid: 's6BhdRkqt3',
           prm: [ { rid: 'https://api.example.com/', scp: [ 'read:foo', 'write:foo', 'read:bar' ] } ],
@@ -207,7 +207,7 @@ describe('code/issue/token', function() {
       });
     
       after(function() {
-        tokens.unseal.restore();
+        Tokens.unseal.restore();
       });
     
       before(function(done) {
@@ -216,7 +216,7 @@ describe('code/issue/token', function() {
           name: 'Another Example Client'
         }
         
-        var issueCb = factory(interpret, directory, undefined, undefined, tokens);
+        var issueCb = factory(interpret, directory, undefined, undefined, Tokens);
         issueCb(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/not/cb', {}, {}, function(e, a, r, p) {
           if (e) { return done(e); }
           accessToken = a;
@@ -227,8 +227,8 @@ describe('code/issue/token', function() {
       });
       
       it('should call ACS#get', function() {
-        expect(tokens.unseal).to.have.been.calledOnce;
-        expect(tokens.unseal).to.have.been.calledWith('SplxlOBeZQQYbYS6WxSbIA');
+        expect(Tokens.unseal).to.have.been.calledOnce;
+        expect(Tokens.unseal).to.have.been.calledWith('SplxlOBeZQQYbYS6WxSbIA');
       });
       
       it('should not yield an access token', function() {
@@ -245,7 +245,7 @@ describe('code/issue/token', function() {
       var err, accessToken, refreshToken, params;
     
       before(function() {
-        sinon.stub(tokens, 'unseal').yields(null, {
+        sinon.stub(Tokens, 'unseal').yields(null, {
           sub: '1',
           cid: 's6BhdRkqt3',
           prm: [ { rid: 'https://api.example.com/', scp: [ 'read:foo', 'write:foo', 'read:bar' ] } ],
@@ -265,11 +265,11 @@ describe('code/issue/token', function() {
       });
     
       after(function() {
-        tokens.unseal.restore();
+        Tokens.unseal.restore();
       });
     
       before(function(done) {
-        var issueCb = factory(interpret, directory, undefined, undefined, tokens);
+        var issueCb = factory(interpret, directory, undefined, undefined, Tokens);
         issueCb(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/not/cb', {}, {}, function(e, a, r, p) {
           err = e;
           accessToken = a;
@@ -280,8 +280,8 @@ describe('code/issue/token', function() {
       });
       
       it('should call ACS#get', function() {
-        expect(tokens.unseal).to.have.been.calledOnce;
-        expect(tokens.unseal).to.have.been.calledWith('SplxlOBeZQQYbYS6WxSbIA');
+        expect(Tokens.unseal).to.have.been.calledOnce;
+        expect(Tokens.unseal).to.have.been.calledWith('SplxlOBeZQQYbYS6WxSbIA');
       });
       
       it('should yield error', function() {
