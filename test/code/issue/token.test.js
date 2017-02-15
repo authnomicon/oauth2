@@ -117,7 +117,7 @@ describe('code/issue/token', function() {
         expect(directory.get).to.have.been.calledWith('https://api.example.com/');
       });
       
-      it('should negotiate authentication scheme between resource and client', function() {
+      it('should negotiate token utilization mechanism between resource and client', function() {
         expect(schemes.negotiate).to.have.been.calledOnce;
         expect(schemes.negotiate).to.have.been.calledWith([{ type: "bearer" }], [{ type: "bearer" }]);
       });
