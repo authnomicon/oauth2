@@ -3,5 +3,5 @@ exports = module.exports = function(server) {
 };
 
 exports['@require'] = [
-  'http://schema.modulate.io/js/aaa/oauth2/Server'
+  'http://schemas.authnomicon.org/js/aaa/oauth2/Server'
 ];

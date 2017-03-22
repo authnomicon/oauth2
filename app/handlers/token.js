@@ -56,6 +56,6 @@ exports = module.exports = function(server, issueToken) {
 };
 
 exports['@require'] = [
-  'http://schema.modulate.io/js/aaa/oauth2/Server',
+  'http://schemas.authnomicon.org/js/aaa/oauth2/Server',
   '../util/issuetoken'
 ];

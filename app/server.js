@@ -55,4 +55,4 @@ exports['@singleton'] = true;
 exports['@require'] = [ '!container',
                         'http://schema.modulate.io/js/aaa/oauth2/TransactionStore',
                         'http://i.bixbyjs.org/Logger' ];
-exports['@implements'] = 'http://schema.modulate.io/js/aaa/oauth2/Server';
+exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/Server';
