@@ -1,17 +1,32 @@
-exports = module.exports = function(server, validateRequestCb, immediateResponseCb) {
-  return server.authorization(
-    validateRequestCb,
-    immediateResponseCb,
-    function completeTxn(req, txn, cb) {
-      console.log('&&&&& DO SOMETHIGN WITH TXN, LOG, SESSION MGMT, ETC!!!');
-      console.log(txn);
-      cb();
-    }
-  );
+exports = module.exports = function(server, flows, validateClient, processTransaction, completeTransaction, errorLogging) {
+  
+  function prompt(req, res, next) {
+    var prompt = req.oauth2.info.prompt;
+    var options = req.oauth2.info;
+    delete options.prompt;
+    options.state = req.oauth2.transactionID;
+    
+    flows.goto(prompt, options, req, res, next);
+  }
+  
+  
+  return [
+    server.authorization(
+      validateClient,
+      processTransaction,
+      completeTransaction
+    ),
+    prompt,
+    errorLogging(),
+    server.authorizationErrorHandler()
+  ];
 };
 
 exports['@require'] = [
   'http://schemas.authnomicon.org/js/aaa/oauth2/Server',
-  './authorize/validaterequest',
-  './authorize/processtransaction'
+  'http://i.bixbyjs.org/http/state/Dispatcher',
+  './authorize/validateclient',
+  './authorize/processtransaction',
+  './authorize/completetransaction',
+  'http://i.bixbyjs.org/http/middleware/errorLogging'
 ];
