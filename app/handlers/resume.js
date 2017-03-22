@@ -21,5 +21,5 @@ exports = module.exports = function(server, immediateResponseCb) {
 
 exports['@require'] = [
   'http://schemas.authnomicon.org/js/aaa/oauth2/Server',
-  './authorize/immediateresponsecb'
+  './authorize/processtransaction'
 ];
