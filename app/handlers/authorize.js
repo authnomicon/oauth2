@@ -1,14 +1,4 @@
-exports = module.exports = function(server, flows, validateClient, processTransaction, completeTransaction, errorLogging) {
-  
-  function prompt(req, res, next) {
-    var prompt = req.oauth2.info.prompt;
-    var options = req.oauth2.info;
-    delete options.prompt;
-    options.state = req.oauth2.transactionID;
-    
-    flows.goto(prompt, options, req, res, next);
-  }
-  
+exports = module.exports = function(server, validateClient, processTransaction, completeTransaction, prompt, errorLogging) {
   
   return [
     server.authorization(
@@ -16,7 +6,7 @@ exports = module.exports = function(server, flows, validateClient, processTransa
       processTransaction,
       completeTransaction
     ),
-    prompt,
+    prompt(),
     errorLogging(),
     server.authorizationErrorHandler()
   ];
@@ -24,9 +14,9 @@ exports = module.exports = function(server, flows, validateClient, processTransa
 
 exports['@require'] = [
   'http://schemas.authnomicon.org/js/aaa/oauth2/Server',
-  'http://i.bixbyjs.org/http/state/Dispatcher',
   './authorize/validateclient',
   './authorize/processtransaction',
   './authorize/completetransaction',
+  '../middleware/prompt',
   'http://i.bixbyjs.org/http/middleware/errorLogging'
 ];
