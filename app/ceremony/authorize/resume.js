@@ -1,4 +1,4 @@
-exports = module.exports = function(resume, errorHandler, ceremony) {
+exports = module.exports = function(ceremony, server, processTransaction) {
   
   function prompt(req, res, next) {
     var prompt = req.oauth2.info.prompt;
@@ -18,15 +18,22 @@ exports = module.exports = function(resume, errorHandler, ceremony) {
 
 
   return [
-    resume,
+    server.resume(
+      processTransaction,
+      function completeTxn(req, txn, cb) {
+        //console.log('DO SOMETHIGN WITH TXN, LOG, SESSION MGMT, ETC!!!');
+        //console.log(txn);
+        cb();
+      }
+    ),
     prompt,
-    errorHandler
+    server.authorizationErrorHandler()
   ];
   
 };
 
 exports['@require'] = [
-  '../../handlers/resume',
-  '../../handlers/authorizeErrorHandler',
-  'http://i.bixbyjs.org/http/state/Dispatcher'
+  'http://i.bixbyjs.org/http/state/Dispatcher',
+  'http://schemas.authnomicon.org/js/aaa/oauth2/Server',
+  '../../handlers/authorize/processtransaction'
 ];
