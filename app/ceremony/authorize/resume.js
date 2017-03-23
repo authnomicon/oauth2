@@ -1,11 +1,12 @@
-exports = module.exports = function(server, processTransaction, completeTransaction, prompt) {
+exports = module.exports = function(server, processTransaction, completeTransaction, prompt, errorLogging) {
 
   return [
     server.resume(
       processTransaction,
       completeTransaction
     ),
-    //prompt(),
+    prompt(),
+    errorLogging(),
     server.authorizationErrorHandler()
   ];
 };
@@ -15,4 +16,5 @@ exports['@require'] = [
   '../../handlers/authorize/processtransaction',
   '../../handlers/authorize/completetransaction',
   '../../middleware/prompt',
+  'http://i.bixbyjs.org/http/middleware/errorLogging'
 ];
