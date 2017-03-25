@@ -28,4 +28,7 @@ exports = module.exports = function() {
   
 };
 
+exports['@implements'] = 'http://i.bixbyjs.org/http/flows/transition';
+exports['@complete'] = 'login';
+exports['@continue'] = 'oauth2-authorize';
 exports['@require'] = [];

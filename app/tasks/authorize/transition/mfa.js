@@ -11,4 +11,7 @@ exports = module.exports = function() {
   };
 };
 
+exports['@implements'] = 'http://i.bixbyjs.org/http/flows/transition';
+exports['@complete'] = 'mfa'; // TODO: Rename this to stepup???
+exports['@continue'] = 'oauth2-authorize';
 exports['@require'] = [];
