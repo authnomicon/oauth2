@@ -1,4 +1,4 @@
-exports = module.exports = function(server, issueToken) {
+exports = module.exports = function(server, issueToken, errorLogging) {
   //return server.token();
   
   return [
@@ -50,6 +50,7 @@ exports = module.exports = function(server, issueToken) {
       
       
     },
+    errorLogging(),
     server.errorHandler()
   ];
   
@@ -57,5 +58,6 @@ exports = module.exports = function(server, issueToken) {
 
 exports['@require'] = [
   'http://schemas.authnomicon.org/js/aaa/oauth2/Server',
-  '../util/issuetoken'
+  '../util/issuetoken',
+  'http://i.bixbyjs.org/http/middleware/errorLogging'
 ];
