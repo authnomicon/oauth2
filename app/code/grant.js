@@ -4,6 +4,6 @@ exports = module.exports = function(issueCb) {
   return oauth2orize.exchange.code(issueCb);
 }
 
-exports['@implements'] = 'http://schema.modulate.io/js/aaa/oauth2/grant';
+exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/grant';
 exports['@type'] = 'authorization_code';
 exports['@require'] = [ './issue/token' ];

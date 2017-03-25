@@ -10,25 +10,25 @@ exports = module.exports = function(container, store, logger) {
   server.grant(require('oauth2orize-openid').extensions());
   
   
-  var responseDecls = container.specs('http://schema.modulate.io/js/aaa/oauth2/Response')
-    , exchangeDecls = container.specs('http://schema.modulate.io/js/aaa/oauth2/grant')
+  var responseDecls = container.specs('http://schemas.authnomicon.org/js/aaa/oauth2/response')
+    , grantDecls = container.specs('http://schemas.authnomicon.org/js/aaa/oauth2/grant')
   
   return Promise.all(responseDecls.map(function(spec) { return container.create(spec.id); } ))
     .then(function(plugins) {
-      // Register response type plugins with the OAuth 2.0 server.
+      // Register response types with the OAuth 2.0 server.
       plugins.forEach(function(plugin, i) {
         server.grant(responseDecls[i].a['@type'] || plugin.name, plugin);
-        logger.info('Registered OAuth 2.0 response type: ' + (responseDecls[i].a['@type'] || plugin.name));
+        logger.info('Loaded OAuth 2.0 response type: ' + (responseDecls[i].a['@type'] || plugin.name));
       });
     })
     .then(function() {
-      return Promise.all(exchangeDecls.map(function(spec) { return container.create(spec.id); } ));
+      return Promise.all(grantDecls.map(function(spec) { return container.create(spec.id); } ));
     })
     .then(function(plugins) {
-      // Register exchange plugins with the OAuth 2.0 server.
+      // Register grant types with the OAuth 2.0 server.
       plugins.forEach(function(plugin, i) {
-        server.exchange(exchangeDecls[i].a['@type'] || plugin.name, plugin);
-        logger.info('Registered OAuth 2.0 exchange type: ' + (exchangeDecls[i].a['@type'] || plugin.name));
+        server.exchange(grantDecls[i].a['@type'] || plugin.name, plugin);
+        logger.info('Loaded OAuth 2.0 grant type: ' + (grantDecls[i].a['@type'] || plugin.name));
       });
     })
     .then(function() {

@@ -10,6 +10,6 @@ exports = module.exports = function(issueCb) {
   }, issueCb);
 };
 
-exports['@implements'] = 'http://schema.modulate.io/js/aaa/oauth2/Response';
+exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/response';
 exports['@type'] = 'code';
 exports['@require'] = [ './issue/code' ];
