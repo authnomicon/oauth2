@@ -11,6 +11,6 @@ exports = module.exports = function(issueFunc) {
   }, issueFunc);
 };
 
-exports['@implements'] = 'http://schema.modulate.io/js/aaa/oauth2/Response';
+exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/response';
 exports['@type'] = 'token';
 exports['@require'] = [ './issue' ];

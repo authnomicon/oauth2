@@ -34,20 +34,6 @@ exports = module.exports = function(container, store, logger) {
     .then(function() {
       return server;
     });
-  
-  
-  // TODO: When implementing refresh_token exchange, need an ack'ing strategy
-  //       if we choose to rotate the refresh_token itself, otherwise the client
-  //       and server could get out of sync.  (See 1.5 (H) of OAuth 2.0 RFC)
-  
-  
-  
-  // TODO: Consider the impact of non-session-based transactions stores on
-  //       client serialization.
-  //server.serializeClient(serializeClientCb);
-  //server.deserializeClient(deserializeClientCb);
-  
-  return server;
 }
 
 exports['@singleton'] = true;
