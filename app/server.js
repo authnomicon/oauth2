@@ -11,7 +11,7 @@ exports = module.exports = function(container, store, logger) {
   
   
   var responseDecls = container.specs('http://schema.modulate.io/js/aaa/oauth2/Response')
-    , exchangeDecls = container.specs('http://schema.modulate.io/js/aaa/oauth2/exchange')
+    , exchangeDecls = container.specs('http://schema.modulate.io/js/aaa/oauth2/grant')
   
   return Promise.all(responseDecls.map(function(spec) { return container.create(spec.id); } ))
     .then(function(plugins) {

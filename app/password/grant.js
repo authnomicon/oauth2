@@ -4,6 +4,6 @@ exports = module.exports = function(issue) {
   return oauth2orize.exchange.password(issue);
 }
 
-exports['@implements'] = 'http://schema.modulate.io/js/aaa/oauth2/exchange';
+exports['@implements'] = 'http://schema.modulate.io/js/aaa/oauth2/grant';
 exports['@type'] = 'password';
 exports['@require'] = [ './issue' ];
