@@ -1,17 +1,17 @@
-exports = module.exports = function(serializeClientCb, deserializeClientCb, s) {
-  var StateStore = require('../lib/txn/state');
+exports = module.exports = function(serializeClient, deserializeClient, s) {
+  var TransactionStore = require('../lib/transactionstore');
   
-  var store = new StateStore(s);
-  store.serializeClient(serializeClientCb);
-  store.deserializeClient(deserializeClientCb);
+  var store = new TransactionStore(s);
+  store.serializeClient(serializeClient);
+  store.deserializeClient(deserializeClient);
   
   return store;
 };
 
-exports['@implements'] = 'http://schema.modulate.io/js/aaa/oauth2/TransactionStore';
+exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/TransactionStore';
 exports['@singleton'] = true;
 exports['@require'] = [
-  './szx/serializeclientcb',  // TODO: rename folder to txn
-  './szx/deserializeclientcb',
+  './txn/serializeclient',  // TODO: rename folder to txn
+  './txn/deserializeclient',
   'http://i.bixbyjs.org/http/state/Store'
 ];
