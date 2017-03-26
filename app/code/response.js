@@ -3,13 +3,13 @@ exports = module.exports = function(issueCb) {
   
   // TODO: Make modes pluggable
   return oauth2orize.grant.code({
-    modes: {
+    modes: { // query
       form_post: require('oauth2orize-fprm'),
       web_message: require('oauth2orize-wmrm')
     }
   }, issueCb);
 };
 
-exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/response';
+exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/grant';
 exports['@type'] = 'code';
 exports['@require'] = [ './issue/code' ];

@@ -5,7 +5,7 @@ exports = module.exports = {
   'code/grant': require('./code/grant'),
   'code/dialect/jwt/encode': require('./code/dialect/jwt/encode'),
   'code/dialect/jwt/decode': require('./code/dialect/jwt/decode'),
-  'token/response': require('./token/response'),
+  'implicit/response': require('./implicit/response'),
   'password/grant': require('./password/grant'),
   'util/issuetoken': require('./util/issuetoken')
 };
