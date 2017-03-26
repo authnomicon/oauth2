@@ -2,7 +2,7 @@ exports = module.exports = function(container, issue, logger) {
   var oauth2orize = require('oauth2orize');
   
   
-  var modeDecls = container.specs('http://schemas.authnomicon.org/js/aaa/oauth2/response/mode')
+  var modeDecls = container.specs('http://schemas.authnomicon.org/js/aaa/oauth2/response/mode');
   return Promise.all(modeDecls.map(function(spec) { return container.create(spec.id); } ))
     .then(function(plugins) {
       var modes = {}
