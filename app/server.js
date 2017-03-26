@@ -36,9 +36,10 @@ exports = module.exports = function(container, store, logger) {
     });
 }
 
-exports['@singleton'] = true;
-// TODO: Refactor state handling to a plugin system.
-exports['@require'] = [ '!container',
-                        'http://schemas.authnomicon.org/js/aaa/oauth2/TransactionStore',
-                        'http://i.bixbyjs.org/Logger' ];
 exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/Server';
+exports['@singleton'] = true;
+exports['@require'] = [
+  '!container',
+  'http://schemas.authnomicon.org/js/aaa/oauth2/TransactionStore',
+  'http://i.bixbyjs.org/Logger'
+];
