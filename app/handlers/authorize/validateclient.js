@@ -39,7 +39,7 @@ exports = module.exports = function(directory) {
         return cb(new oauth2orize.AuthorizationError('Client not permitted to use redirect URI', 'unauthorized_client'));
       }
       
-      return cb(null, client, redirectURI || client.redirectURIs[0]);
+      return cb(null, client, redirectURI || client.redirectURIs[0], 'http://localhost:3001');
     });
   };
 };

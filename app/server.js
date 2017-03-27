@@ -1,12 +1,10 @@
 exports = module.exports = function(container, store, logger) {
   var oauth2orize = require('oauth2orize');
   
+  
   var server = oauth2orize.createServer({
     store: store
   });
-  
-  //server.grant(require('oauth2orize-openid').extensions());
-  
   
   var paramDecls = container.specs('http://schemas.authnomicon.org/js/aaa/oauth2/request/parameters')
     , grantDecls = container.specs('http://schemas.authnomicon.org/js/aaa/oauth2/grant')
