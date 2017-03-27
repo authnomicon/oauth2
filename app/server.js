@@ -5,15 +5,24 @@ exports = module.exports = function(container, store, logger) {
     store: store
   });
   
-  server.grant(require('oauth2orize-response-mode').extensions());
-  server.grant(require('oauth2orize-wmrm').extensions());
-  server.grant(require('oauth2orize-openid').extensions());
+  //server.grant(require('oauth2orize-openid').extensions());
   
   
-  var grantDecls = container.specs('http://schemas.authnomicon.org/js/aaa/oauth2/grant')
+  var paramDecls = container.specs('http://schemas.authnomicon.org/js/aaa/oauth2/request/parameters')
+    , grantDecls = container.specs('http://schemas.authnomicon.org/js/aaa/oauth2/grant')
     , exchangeDecls = container.specs('http://schemas.authnomicon.org/js/aaa/oauth2/exchange')
   
-  return Promise.all(grantDecls.map(function(spec) { return container.create(spec.id); } ))
+  return Promise.all(paramDecls.map(function(spec) { return container.create(spec.id); } ))
+    .then(function(plugins) {
+      // Register request parameter extensions with the OAuth 2.0 server.
+      plugins.forEach(function(plugin, i) {
+        server.grant(plugin);
+        logger.info('Loaded OAuth 2.0 request parameters: ' + paramDecls[i].a['@name']);
+      });
+    })
+    .then(function() {
+      return Promise.all(grantDecls.map(function(spec) { return container.create(spec.id); } ));
+    })
     .then(function(plugins) {
       // Register response types with the OAuth 2.0 server.
       plugins.forEach(function(plugin, i) {

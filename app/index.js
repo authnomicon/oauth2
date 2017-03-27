@@ -7,6 +7,8 @@ exports = module.exports = {
   'code/dialect/jwt/decode': require('./code/dialect/jwt/decode'),
   'implicit/grant': require('./implicit/grant'),
   'password/exchange': require('./password/exchange'),
+  'ext/responsemode': require('./ext/responsemode'),
+  'ext/webmessage': require('./ext/webmessage'),
   'ext/modes/formpost': require('./ext/modes/formpost'),
   'ext/modes/webmessage': require('./ext/modes/webmessage'),
   'util/issuetoken': require('./util/issuetoken')
