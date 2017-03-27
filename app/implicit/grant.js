@@ -12,7 +12,7 @@ exports = module.exports = function(container, issue, logger) {
       plugins.forEach(function(mode, i) {
         name = modeDecls[i].a['@mode'];
         if (name == 'query') {
-          // The default response mode of this response type if the fragment
+          // The default response mode of this response type is the fragment
           // encoding.  In accordance with security considerations, this
           // response type must not use query encoding, in order to avoid
           // leaking sensitive information such as access tokens.

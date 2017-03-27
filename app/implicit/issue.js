@@ -49,5 +49,5 @@ exports = module.exports = function(services, Schemes, Tokens, rsg) {
   };
 };
 
-exports['@implements'] = 'http://schema.modulate.io/js/aaa/oauth2/issueTokenFunc';
+exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/issueTokenFunc';
 exports['@require'] = [];

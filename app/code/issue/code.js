@@ -39,7 +39,7 @@ exports = module.exports = function(Tokens) {
   };
 };
 
-exports['@implements'] = 'http://schema.modulate.io/js/aaa/oauth2/issueCodeFunc';
+exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/issueCodeFunc';
 exports['@require'] = [
   'http://i.bixbyjs.org/tokens'
 ];
