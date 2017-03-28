@@ -11,7 +11,7 @@ exports = module.exports = function(Tokens) {
       secret: 'some-secret-shared-with-oauth-authorization-server'
     } ];
     
-    Tokens.cipher(ctx, { dialect: 'http://schemas.authnomicon.org/aaa/tokens/dialect/jwt/authorization-code' }, function(err, code) {
+    Tokens.cipher(ctx, { dialect: 'http://schemas.authnomicon.org/tokens/jwt/authorization-code' }, function(err, code) {
       if (err) { return cb(err); }
       return cb(null, code);
     });

@@ -69,4 +69,4 @@ exports = module.exports = function() {
 };
 
 exports['@implements'] = 'http://i.bixbyjs.org/tokens/interpretClaimsFunc';
-exports['@dialect'] = 'http://schemas.authnomicon.org/aaa/tokens/dialect/jwt/authorization-code';
+exports['@dialect'] = 'http://schemas.authnomicon.org/tokens/jwt/authorization-code';

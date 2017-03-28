@@ -32,7 +32,7 @@ exports = module.exports = function(issueTokenx, /*decode,*/ services, Utilizati
       //console.log('UNSEALED CODE');
       //console.log(info);
       
-    Tokens.decipher(code, { dialect: 'http://schemas.authnomicon.org/aaa/tokens/dialect/jwt/authorization-code' }, function(err, claims) {
+    Tokens.decipher(code, { dialect: 'http://schemas.authnomicon.org/tokens/jwt/authorization-code' }, function(err, claims) {
       console.log('DECIPHERED AZ CODE');
       console.log(err);
       console.log(claims)
