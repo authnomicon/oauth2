@@ -25,6 +25,30 @@
     }
   ],
   "main": "./app",
+  "assembly": {
+    "namespace": "oauth2",
+    "components": [
+      "server",
+      "transactionstore",
+      "auth/client_secret_basic",
+      "auth/client_secret_post",
+      "auth/none",
+      "code/exchange",
+      "code/grant",
+      "code/issue/code",
+      "code/tokens/authorization-code/interpret",
+      "code/tokens/authorization-code/translate",
+      "ext/responsemode",
+      "ext/webmessage",
+      "ext/modes/formpost",
+      "ext/modes/webmessage",
+      "implicit/grant",
+      "implicit/issue",
+      "password/exchange",
+      "util/issuetoken",
+      "workflow/controller"
+    ]
+  },
   "dependencies": {
     "clone": "^1.0.2",
     "oauth2orize": "^1.8.0",
