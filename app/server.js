@@ -6,9 +6,9 @@ exports = module.exports = function(container, store, logger) {
     store: store
   });
   
-  var paramDecls = container.specs('http://schemas.authnomicon.org/js/aaa/oauth2/request/parameters')
-    , grantDecls = container.specs('http://schemas.authnomicon.org/js/aaa/oauth2/grant')
-    , exchangeDecls = container.specs('http://schemas.authnomicon.org/js/aaa/oauth2/exchange')
+  var paramDecls = container.components('http://schemas.authnomicon.org/js/aaa/oauth2/request/parameters')
+    , grantDecls = container.components('http://schemas.authnomicon.org/js/aaa/oauth2/grant')
+    , exchangeDecls = container.components('http://schemas.authnomicon.org/js/aaa/oauth2/exchange')
   
   return Promise.all(paramDecls.map(function(spec) { return container.create(spec.id); } ))
     .then(function(plugins) {

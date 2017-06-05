@@ -48,7 +48,12 @@
       "util/issuetoken",
       "workflow/controller",
       "http/authorization",
-      "http/token"
+      "http/token",
+      "handlers/token",
+      "tasks/authorize",
+      "tasks/authorize/transition/login",
+      "tasks/authorize/transition/mfa",
+      "tasks/authorize/transition/consent"
     ]
   },
   "dependencies": {
