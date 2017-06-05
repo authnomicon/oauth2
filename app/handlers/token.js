@@ -1,7 +1,11 @@
-exports = module.exports = function(server, issueToken, errorLogging) {
+exports = module.exports = function(server, issueToken, parse, authenticate, errorLogging) {
   //return server.token();
   
+  // curl --data "client_id=1&client_secret=secret&grant_type=authorization_code&code=1234" http://127.0.0.1:8080/token
+  
   return [
+    parse('application/x-www-form-urlencoded'),
+    authenticate(['client_secret_basic', 'client_secret_post', 'none']),
     server.token(),
     function mfaErrorHandler(err, req, res, next) {
       console.log('TOKEN ERROR!');
@@ -59,5 +63,7 @@ exports = module.exports = function(server, issueToken, errorLogging) {
 exports['@require'] = [
   'http://schemas.authnomicon.org/js/aaa/oauth2/Server',
   '../util/issuetoken',
+  'http://i.bixbyjs.org/http/middleware/parse',
+  'http://i.bixbyjs.org/http/middleware/authenticate',
   'http://i.bixbyjs.org/http/middleware/errorLogging'
 ];

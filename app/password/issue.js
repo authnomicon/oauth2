@@ -66,5 +66,5 @@ exports['@require'] = [
   'http://schema.modulate.io/js/aaa/PolicyDecisionPoint',
   'http://schemas.modulate.io/js/aaa/services/Directory',
   'http://schemas.modulate.io/js/aaa',
-  'http://i.bixbyjs.org/aaa/password/authenticate'
+  'http://i.bixbyjs.org/security/authentication/password/authenticate'
 ];
