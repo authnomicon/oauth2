@@ -13,5 +13,5 @@ exports['@singleton'] = true;
 exports['@require'] = [
   './txn/serializeclient',  // TODO: rename folder to txn
   './txn/deserializeclient',
-  'http://i.bixbyjs.org/http/state/Store'
+  'http://i.bixbyjs.org/http/workflow/StateStore'
 ];
