@@ -11,7 +11,12 @@ exports = module.exports = function(Tokens) {
       secret: 'some-secret-shared-with-oauth-authorization-server'
     } ];
     
-    Tokens.cipher(ctx, { dialect: 'http://schemas.authnomicon.org/tokens/jwt/authorization-code' }, function(err, code) {
+    var opt = {};
+    opt.dialect = 'http://schemas.authnomicon.org/tokens/jwt/authorization-code';
+    // TODO: Make this confidential
+    opt.confidential = false;
+    
+    Tokens.cipher(ctx, opt, function(err, code) {
       if (err) { return cb(err); }
       return cb(null, code);
     });

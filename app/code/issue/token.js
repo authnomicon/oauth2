@@ -84,6 +84,9 @@ exports = module.exports = function(issueTokenx, /*decode,*/ services, Utilizati
         ctx.user = { id: info.userID };
         ctx.client = client;
         ctx.permissions = [ { resource: resource, scope: info.permissions[0].scope } ];
+        ctx.audience = [ {
+          id: 'http://localhost/userinfo'
+        } ];
       
         console.log('NOW SERIALIZE THIS TO JWT ACCESS TOKEN:');
         console.log(ctx);
