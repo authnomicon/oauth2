@@ -10,37 +10,20 @@ exports = module.exports = function(Tokens) {
       id: 'http://localhost/authorization_code',
       secret: 'some-secret-shared-with-oauth-authorization-server'
     } ];
+    // TODO: Add PKCE challenge here (if any)
     
     var opt = {};
+    //opt.type = 'application/fe26.2';
+    //opt.type = 'application/x-fernet-json';
     opt.dialect = 'http://schemas.authnomicon.org/tokens/jwt/authorization-code';
     // TODO: Make this confidential
     opt.confidential = false;
     
+    // TODO: Ensure that code has a TTL of 10 minutes
     Tokens.cipher(ctx, opt, function(err, code) {
       if (err) { return cb(err); }
       return cb(null, code);
     });
-    
-    
-    // TODO: Replace all of this:
-    /*
-    var bound = {
-      client: client,
-      redirectURI: redirectURI,
-      user: user,
-      permissions: ares.permissions
-      // TODO
-      //service: locals.service,
-      //grant: locals.grant,
-      //scope: ares.scope
-    };
-    
-    // TODO: Ensure that code has a TTL of 10 minutes
-    Code.encode(bound, function(err, code) {
-      if (err) { return cb(err); }
-      return cb(null, code);
-    });
-    */
   };
 };
 
