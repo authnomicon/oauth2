@@ -24,13 +24,13 @@ exports = module.exports = function(container, store, logger) {
     })
     .then(function(server) {
       // Register response types with the OAuth 2.0 server.
-      var grantDecls = container.components('http://schemas.authnomicon.org/js/aaa/oauth2/grant')
+      var typeComps = container.components('http://schemas.authnomicon.org/js/oauth2/responseType')
     
-      return Promise.all(grantDecls.map(function(spec) { return container.create(spec.id); } ))
+      return Promise.all(typeComps.map(function(spec) { return container.create(spec.id); } ))
         .then(function(plugins) {
           plugins.forEach(function(plugin, i) {
-            server.grant(grantDecls[i].a['@type'] || plugin.name, plugin);
-            logger.info('Loaded OAuth 2.0 response type: ' + (grantDecls[i].a['@type'] || plugin.name));
+            server.grant(typeComps[i].a['@type'] || plugin.name, plugin);
+            logger.info('Loaded OAuth 2.0 response type: ' + (typeComps[i].a['@type'] || plugin.name));
           });
         })
         .then(function() {
