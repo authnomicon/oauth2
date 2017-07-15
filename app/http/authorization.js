@@ -7,7 +7,7 @@ exports = module.exports = function(authorizeHandler) {
   return router;
 };
 
-exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/AuthorizationService';
+exports['@implements'] = 'http://schemas.authnomicon.org/js/http/oauth2/AuthorizationService';
 exports['@require'] = [
   '../handlers/authorize'
 ];
