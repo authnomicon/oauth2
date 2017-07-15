@@ -4,6 +4,6 @@ exports = module.exports = function(issue) {
   return oauth2orize.exchange.password(issue);
 }
 
-exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/exchange';
+exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/grantType';
 exports['@type'] = 'password';
 exports['@require'] = [ './issue' ];

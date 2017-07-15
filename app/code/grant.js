@@ -1,28 +1,9 @@
-exports = module.exports = function(container, issue, logger) {
+exports = module.exports = function(issueCb) {
   var oauth2orize = require('oauth2orize');
   
-  
-  var modeDecls = container.components('http://schemas.authnomicon.org/js/aaa/oauth2/response/mode');
-  return Promise.all(modeDecls.map(function(spec) { return container.create(spec.id); } ))
-    .then(function(plugins) {
-      var modes = {}
-        , name;
-      plugins.forEach(function(mode, i) {
-        name = modeDecls[i].a['@mode'];
-        modes[name] = mode;
-        logger.info('Loaded response mode for OAuth 2.0 authorization code flow: ' + name);
-      });
-      
-      return oauth2orize.grant.code({
-        modes: modes
-      }, issue);
-    });
-};
+  return oauth2orize.exchange.code(issueCb);
+}
 
-exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/grant';
-exports['@type'] = 'code';
-exports['@require'] = [
-  '!container',
-  './issue/code',
-  'http://i.bixbyjs.org/Logger'
-];
+exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/grantType';
+exports['@type'] = 'authorization_code';
+exports['@require'] = [ './issue/token' ];

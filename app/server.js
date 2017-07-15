@@ -39,13 +39,13 @@ exports = module.exports = function(container, store, logger) {
     })
     .then(function(server) {
       // Register grant types with the OAuth 2.0 server.
-      var exchangeDecls = container.components('http://schemas.authnomicon.org/js/aaa/oauth2/exchange')
+      var typeComps = container.components('http://schemas.authnomicon.org/js/oauth2/grantType')
     
-      return Promise.all(exchangeDecls.map(function(spec) { return container.create(spec.id); } ))
+      return Promise.all(typeComps.map(function(spec) { return container.create(spec.id); } ))
         .then(function(plugins) {
           plugins.forEach(function(plugin, i) {
-            server.exchange(exchangeDecls[i].a['@type'] || plugin.name, plugin);
-            logger.info('Loaded OAuth 2.0 grant type: ' + (exchangeDecls[i].a['@type'] || plugin.name));
+            server.exchange(typeComps[i].a['@type'] || plugin.name, plugin);
+            logger.info('Loaded OAuth 2.0 grant type: ' + (typeComps[i].a['@type'] || plugin.name));
           });
         })
         .then(function() {
