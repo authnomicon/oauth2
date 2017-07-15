@@ -57,7 +57,6 @@ exports = module.exports = function(container, store, logger) {
     });
 }
 
-exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/Server';
 exports['@singleton'] = true;
 exports['@require'] = [
   '!container',

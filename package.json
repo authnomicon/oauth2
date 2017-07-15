@@ -28,7 +28,6 @@
   "assembly": {
     "namespace": "oauth2",
     "components": [
-      "server",
       "transactionstore",
       "auth/client_secret_basic",
       "auth/client_secret_post",
@@ -49,6 +48,7 @@
       "workflow/controller",
       "http/authorization",
       "http/token",
+      "http/middleware/errorhandler",
       "handlers/token",
       "tasks/authorize",
       "tasks/authorize/transition/login",

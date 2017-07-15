@@ -61,7 +61,7 @@ exports = module.exports = function(server, issueToken, parse, authenticate, err
 };
 
 exports['@require'] = [
-  'http://schemas.authnomicon.org/js/aaa/oauth2/Server',
+  '../server',
   '../util/issuetoken',
   'http://i.bixbyjs.org/http/middleware/parse',
   'http://i.bixbyjs.org/http/middleware/authenticate',

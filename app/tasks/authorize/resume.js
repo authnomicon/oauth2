@@ -12,7 +12,7 @@ exports = module.exports = function(server, processTransaction, completeTransact
 };
 
 exports['@require'] = [
-  'http://schemas.authnomicon.org/js/aaa/oauth2/Server',
+  '../../server',
   '../../handlers/authorize/processtransaction',
   '../../handlers/authorize/completetransaction',
   '../../middleware/prompt',
