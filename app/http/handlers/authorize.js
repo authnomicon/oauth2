@@ -18,11 +18,11 @@ exports = module.exports = function(server, validateClient, processTransaction, 
 };
 
 exports['@require'] = [
-  '../server',
+  '../../server',
   './authorize/validateclient',
   './authorize/processtransaction',
   './authorize/completetransaction',
   'http://i.bixbyjs.org/http/middleware/authenticate',
-  '../middleware/prompt',
+  '../../middleware/prompt',
   'http://i.bixbyjs.org/http/middleware/errorLogging'
 ];

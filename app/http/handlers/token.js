@@ -61,8 +61,8 @@ exports = module.exports = function(server, issueToken, parse, authenticate, err
 };
 
 exports['@require'] = [
-  '../server',
-  '../util/issuetoken',
+  '../../server',
+  '../../util/issuetoken',
   'http://i.bixbyjs.org/http/middleware/parse',
   'http://i.bixbyjs.org/http/middleware/authenticate',
   'http://i.bixbyjs.org/http/middleware/errorLogging'

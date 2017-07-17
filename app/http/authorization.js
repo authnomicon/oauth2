@@ -9,5 +9,5 @@ exports = module.exports = function(authorizeHandler) {
 
 exports['@implements'] = 'http://schemas.authnomicon.org/js/http/oauth2/AuthorizationService';
 exports['@require'] = [
-  '../handlers/authorize'
+  './handlers/authorize'
 ];

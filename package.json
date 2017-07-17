@@ -48,7 +48,6 @@
       "http/authorization",
       "http/token",
       "http/middleware/errorhandler",
-      "handlers/token",
       "tasks/authorize",
       "tasks/authorize/transition/login",
       "tasks/authorize/transition/mfa",
