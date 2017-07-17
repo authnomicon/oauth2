@@ -8,8 +8,6 @@ exports = module.exports = function(verify) {
   return strategy;
 };
 
-
-exports['@require'] = [ './verify' ];
-
 exports['@implements'] = 'http://i.bixbyjs.org/http/auth/Scheme';
 exports['@scheme'] = 'client_secret_basic';
+exports['@require'] = [ './verify' ];
