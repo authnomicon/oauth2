@@ -12,9 +12,15 @@
  * redirect the user to an invalid redirection URI.
  */
 exports = module.exports = function(directory) {
-  var oauth2orize = require('oauth2orize');
+  var oauth2orize = require('oauth2orize')
+    , uri = require('url');
   
   return function validateRequest(clientID, redirectURI, cb) {
+    console.log('VALIDATE CLIENT');
+    console.log(clientID);
+    console.log(redirectURI);
+    
+    
     directory.get(clientID, function(err, client) {
       if (err) { return cb(err); }
       if (!client) {
@@ -35,6 +41,18 @@ exports = module.exports = function(directory) {
         // Section 3.1.2.3 of RFC 6749 for further details.
         return cb(new oauth2orize.AuthorizationError('Missing required parameter: redirect_uri', 'invalid_request'));
       }
+      
+      
+      if (redirectURI) {
+        var url = uri.parse(redirectURI);
+        console.log(url);
+        if (url.protocol == 'storagerelay:') {
+          // TODO: Implement web/js origin checks
+          return cb(null, client, redirectURI, 'http://localhost:3001');
+        }
+      }
+      
+      
       if (redirectURI && client.redirectURIs.indexOf(redirectURI) == -1) {
         return cb(new oauth2orize.AuthorizationError('Client not permitted to use redirect URI', 'unauthorized_client'));
       }

@@ -1,7 +1,64 @@
-exports = module.exports = function(pdp, resourcesDir, Audience) {
+exports = module.exports = function(pdp, resourcesDir, Audience, service) {
   var oauth2orize = require('oauth2orize');
+  var AuthorizationTransaction = require('klamm-oauth2').AuthorizationTransaction;
+  
   
   return function immediateResponse(client, user, scope, type, areq, locals, cb) {
+    /*
+    var txn = {
+      client: client,
+      user: user,
+      req: areq,
+      ctx: locals || {},
+      locals: {}
+    };
+    */
+    
+    
+    
+    function respond() {
+      console.log('RESPOND!');
+      console.log(this);
+      
+      if (this.allowed === undefined) {
+        return cb(null, false, this.prompt);
+      } else if (this._allowed == false) {
+        console.log('DENY IT');
+      } else {
+        // TODO: Compute the scopes to put in the access token somehow, with grant etc.
+        return cb(null, true, { permissions: [ { resource: txn.resources[0], scope: 'foo' } ]});
+      }
+      
+      
+      /*
+      if (this._prompt) {
+        // TODO: Pass locals here again???
+        return cb(null, false, this._prompt);
+      }
+      
+      // responde with access token
+      return cb(null, true)
+      */
+    }
+    
+    var txn = new AuthorizationTransaction(client, areq, user, respond);
+    service(txn);
+    
+    
+    /*
+    controller(txn, function(err, allow, info) {
+      console.log('!!! CONTROLLER COMPLETE !!!!');
+      console.log(err);
+      console.log(allow);
+      console.log(info);
+      console.log(txn.locals);
+      
+      return cb(err, allow, info, txn.locals);
+    });
+    */
+    return;
+    
+    
     /*
     if (areq.prompt && areq.prompt.indexOf('none') !== -1) {
       // FIXME: Do this properly
@@ -193,5 +250,6 @@ exports = module.exports = function(pdp, resourcesDir, Audience) {
 exports['@require'] = [
   'http://schema.modulate.io/js/aaa/PolicyDecisionPoint',
   'http://schemas.modulate.io/js/aaa/services/Directory',
-  'http://schema.modulate.io/js/aaa/audience'
+  'http://schema.modulate.io/js/aaa/audience',
+  'http://schemas.authnomicon.org/js/aaa/Service'
 ];
