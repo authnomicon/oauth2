@@ -1,12 +1,10 @@
-exports = module.exports = function(verifyCb) {
+exports = module.exports = function(verify) {
   var Strategy = require('passport-oauth2-client-public').Strategy;
   
-  var strategy = new Strategy(verifyCb);
+  var strategy = new Strategy(verify);
   return strategy;
 };
 
-
-exports['@require'] = [ './none/verifycb' ];
-
 exports['@implements'] = 'http://i.bixbyjs.org/http/auth/Scheme';
 exports['@scheme'] = 'none';
+exports['@require'] = [ './none/verify' ];
