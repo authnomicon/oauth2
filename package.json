@@ -45,7 +45,6 @@
       "implicit/issue",
       "password/grant",
       "util/issuetoken",
-      "workflow/controller",
       "http/authorization",
       "http/token",
       "http/middleware/errorhandler",
