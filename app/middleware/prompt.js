@@ -22,9 +22,15 @@ exports = module.exports = function(flows) {
       return next(new oauth2orize.AuthorizationError('Interaction with user is required to proceed', error, null, 403));
     }
     
+    console.log('-------- PROMPTING NOW>...');
+    console.log(req.oauth2)
+    console.log(req.state);
+    
+    req.state = req.oauth2;
+    req.state.handle = req.oauth2.transactionID;
+    
     options = req.oauth2.info;
     delete options.prompt;
-    options.state = req.oauth2.transactionID;
   
     switch (prompt) {
     case 'consent':

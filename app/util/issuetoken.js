@@ -18,6 +18,10 @@ exports = module.exports = function(negotiateTokenContent, negotiateTokenType, T
     
     
     copts.dialect = options.dialect || copts.dialect;
+    copts.confidential = false;
+    
+    //copts.type = 'http://schemas.modulate.io/tokens/jwt/twilio';
+    //copts.dialect = 'http://schemas.modulate.io/tokens/jwt/twilio';
     
     Tokens.cipher(ctx, copts, function(err, token) {
       if (err) { return cb(err); }
