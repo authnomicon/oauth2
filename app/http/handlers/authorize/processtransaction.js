@@ -22,7 +22,7 @@ exports = module.exports = function(pdp, resourcesDir, Audience, service) {
       
       if (this.allowed === undefined) {
         return cb(null, false, this.prompt);
-      } else if (this._allowed == false) {
+      } else if (this.allowed == false) {
         console.log('DENY IT');
       } else {
         // TODO: Compute the scopes to put in the access token somehow, with grant etc.

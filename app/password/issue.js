@@ -1,4 +1,5 @@
-exports = module.exports = function(issueToken, pdp, Resources, AAA, verifyPassword) {
+exports = module.exports = function(issueToken, pdp, Resources, AAA, service, verifyPassword) {
+  var TokenTransaction = require('klamm-oauth2').TokenTransaction;
   var MFARequiredError = require('oauth2orize-mfa').MFARequiredError;
   
   
@@ -7,7 +8,66 @@ exports = module.exports = function(issueToken, pdp, Resources, AAA, verifyPassw
     console.log(client)
     console.log(username);
     console.log(passwd);
+    console.log(scope);
+    console.log(body);
     console.log(authInfo);
+    
+    verifyPassword(username, passwd, function(err, user) {
+      console.log(err);
+      console.log(user);
+      
+      console.log('process txn...');
+      
+      
+      function respond() {
+        console.log('TOKEN PASSOWRD RESPOND!');
+        console.log(this);
+        
+        if (this.allowed === undefined) {
+          console.log('TODO: PROMPT, SEND ERROR WITH TOKEN?');
+          
+          //return cb(null, false, this.prompt);
+        } else if (this.allowed == false) {
+          console.log('DENY IT');
+        } else {
+          console.log('ALLOW IT!');
+          
+          // TODO: Compute the scopes to put in the access token somehow, with grant etc.
+          //return cb(null, true, { permissions: [ { resource: txn.resources[0], scope: 'foo' } ]});
+          
+          // TODO: Issue real access token.
+          /*
+          var ctx = {};
+          ctx.user = txn.user;
+          ctx.client = txn.client;
+          ctx.resources = txn.resources;
+          ctx.permissions = [ { resource: txn.resources[0], scope: 'foo' } ];
+          
+          issueToken(ctx, function(err, accessToken) {
+            if (err) { return cb(err); }
+            
+            return cb(null, accessToken);
+          });
+          */
+          
+          return cb(null, 'some-access-token-goes-here');
+        }
+        
+      }
+      
+      
+      // TODO: Parse body for scope, audience, etc...
+      var areq = {
+        scope: scope
+      };
+      
+      var txn = new TokenTransaction(client, areq, user, respond);
+      service(txn);
+    });
+    
+    
+    
+    return;
     
     verifyPassword(username, passwd, function(err, user) {
       console.log(err);
@@ -66,5 +126,6 @@ exports['@require'] = [
   'http://schema.modulate.io/js/aaa/PolicyDecisionPoint',
   'http://schemas.modulate.io/js/aaa/services/Directory',
   'http://schemas.modulate.io/js/aaa',
+  'http://schemas.authnomicon.org/js/aaa/Service',
   'http://i.bixbyjs.org/security/authentication/password/authenticate'
 ];
