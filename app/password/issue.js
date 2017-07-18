@@ -25,6 +25,20 @@ exports = module.exports = function(issueToken, pdp, Resources, AAA, service, ve
         
         if (this.allowed === undefined) {
           console.log('TODO: PROMPT, SEND ERROR WITH TOKEN?');
+          console.log(this.prompt);
+          
+          switch (this.prompt.prompt) {
+          case 'login':
+            // TODO: Pass additional request context needed here to make mfa_token
+            return cb(new MFARequiredError('Multi-factor authentication required', null, user));
+            break;
+            
+          default:
+            console.log('TODO: Unsupported prompt');
+            console.log(this.prompt);
+            break;
+          }
+          
           
           //return cb(null, false, this.prompt);
         } else if (this.allowed == false) {

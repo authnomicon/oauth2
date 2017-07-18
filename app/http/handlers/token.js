@@ -1,69 +1,38 @@
-exports = module.exports = function(server, issueToken, parse, authenticate, errorLogging) {
+exports = module.exports = function(container, server, parse, authenticate, errorLogging, logger) {
   //return server.token();
   
   // curl --data "client_id=1&client_secret=secret&grant_type=authorization_code&code=1234" http://127.0.0.1:8080/token
   
-  return [
+  var stack = [
     parse('application/x-www-form-urlencoded'),
     authenticate(['client_secret_basic', 'client_secret_post', 'none']),
-    server.token(),
-    function mfaErrorHandler(err, req, res, next) {
-      console.log('TOKEN ERROR!');
-      console.log(err);
-      console.log(err.stack);
-      
-      if (err.code !== 'mfa_required') {
-        return next(err);
-      }
-      
-      console.log('HANDLE MFA ERROR!');
-      
-      var ctx = {};
-      ctx.user = err.user;
-      ctx.client = req.user;
-      ctx.audience = [ {
-        id: 'http://localhost/mfa',
-        secret: 'some-secret-shared-with-oauth-authorization-server'
-        //secret: 'some-shared-with-rs-s3cr1t-asdfasdfaieraadsfiasdfasd'
-      } ];
-      //ctx.permissions = [ { resource: resources[0], scope: decision.allowed } ];
-      
-      issueToken(ctx, function(ierr, mfaToken) {
-        console.log('MFA TOKEN!');
-        console.log(err);
-        console.log(mfaToken)
-        
-        
-        if (ierr) { return next(ierr); }
-        
-        
-        var e = {};
-        e.error = err.code || 'server_error';
-        if (err.message) { e.error_description = err.message; }
-        if (err.uri) { e.error_uri = err.uri; }
-        e.mfa_token = mfaToken;
-      
-        res.setHeader('Content-Type', 'application/json');
-        return res.end(JSON.stringify(e));
-        
-        //return cb(null, mfaToken);
-        //return cb(null, accessToken);
-      });
-      return;
-      
-      
-      
-    },
-    errorLogging(),
-    server.errorHandler()
+    server.token()
   ];
   
+  return Promise.resolve(stack)
+    .then(function(stack) {
+      return container.create('http://schemas.authnomicon.org/js/http/oauth2/mfa/middleware/mfaRequiredErrorHandler')
+        .then(function(mfaRequiredErrorHandler) {
+          stack.push(mfaRequiredErrorHandler());
+          return stack;
+        }, function(err) {
+          logger.notice('OAuth 2.0 Multi-Factor Authorization not available');
+          return stack;
+        });
+    })
+    .then(function(stack) {
+      stack.push(errorLogging());
+      stack.push(server.errorHandler());
+      
+      return stack;
+    });
 };
 
 exports['@require'] = [
+  '!container',
   '../../server',
-  '../../util/issuetoken',
   'http://i.bixbyjs.org/http/middleware/parse',
   'http://i.bixbyjs.org/http/middleware/authenticate',
-  'http://i.bixbyjs.org/http/middleware/errorLogging'
+  'http://i.bixbyjs.org/http/middleware/errorLogging',
+  'http://i.bixbyjs.org/Logger'
 ];
