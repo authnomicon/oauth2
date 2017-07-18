@@ -4,7 +4,7 @@ exports = module.exports = function(container, issue, logger) {
   
   // TODO: require('oauth2orize-idpiframerm')
   
-  var modeDecls = container.components('http://schemas.authnomicon.org/js/aaa/oauth2/response/mode');
+  var modeDecls = container.components('http://schemas.authnomicon.org/js/oauth2/responseMode');
   return Promise.all(modeDecls.map(function(spec) { return container.create(spec.id); } ))
     .then(function(plugins) {
       var modes = {}
