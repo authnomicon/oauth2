@@ -23,6 +23,8 @@ exports = module.exports = function(issueToken, pdp, Resources, AAA, service, ve
         console.log('TOKEN PASSOWRD RESPOND!');
         console.log(this);
         
+        var areq = { scope: scope };
+        
         if (this.allowed === undefined) {
           console.log('TODO: PROMPT, SEND ERROR WITH TOKEN?');
           console.log(this.prompt);
@@ -30,7 +32,7 @@ exports = module.exports = function(issueToken, pdp, Resources, AAA, service, ve
           switch (this.prompt.prompt) {
           case 'login':
             // TODO: Pass additional request context needed here to make mfa_token
-            return cb(new MFARequiredError('Multi-factor authentication required', null, user));
+            return cb(new MFARequiredError('Multi-factor authentication required', null, user, areq));
             break;
             
           default:
