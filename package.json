@@ -1,5 +1,5 @@
 {
-  "name": "@authnomicon/aaa-oauth2",
+  "name": "@authnomicon/oauth2",
   "version": "0.0.0",
   "description": "Injectable OAuth 2.0 implementation for Bixby.js.",
   "keywords": [
