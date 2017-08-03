@@ -60,6 +60,6 @@ exports = module.exports = function(container, store, logger) {
 exports['@singleton'] = true;
 exports['@require'] = [
   '!container',
-  'http://schemas.authnomicon.org/js/aaa/oauth2/TransactionStore',
+  './transactionstore',
   'http://i.bixbyjs.org/Logger'
 ];

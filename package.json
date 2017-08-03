@@ -28,7 +28,6 @@
   "assembly": {
     "namespace": "oauth2",
     "components": [
-      "transactionstore",
       "code/grant",
       "code/response",
       "code/issue/code",

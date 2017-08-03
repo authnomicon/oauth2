@@ -8,7 +8,6 @@ exports = module.exports = function(serializeClient, deserializeClient, s) {
   return store;
 };
 
-exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/TransactionStore';
 exports['@singleton'] = true;
 exports['@require'] = [
   './txn/serializeclient',  // TODO: rename folder to txn
