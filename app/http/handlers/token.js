@@ -11,7 +11,7 @@ exports = module.exports = function(container, server, parse, authenticate, erro
   
   return Promise.resolve(stack)
     .then(function(stack) {
-      return container.create('http://schemas.authnomicon.org/js/http/oauth2/mfa/middleware/mfaRequiredErrorHandler')
+      return container.create('http://schemas.authnomicon.org/js/oauth2/http/middleware/mfaRequiredErrorHandler')
         .then(function(mfaRequiredErrorHandler) {
           stack.push(mfaRequiredErrorHandler());
           return stack;
