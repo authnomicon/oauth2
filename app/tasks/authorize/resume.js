@@ -15,6 +15,6 @@ exports['@require'] = [
   '../../server',
   '../../http/handlers/authorize/processtransaction',
   '../../http/handlers/authorize/completetransaction',
-  '../../middleware/prompt',
+  '../../http/middleware/prompt',
   'http://i.bixbyjs.org/http/middleware/errorLogging'
 ];
