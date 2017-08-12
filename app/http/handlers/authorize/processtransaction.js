@@ -3,7 +3,7 @@ exports = module.exports = function(pdp, resourcesDir, Audience, service) {
   var AuthorizationTransaction = require('klamm-oauth2').AuthorizationTransaction;
   
   
-  return function immediateResponse(client, user, scope, type, areq, locals, cb) {
+  return function processTransaction(client, user, scope, type, areq, locals, cb) {
     /*
     var txn = {
       client: client,
@@ -43,19 +43,6 @@ exports = module.exports = function(pdp, resourcesDir, Audience, service) {
     
     var txn = new AuthorizationTransaction(client, areq, user, respond);
     service(txn);
-    
-    
-    /*
-    controller(txn, function(err, allow, info) {
-      console.log('!!! CONTROLLER COMPLETE !!!!');
-      console.log(err);
-      console.log(allow);
-      console.log(info);
-      console.log(txn.locals);
-      
-      return cb(err, allow, info, txn.locals);
-    });
-    */
     return;
     
     

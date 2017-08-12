@@ -5,7 +5,6 @@ exports = module.exports = function(server, validateClient, processTransaction, 
   
   return [
     authenticate([ 'session', 'anonymous' ]),
-    //initiateSession,
     server.authorization(
       validateClient,
       processTransaction,

@@ -15,11 +15,7 @@ exports = module.exports = function(directory) {
   var oauth2orize = require('oauth2orize')
     , uri = require('url');
   
-  return function validateRequest(clientID, redirectURI, cb) {
-    console.log('VALIDATE CLIENT');
-    console.log(clientID);
-    console.log(redirectURI);
-    
+  return function validateClient(clientID, redirectURI, cb) {
     
     directory.get(clientID, function(err, client) {
       if (err) { return cb(err); }
