@@ -47,10 +47,10 @@
       "http/auth/secret/post",
       "http/auth/none",
       "http/middleware/errorhandler",
-      "tasks/authorize",
-      "tasks/authorize/transition/login",
-      "tasks/authorize/transition/mfa",
-      "tasks/authorize/transition/consent"
+      "http/workflow/authorize",
+      "http/workflow/authorize/transition/login",
+      "http/workflow/authorize/transition/mfa",
+      "http/workflow/authorize/transition/consent"
     ]
   },
   "dependencies": {

@@ -12,9 +12,9 @@ exports = module.exports = function(server, processTransaction, completeTransact
 };
 
 exports['@require'] = [
-  '../../server',
-  '../../http/handlers/authorize/processtransaction',
-  '../../http/handlers/authorize/completetransaction',
-  '../../http/middleware/prompt',
+  '../../../server',
+  '../../handlers/authorize/processtransaction',
+  '../../handlers/authorize/completetransaction',
+  '../../middleware/prompt',
   'http://i.bixbyjs.org/http/middleware/errorLogging'
 ];
