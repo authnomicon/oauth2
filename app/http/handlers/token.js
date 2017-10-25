@@ -23,7 +23,6 @@ exports = module.exports = function(container, server, parse, authenticate, erro
     .then(function(stack) {
       stack.push(errorLogging());
       stack.push(server.errorHandler());
-      
       return stack;
     });
 };
