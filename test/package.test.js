@@ -3,7 +3,7 @@
 var expect = require('chai').expect;
 
 
-describe('nodex-aaa-oauth2', function() {
+describe('@authnomicon/oauth2', function() {
   
   describe('package.json', function() {
     var json = require('../package.json');
@@ -12,7 +12,8 @@ describe('nodex-aaa-oauth2', function() {
       expect(json.assembly.namespace).to.equal('oauth2');
       
       expect(json.assembly.components).to.have.length(23);
-      //expect(json.assembly.components).to.include('main');
+      expect(json.assembly.components).to.include('http/authorization');
+      expect(json.assembly.components).to.include('http/token');
     });
   });
   

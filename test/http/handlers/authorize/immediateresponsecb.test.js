@@ -2,7 +2,7 @@
 
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../app/http/handlers/authorize/processtransaction');
+var factory = require('../../../../app/http/handlers/authorize/processtransaction');
 
 
 describe('handlers/authorize/immediateresponsecb', function() {

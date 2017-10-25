@@ -2,7 +2,7 @@
 
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../app/http/handlers/authorize/validateclient');
+var factory = require('../../../../app/http/handlers/authorize/validateclient');
 
 
 describe('handlers/authorize/validaterequestcb', function() {
