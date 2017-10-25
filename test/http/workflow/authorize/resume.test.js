@@ -18,22 +18,37 @@ describe('http/workflow/authorize/resume', function() {
     };
     var processTransaction = function(){};
     var completeTransaction = function(){};
-    var prompt = function(){};
-    var errorLogging = sinon.spy();
     
-    var stub = sinon.stub(server, 'resume').returns([
-      function transactionLoader(req, res, next){},
-      function resume(req, res, next){}
-    ]);
-    var handler = factory(server, processTransaction, completeTransaction, prompt, errorLogging);
+    var resume = function(){};
+    var prompt = function(){};
+    var errorLogging = function(){};
+    var errorHandler = function(){};
+    
+    
+    var resumeStub = sinon.stub(server, 'resume').returns(resume);
+    var errorLoggingStub = sinon.stub().returns(errorLogging);
+    var errorHandlerStub = sinon.stub(server, 'authorizationErrorHandler').returns(errorHandler);
+    
+    var handler = factory(server, processTransaction, completeTransaction, prompt, errorLoggingStub);
     
     it('should return handler', function() {
       expect(handler).to.be.an('array');
+      expect(handler[0]).to.equal(resume);
       expect(handler[1]).to.equal(prompt);
+      expect(handler[2]).to.equal(errorLogging);
+      expect(handler[3]).to.equal(errorHandler);
     });
     
     it('should apply resume', function() {
-      expect(stub).to.have.been.calledWithExactly(processTransaction, completeTransaction);
+      expect(resumeStub).to.have.been.calledWithExactly(processTransaction, completeTransaction);
+    });
+    
+    it('should apply error logging', function() {
+      expect(errorLoggingStub).to.have.been.calledOnce;
+    });
+    
+    it('should apply error handler', function() {
+      expect(errorHandlerStub).to.have.been.calledOnce;
     });
   }); // creating handler
   
