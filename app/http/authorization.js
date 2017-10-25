@@ -2,7 +2,7 @@ exports = module.exports = function(authorizeHandler) {
   var express = require('express');
   var router = new express.Router();
   
-  router.get('/authorize', authorizeHandler);
+  router.get('/', authorizeHandler);
   
   return router;
 };

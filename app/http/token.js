@@ -2,7 +2,7 @@ exports = module.exports = function(tokenHandler) {
   var express = require('express');
   var router = new express.Router();
   
-  router.post('/token', tokenHandler);
+  router.post('/', tokenHandler);
   
   return router;
 };
