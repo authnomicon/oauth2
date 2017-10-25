@@ -23,9 +23,13 @@ describe('handlers/authorize', function() {
     var authenticate = sinon.spy();
     var errorLogging = sinon.spy();
     
-    var stub = sinon.stub(server, 'authorization').returns(
+    var server_authorizationStub = sinon.stub(server, 'authorization').returns(
       function authorization(req, res, next){}
     );
+    var server_authorizationErrorHandlerStub = sinon.stub(server, 'authorizationErrorHandler').returns([
+      function transactionLoader(err, req, res, next){},
+      function authorization(err, req, res, next){}
+    ]);
     var handler = factory(server, validateClient, processTransaction, completeTransaction, prompt, authenticate, errorLogging);
     
     it('should return handler', function() {
@@ -38,7 +42,11 @@ describe('handlers/authorize', function() {
     });
     
     it('should apply authorization', function() {
-      expect(stub).to.have.been.calledWithExactly(validateClient, processTransaction, completeTransaction);
+      expect(server_authorizationStub).to.have.been.calledWithExactly(validateClient, processTransaction, completeTransaction);
+    });
+    
+    it('should apply authorization error handler', function() {
+      expect(server_authorizationStub).to.have.been.calledOnce;
     });
   });
   
