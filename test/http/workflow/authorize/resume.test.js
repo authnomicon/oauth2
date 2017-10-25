@@ -27,13 +27,13 @@ describe('http/workflow/authorize/resume', function() {
     ]);
     var handler = factory(server, processTransaction, completeTransaction, prompt, errorLogging);
     
-    it('should invoke Server#resume with callback', function() {
-      expect(stub).to.have.been.calledWithExactly(processTransaction, completeTransaction);
-    });
-    
     it('should return handler', function() {
       expect(handler).to.be.an('array');
       expect(handler[1]).to.equal(prompt);
+    });
+    
+    it('should apply resume', function() {
+      expect(stub).to.have.been.calledWithExactly(processTransaction, completeTransaction);
     });
   }); // creating handler
   

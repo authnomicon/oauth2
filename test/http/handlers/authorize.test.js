@@ -11,25 +11,35 @@ describe('handlers/authorize', function() {
     expect(factory).to.be.a('function');
   });
   
-  /*
-  describe('factory', function() {
+  describe('creating handler', function() {
     var server = {
-      authorization: function(){}
+      authorization: function(){},
+      authorizationErrorHandler: function(){}
     };
-    var validateRequestCb = function(){};
-    var immediateResponseCb = function(){};
+    var validateClient = function(){};
+    var processTransaction = function(){};
+    var completeTransaction = function(){};
+    var prompt = function(){};
+    var authenticate = sinon.spy();
+    var errorLogging = sinon.spy();
     
-    var stub = sinon.stub(server, 'authorization').returns(function middleware(req, res, next){});
-    var handler = factory(server, validateRequestCb, immediateResponseCb);
+    var stub = sinon.stub(server, 'authorization').returns(
+      function authorization(req, res, next){}
+    );
+    var handler = factory(server, validateClient, processTransaction, completeTransaction, prompt, authenticate, errorLogging);
     
-    it('should invoke Server#authorization with callbacks', function() {
-      expect(stub).to.have.been.calledWithExactly(validateRequestCb, immediateResponseCb);
+    it('should return handler', function() {
+      expect(handler).to.be.an('array');
+      expect(handler[2]).to.equal(prompt);
     });
     
-    it('should return route handler', function() {
-      expect(handler).to.be.a('function');
+    it('should apply authenticate', function() {
+      expect(authenticate).to.have.been.calledWithExactly([ 'session', 'anonymous' ]);
+    });
+    
+    it('should apply authorization', function() {
+      expect(stub).to.have.been.calledWithExactly(validateClient, processTransaction, completeTransaction);
     });
   });
-  */
   
 });
