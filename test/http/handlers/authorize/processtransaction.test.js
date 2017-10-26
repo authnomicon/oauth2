@@ -11,7 +11,7 @@ describe('http/handlers/authorize/processtransaction', function() {
     expect(factory).to.be.a('function');
   });
   
-  describe.only('processTransaction', function() {
+  describe('processTransaction', function() {
     
     describe('that requires login', function() {
       function service(txn) {
