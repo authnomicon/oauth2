@@ -11,14 +11,6 @@ describe('http/handlers/authorize/validateclient', function() {
     expect(factory).to.be.a('function');
   });
   
-  describe('factory', function() {
-    var func = factory();
-    
-    it('should return function', function() {
-      expect(func).to.be.a('function');
-    });
-  });
-  
   describe('validateClient', function() {
     var directory = {
       get: function(){}

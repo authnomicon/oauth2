@@ -42,7 +42,7 @@ exports = module.exports = function(directory) {
       
       if (redirectURI) {
         var url = uri.parse(redirectURI);
-        console.log(url);
+        //console.log(url);
         if (url.protocol == 'storagerelay:') {
           // TODO: Implement web/js origin checks
           return cb(null, client, redirectURI, 'http://localhost:3001');

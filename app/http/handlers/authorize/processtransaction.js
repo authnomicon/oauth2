@@ -1,9 +1,13 @@
-exports = module.exports = function(pdp, resourcesDir, Audience, service) {
+exports = module.exports = function(service, pdp, resourcesDir, Audience) {
   var oauth2orize = require('oauth2orize');
   var AuthorizationTransaction = require('klamm-oauth2').AuthorizationTransaction;
   
   
-  return function processTransaction(client, user, scope, type, areq, locals, cb) {
+  //return function processTransaction(client, user, scope, type, areq, locals, cb) {
+  return function processTransaction(oauthTxn, cb) {
+    console.log('PROCESS TRANSACTION!!!!');
+    console.log(oauthTxn)
+    
     /*
     var txn = {
       client: client,
@@ -17,13 +21,11 @@ exports = module.exports = function(pdp, resourcesDir, Audience, service) {
     
     
     function respond() {
-      console.log('RESPOND!');
-      console.log(this);
-      
       if (this.allowed === undefined) {
         return cb(null, false, this.prompt);
       } else if (this.allowed == false) {
         console.log('DENY IT');
+        // TODO:
       } else {
         // TODO: Compute the scopes to put in the access token somehow, with grant etc.
         return cb(null, true, { permissions: [ { resource: txn.resources[0], scope: 'foo' } ]});
@@ -41,7 +43,7 @@ exports = module.exports = function(pdp, resourcesDir, Audience, service) {
       */
     }
     
-    var txn = new AuthorizationTransaction(client, areq, user, respond);
+    var txn = new AuthorizationTransaction(oauthTxn, respond);
     service(txn);
     return;
     
@@ -235,8 +237,8 @@ exports = module.exports = function(pdp, resourcesDir, Audience, service) {
 };
 
 exports['@require'] = [
+  'http://schemas.authnomicon.org/js/aaa/Service',
   'http://schema.modulate.io/js/aaa/PolicyDecisionPoint',
   'http://schemas.modulate.io/js/aaa/services/Directory',
-  'http://schema.modulate.io/js/aaa/audience',
-  'http://schemas.authnomicon.org/js/aaa/Service'
+  'http://schema.modulate.io/js/aaa/audience'
 ];
