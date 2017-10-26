@@ -5,7 +5,7 @@ var sinon = require('sinon');
 var factory = require('../../../../app/http/handlers/authorize/validateclient');
 
 
-describe('handlers/authorize/validaterequestcb', function() {
+describe('http/handlers/authorize/validateclient', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
@@ -19,20 +19,20 @@ describe('handlers/authorize/validaterequestcb', function() {
     });
   });
   
-  describe('validateRequestCb', function() {
+  describe('validateClient', function() {
     var directory = {
       get: function(){}
     };
     
-    describe('validating a valid client request', function() {
+    describe('validating a valid authorization request', function() {
       var client, redirectURI;
     
       before(function() {
         sinon.stub(directory, 'get').yields(null, {
-          id: '1',
+          id: 's6BhdRkqt3',
           name: 'Example Client',
           redirectURIs: [
-            'https://www.example.com/login/return'
+            'https://client.example.com/cb'
           ]
         });
       });
@@ -42,8 +42,8 @@ describe('handlers/authorize/validaterequestcb', function() {
       });
     
       before(function(done) {
-        var validateFuncCb = factory(directory);
-        validateFuncCb('1', 'https://www.example.com/login/return', function(e, c, r) {
+        var validateClient = factory(directory);
+        validateClient('s6BhdRkqt3', 'https://client.example.com/cb', function(e, c, r) {
           if (e) { return done(e); }
           client = c;
           redirectURI = r;
@@ -51,34 +51,34 @@ describe('handlers/authorize/validaterequestcb', function() {
         });
       });
       
-      it('should call Directory#get', function() {
-        expect(directory.get).to.have.been.calledWith('1');
+      it('should get client from data store', function() {
+        expect(directory.get).to.have.been.calledWith('s6BhdRkqt3');
       });
     
       it('should yield client', function() {
         expect(client).to.deep.equal({
-          id: '1',
+          id: 's6BhdRkqt3',
           name: 'Example Client',
           redirectURIs: [
-            'https://www.example.com/login/return'
+            'https://client.example.com/cb'
           ]
         });
       });
       
       it('should yield redirectURI', function() {
-        expect(redirectURI).to.equal('https://www.example.com/login/return');
+        expect(redirectURI).to.equal('https://client.example.com/cb');
       });
-    }); // validating a valid client request
+    }); // validating a valid authorization request
     
-    describe('validating a valid client request when one URI is registered but omitted from request', function() {
+    describe('validating a valid authorization request when one redirect URI is registered but omitted from request', function() {
       var client, redirectURI;
     
       before(function() {
         sinon.stub(directory, 'get').yields(null, {
-          id: '1',
+          id: 's6BhdRkqt3',
           name: 'Example Client',
           redirectURIs: [
-            'https://www.example.com/login/return'
+            'https://client.example.com/cb'
           ]
         });
       });
@@ -88,8 +88,8 @@ describe('handlers/authorize/validaterequestcb', function() {
       });
     
       before(function(done) {
-        var validateFuncCb = factory(directory);
-        validateFuncCb('1', undefined, function(e, c, r) {
+        var validateClient = factory(directory);
+        validateClient('s6BhdRkqt3', undefined, function(e, c, r) {
           if (e) { return done(e); }
           client = c;
           redirectURI = r;
@@ -97,35 +97,35 @@ describe('handlers/authorize/validaterequestcb', function() {
         });
       });
       
-      it('should call Directory#get', function() {
-        expect(directory.get).to.have.been.calledWith('1');
+      it('should get client from data store', function() {
+        expect(directory.get).to.have.been.calledWith('s6BhdRkqt3');
       });
     
       it('should yield client', function() {
         expect(client).to.deep.equal({
-          id: '1',
+          id: 's6BhdRkqt3',
           name: 'Example Client',
           redirectURIs: [
-            'https://www.example.com/login/return'
+            'https://client.example.com/cb'
           ]
         });
       });
       
       it('should yield redirectURI', function() {
-        expect(redirectURI).to.equal('https://www.example.com/login/return');
+        expect(redirectURI).to.equal('https://client.example.com/cb');
       });
-    }); // validating a valid client request when one URI is registered but omitted from request
+    }); // validating a valid authorization request when one URI is registered but omitted from request
     
-    describe('validating a valid client request when multiple URIs are registered', function() {
+    describe('validating a valid authorization request when multiple URIs are registered', function() {
       var client, redirectURI;
     
       before(function() {
         sinon.stub(directory, 'get').yields(null, {
-          id: '1',
+          id: 's6BhdRkqt3',
           name: 'Example Client',
           redirectURIs: [
-            'https://www.example.com/login/return',
-            'https://www.example.com/oauth2/return'
+            'https://client.example.com/cb',
+            'https://client.example.com/2/cb'
           ]
         });
       });
@@ -135,8 +135,8 @@ describe('handlers/authorize/validaterequestcb', function() {
       });
     
       before(function(done) {
-        var validateFuncCb = factory(directory);
-        validateFuncCb('1', 'https://www.example.com/oauth2/return', function(e, c, r) {
+        var validateClient = factory(directory);
+        validateClient('s6BhdRkqt3', 'https://client.example.com/2/cb', function(e, c, r) {
           if (e) { return done(e); }
           client = c;
           redirectURI = r;
@@ -144,27 +144,27 @@ describe('handlers/authorize/validaterequestcb', function() {
         });
       });
       
-      it('should call Directory#get', function() {
-        expect(directory.get).to.have.been.calledWith('1');
+      it('should get client from data store', function() {
+        expect(directory.get).to.have.been.calledWith('s6BhdRkqt3');
       });
     
       it('should yield client', function() {
         expect(client).to.deep.equal({
-          id: '1',
+          id: 's6BhdRkqt3',
           name: 'Example Client',
           redirectURIs: [
-            'https://www.example.com/login/return',
-            'https://www.example.com/oauth2/return'
+            'https://client.example.com/cb',
+            'https://client.example.com/2/cb'
           ]
         });
       });
       
       it('should yield redirectURI', function() {
-        expect(redirectURI).to.equal('https://www.example.com/oauth2/return');
+        expect(redirectURI).to.equal('https://client.example.com/2/cb');
       });
-    }); // validating a valid client request when multiple URIs are registered
+    }); // validating a valid authorization request when multiple URIs are registered
     
-    describe('validating an invalid client request caused by unknown client', function() {
+    describe('validating an invalid authorization request caused by unknown client', function() {
       var err, client, redirectURI;
     
       before(function() {
@@ -176,8 +176,8 @@ describe('handlers/authorize/validaterequestcb', function() {
       });
       
       before(function(done) {
-        var validateFuncCb = factory(directory);
-        validateFuncCb('1', 'https://www.example.com/return', function(e, c, r) {
+        var validateClient = factory(directory);
+        validateClient('s6BhdRkqt3', 'https://client.example.com/cb', function(e, c, r) {
           err = e;
           client = c;
           redirectURI = r;
@@ -199,14 +199,14 @@ describe('handlers/authorize/validaterequestcb', function() {
       it('should not yield redirectURI', function() {
         expect(redirectURI).to.be.undefined;
       });
-    }); // validating an invalid client request caused by unknown client
+    }); // validating an invalid authorization request caused by unknown client
     
-    describe('validating an invalid client request caused by no registered redirect URIs', function() {
+    describe('validating an invalid authorization request caused by no registered redirect URIs', function() {
       var err, client, redirectURI;
     
       before(function() {
         sinon.stub(directory, 'get').yields(null, {
-          id: '1',
+          id: 's6BhdRkqt3',
           name: 'Example Client'
         });
       });
@@ -216,8 +216,8 @@ describe('handlers/authorize/validaterequestcb', function() {
       });
       
       before(function(done) {
-        var validateFuncCb = factory(directory);
-        validateFuncCb('1', 'https://www.example.com/return', function(e, c, r) {
+        var validateClient = factory(directory);
+        validateClient('s6BhdRkqt3', 'https://client.example.com/cb', function(e, c, r) {
           err = e;
           client = c;
           redirectURI = r;
@@ -239,14 +239,14 @@ describe('handlers/authorize/validaterequestcb', function() {
       it('should not yield redirectURI', function() {
         expect(redirectURI).to.be.undefined;
       });
-    }); // validating an invalid client request caused by no registered redirect URIs
+    }); // validating an invalid authorization request caused by no registered redirect URIs
     
-    describe('validating an invalid client request caused by empty set of redirect URIs', function() {
+    describe('validating an invalid authorization request caused by empty set of redirect URIs', function() {
       var err, client, redirectURI;
     
       before(function() {
         sinon.stub(directory, 'get').yields(null, {
-          id: '1',
+          id: 's6BhdRkqt3',
           name: 'Example Client',
           redirectURIs: []
         });
@@ -257,8 +257,8 @@ describe('handlers/authorize/validaterequestcb', function() {
       });
       
       before(function(done) {
-        var validateFuncCb = factory(directory);
-        validateFuncCb('1', 'https://www.example.com/return', function(e, c, r) {
+        var validateClient = factory(directory);
+        validateClient('s6BhdRkqt3', 'https://client.example.com/cb', function(e, c, r) {
           err = e;
           client = c;
           redirectURI = r;
@@ -280,18 +280,18 @@ describe('handlers/authorize/validaterequestcb', function() {
       it('should not yield redirectURI', function() {
         expect(redirectURI).to.be.undefined;
       });
-    }); // validating an invalid client request caused by empty set of redirect URIs
+    }); // validating an invalid authorization request caused by empty set of redirect URIs
     
-    describe('validating an invalid client request caused by using unregistered redirect URI', function() {
+    describe('validating an invalid authorization request caused by using unregistered redirect URI', function() {
       var err, client, redirectURI;
     
       before(function() {
         sinon.stub(directory, 'get').yields(null, {
-          id: '1',
+          id: 's6BhdRkqt3',
           name: 'Example Client',
           redirectURIs: [
-            'https://www.example.com/login/return',
-            'https://www.example.com/oauth2/return'
+            'https://client.example.com/cb',
+            'https://client.example.com/2/cb'
           ]
         });
       });
@@ -301,8 +301,8 @@ describe('handlers/authorize/validaterequestcb', function() {
       });
       
       before(function(done) {
-        var validateFuncCb = factory(directory);
-        validateFuncCb('1', 'https://www.example.test/return', function(e, c, r) {
+        var validateClient = factory(directory);
+        validateClient('s6BhdRkqt3', 'https://client.example.com/0/cb', function(e, c, r) {
           err = e;
           client = c;
           redirectURI = r;
@@ -324,18 +324,18 @@ describe('handlers/authorize/validaterequestcb', function() {
       it('should not yield redirectURI', function() {
         expect(redirectURI).to.be.undefined;
       });
-    }); // validating an invalid client request caused by using unregistered redirect URI
+    }); // validating an invalid authorization request caused by using unregistered redirect URI
     
-    describe('validating an invalid client request caused by not including a redirect URI when multiple redirect URIs are registered', function() {
+    describe('validating an invalid authorization request caused by not including a redirect URI when multiple redirect URIs are registered', function() {
       var err, client, redirectURI;
     
       before(function() {
         sinon.stub(directory, 'get').yields(null, {
-          id: '1',
+          id: 's6BhdRkqt3',
           name: 'Example Client',
           redirectURIs: [
-            'https://www.example.com/login/return',
-            'https://www.example.com/oauth2/return'
+            'https://client.example.com/cb',
+            'https://client.example.com/2/cb'
           ]
         });
       });
@@ -345,8 +345,8 @@ describe('handlers/authorize/validaterequestcb', function() {
       });
     
       before(function(done) {
-        var validateFuncCb = factory(directory);
-        validateFuncCb('1', undefined, function(e, c, r) {
+        var validateClient = factory(directory);
+        validateClient('s6BhdRkqt3', undefined, function(e, c, r) {
           err = e;
           client = c;
           redirectURI = r;
@@ -370,11 +370,11 @@ describe('handlers/authorize/validaterequestcb', function() {
       });
     }); // validating an invalid client request caused by not including a redirect URI when multiple redirect URIs are registered
     
-    describe('error encountered during directory lookup', function() {
+    describe('error encountered while accessing client data store', function() {
       var err, client, redirectURI;
     
       before(function() {
-        sinon.stub(directory, 'get').yields(new Error('Directory lookup failed'));
+        sinon.stub(directory, 'get').yields(new Error('Data access failed'));
       });
     
       after(function() {
@@ -382,8 +382,8 @@ describe('handlers/authorize/validaterequestcb', function() {
       });
     
       before(function(done) {
-        var validateFuncCb = factory(directory);
-        validateFuncCb('1', 'https://www.example.com/return', function(e, c, r) {
+        var validateClient = factory(directory);
+        validateClient('s6BhdRkqt3', 'https://client.example.com/cb', function(e, c, r) {
           err = e;
           client = c;
           redirectURI = r;
@@ -391,13 +391,13 @@ describe('handlers/authorize/validaterequestcb', function() {
         });
       });
       
-      it('should call Directory#get', function() {
-        expect(directory.get).to.have.been.calledWith('1');
+      it('should attempt to get client from data store', function() {
+        expect(directory.get).to.have.been.calledWith('s6BhdRkqt3');
       });
       
       it('should yield error', function() {
         expect(err).to.be.an.instanceOf(Error);
-        expect(err.message).to.equal('Directory lookup failed');
+        expect(err.message).to.equal('Data access failed');
       });
     
       it('should not yield client', function() {
@@ -407,8 +407,8 @@ describe('handlers/authorize/validaterequestcb', function() {
       it('should not yield redirectURI', function() {
         expect(redirectURI).to.be.undefined;
       });
-    }); // error encountered during directory lookup
+    }); // error encountered while accessing client data store
     
-  }); // validateRequestCb
+  }); // validateClient
   
 });
