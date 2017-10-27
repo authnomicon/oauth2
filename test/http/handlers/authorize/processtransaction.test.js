@@ -11,6 +11,10 @@ describe('http/handlers/authorize/processtransaction', function() {
     expect(factory).to.be.a('function');
   });
   
+  it('should be annotated', function() {
+    expect(factory['@implements']).to.equal('http://schemas.authnomicon.org/js/oauth2/http/authorize/processTransactionFunc');
+  });
+  
   describe('processTransaction', function() {
     
     describe('that requires login', function() {

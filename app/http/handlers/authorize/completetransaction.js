@@ -4,3 +4,5 @@ exports = module.exports = function() {
     return cb();
   };
 };
+
+exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/http/authorize/completeTransactionFunc';

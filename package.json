@@ -28,6 +28,7 @@
   "assembly": {
     "namespace": "oauth2",
     "components": [
+      "server",
       "code/grant",
       "code/response",
       "code/issue/code",
@@ -42,6 +43,8 @@
       "password/grant",
       "util/issuetoken",
       "http/authorization",
+      "http/handlers/authorize/processtransaction",
+      "http/handlers/authorize/completetransaction",
       "http/token",
       "http/auth/secret/basic",
       "http/auth/secret/post",

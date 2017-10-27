@@ -236,6 +236,7 @@ exports = module.exports = function(service, pdp, resourcesDir, Audience) {
   };
 };
 
+exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/http/authorize/processTransactionFunc';
 exports['@require'] = [
   'http://schemas.authnomicon.org/js/aaa/Service',
   'http://schema.modulate.io/js/aaa/PolicyDecisionPoint',
