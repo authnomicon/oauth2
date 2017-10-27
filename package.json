@@ -49,6 +49,7 @@
       "http/auth/secret/basic",
       "http/auth/secret/post",
       "http/auth/none",
+      "http/middleware/prompt",
       "http/middleware/errorhandler",
       "http/workflow/authorize",
       "http/workflow/authorize/transition/login",

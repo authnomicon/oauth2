@@ -26,10 +26,11 @@ describe('http/workflow/authorize/resume', function() {
     
     
     var resumeStub = sinon.stub(server, 'resume').returns(resume);
+    var promptStub = sinon.stub().returns(prompt);
     var errorLoggingStub = sinon.stub().returns(errorLogging);
     var errorHandlerStub = sinon.stub(server, 'authorizationErrorHandler').returns(errorHandler);
     
-    var handler = factory(server, processTransaction, completeTransaction, prompt, errorLoggingStub);
+    var handler = factory(server, processTransaction, completeTransaction, promptStub, errorLoggingStub);
     
     it('should return handler', function() {
       expect(handler).to.be.an('array');

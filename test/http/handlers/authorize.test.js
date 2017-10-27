@@ -29,10 +29,11 @@ describe('http/handlers/authorize', function() {
     
     var authenticateStub = sinon.stub().returns(authenticate);
     var authorizationStub = sinon.stub(server, 'authorization').returns(authorization);
+    var promptStub = sinon.stub().returns(prompt);
     var errorLoggingStub = sinon.stub().returns(errorLogging);
     var errorHandlerStub = sinon.stub(server, 'authorizationErrorHandler').returns(errorHandler);
     
-    var handler = factory(server, validateClient, processTransaction, completeTransaction, prompt, authenticateStub, errorLoggingStub);
+    var handler = factory(server, validateClient, processTransaction, completeTransaction, promptStub, authenticateStub, errorLoggingStub);
     
     it('should return handler', function() {
       expect(handler).to.be.an('array');

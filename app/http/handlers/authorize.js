@@ -10,7 +10,7 @@ exports = module.exports = function(server, validateClient, processTransaction, 
       processTransaction,
       completeTransaction
     ),
-    prompt,
+    prompt(),
     errorLogging(),
     server.authorizationErrorHandler()
   ];
