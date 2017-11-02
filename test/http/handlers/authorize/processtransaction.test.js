@@ -18,30 +18,27 @@ describe('http/handlers/authorize/processtransaction', function() {
   describe('processTransaction', function() {
     
     describe('that requires login', function() {
-      function service(txn) {
+      function service(req, txn) {
         txn.prompt('login');
       }
       serviceSpy = sinon.spy(service);
     
       var allow, info;
       before(function(done) {
-        var txn = {
-          client: {
-            id: 's6BhdRkqt3',
-            name: 'Example Client',
-            redirectURIs: [
-              'https://client.example.com/cb'
-            ]
-          },
-          redirectURI: 'https://client.example.com/cb',
-          req: {
-            type: 'code',
-            clientID: 's6BhdRkqt3'
-          }
-        }
+        var client = {
+          id: 's6BhdRkqt3',
+          name: 'Example Client',
+          redirectURIs: [
+            'https://client.example.com/cb'
+          ]
+        };
+        var areq = {
+          type: 'code',
+          clientID: 's6BhdRkqt3'
+        };
       
         var processTransaction = factory(serviceSpy);
-        processTransaction(txn, function(e, a, i) {
+        processTransaction(client, undefined, areq.scope, areq.type, areq, undefined, function(e, a, i) {
           if (e) { return done(e); }
           allow = a;
           info = i;

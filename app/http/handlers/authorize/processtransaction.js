@@ -1,12 +1,12 @@
 exports = module.exports = function(service, pdp, resourcesDir, Audience) {
   var oauth2orize = require('oauth2orize');
-  var AuthorizationTransaction = require('klamm-oauth2').AuthorizationTransaction;
+  var klamm = require('klamm-oauth2');
   
   
-  //return function processTransaction(client, user, scope, type, areq, locals, cb) {
-  return function processTransaction(oauthTxn, cb) {
+  return function processTransaction(client, user, scope, type, areq, locals, cb) {
+  //return function processTransaction(oauthTxn, cb) {
     console.log('PROCESS TRANSACTION!!!!');
-    console.log(oauthTxn)
+    //console.log(oauthTxn)
     
     /*
     var txn = {
@@ -43,8 +43,9 @@ exports = module.exports = function(service, pdp, resourcesDir, Audience) {
       */
     }
     
-    var txn = new AuthorizationTransaction(oauthTxn, respond);
-    service(txn);
+    var req = new klamm.AuthorizationRequest(client, areq);
+    var txn = new klamm.AuthorizationTransaction(user, respond);
+    service(req, txn, null);
     return;
     
     
