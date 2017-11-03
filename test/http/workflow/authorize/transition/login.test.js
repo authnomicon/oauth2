@@ -14,7 +14,7 @@ describe('http/workflow/authorize/transition/login', function() {
   
   describe('handler', function() {
     
-    describe.only('transitioning from password login', function() {
+    describe('transitioning from password login', function() {
       var request, response, error;
       
       before(function(done) {
@@ -51,7 +51,6 @@ describe('http/workflow/authorize/transition/login', function() {
           } ]
         });
       });
-      
     }); // default behavior
     
   }); // handler
