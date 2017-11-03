@@ -2,12 +2,10 @@ exports = module.exports = function() {
   
   function transition(req, res, next) {
     req.state.authN = req.state.authN || {};
-    // TODO: Add authN.time
-    if (req.authInfo.method) {
-      req.state.authN.methods = req.state.authN.methods || [];
-      req.state.authN.methods.push(req.authInfo.method)
+    req.state.authN.verified = req.state.authN.verified || [];
+    if (req.authInfo) {
+      req.state.authN.verified.push(req.authInfo)
     }
-    
     return next();
   }
   

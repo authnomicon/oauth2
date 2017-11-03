@@ -73,9 +73,10 @@
     "mocha": "^4.0.1",
     "chai": "^4.1.1",
     "chai-date-proximity": "0.0.3",
+    "chai-express-handler": "0.0.2",
+    "sinon": "^4.0.2",
     "sinon-chai": "^2.8.0",
-    "proxyquire": "^1.7.0",
-    "sinon": "^4.0.2"
+    "proxyquire": "^1.7.0"
   },
   "engines": {
     "node": "*"
