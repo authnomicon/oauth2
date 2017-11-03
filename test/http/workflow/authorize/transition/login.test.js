@@ -46,7 +46,7 @@ describe('http/workflow/authorize/transition/login', function() {
       
       it('should update authentication contenxt', function() {
         expect(request.state.authN).to.deep.equal({
-          verified: [ {
+          via: [ {
             method: 'password'
           } ]
         });

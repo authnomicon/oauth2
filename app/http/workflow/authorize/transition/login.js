@@ -2,9 +2,9 @@ exports = module.exports = function() {
   
   function transition(req, res, next) {
     req.state.authN = req.state.authN || {};
-    req.state.authN.verified = req.state.authN.verified || [];
+    req.state.authN.via = req.state.authN.via || [];
     if (req.authInfo) {
-      req.state.authN.verified.push(req.authInfo)
+      req.state.authN.via.push(req.authInfo)
     }
     return next();
   }
