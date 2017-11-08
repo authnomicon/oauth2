@@ -24,6 +24,7 @@ describe('code/response', function() {
     }
     var issue = function(){};
     
+    
     describe('without additional response modes', function() {
       before(function() {
         sinon.stub(container, 'components').returns([]);

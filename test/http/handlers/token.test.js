@@ -26,42 +26,46 @@ describe('http/handlers/token', function() {
     var errorLogging = function(){};
     var errorHandler = function(){};
     
-    var parseStub = sinon.stub().returns(parse);
-    var authenticateStub = sinon.stub().returns(authenticate);
-    var tokenStub = sinon.stub(server, 'token').returns(token);
-    var errorLoggingStub = sinon.stub().returns(errorLogging);
-    var errorHandlerStub = sinon.stub(server, 'errorHandler').returns(errorHandler);
     
-    var handler;
-    before(function(done) {
-      var container = {
-        create: function(){}
-      }
-      sinon.stub(container, 'create').returns(Promise.reject(new Error('component not found')));
+    describe('without multi-factor support', function() {
+      var parseStub = sinon.stub().returns(parse);
+      var authenticateStub = sinon.stub().returns(authenticate);
+      var tokenStub = sinon.stub(server, 'token').returns(token);
+      var errorLoggingStub = sinon.stub().returns(errorLogging);
+      var errorHandlerStub = sinon.stub(server, 'errorHandler').returns(errorHandler);
+    
+      var handler;
+      before(function(done) {
+        var container = {
+          create: function(){}
+        }
+        sinon.stub(container, 'create').returns(Promise.reject(new Error('component not found')));
       
-      var promise = factory(container, server, parseStub, authenticateStub, errorLoggingStub, logger);
-      promise.then(function(h) {
-        handler = h;
-        done();
+        var promise = factory(container, server, parseStub, authenticateStub, errorLoggingStub, logger);
+        promise.then(function(h) {
+          handler = h;
+          done();
+        });
       });
-    });
     
-    it('should return handler', function() {
-      expect(handler).to.be.an('array');
-      expect(handler[0]).to.equal(parse);
-      expect(handler[1]).to.equal(authenticate);
-      expect(handler[2]).to.equal(token );
-      expect(handler[3]).to.equal(errorLogging);
-      expect(handler[4]).to.equal(errorHandler);
-    });
+      it('should return handler', function() {
+        expect(handler).to.be.an('array');
+        expect(handler[0]).to.equal(parse);
+        expect(handler[1]).to.equal(authenticate);
+        expect(handler[2]).to.equal(token );
+        expect(handler[3]).to.equal(errorLogging);
+        expect(handler[4]).to.equal(errorHandler);
+      });
     
-    it('should apply parse', function() {
-      expect(parseStub).to.have.been.calledWithExactly('application/x-www-form-urlencoded');
-    });
+      it('should apply parse', function() {
+        expect(parseStub).to.have.been.calledWithExactly('application/x-www-form-urlencoded');
+      });
     
-    it('should apply authenticate', function() {
-      expect(authenticateStub).to.have.been.calledWithExactly([ 'client_secret_basic', 'client_secret_post', 'none' ]);
-    });
-  });
+      it('should apply authenticate', function() {
+        expect(authenticateStub).to.have.been.calledWithExactly([ 'client_secret_basic', 'client_secret_post', 'none' ]);
+      });
+    }); // without multi-factor support
+    
+  }); // creating handler
   
 });

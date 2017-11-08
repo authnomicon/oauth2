@@ -2,13 +2,13 @@ exports = module.exports = function(container, issue, logger) {
   var oauth2orize = require('oauth2orize');
   
   
-  var modeDecls = container.components('http://schemas.authnomicon.org/js/oauth2/responseMode');
-  return Promise.all(modeDecls.map(function(spec) { return container.create(spec.id); } ))
+  var modeComps = container.components('http://schemas.authnomicon.org/js/oauth2/responseMode');
+  return Promise.all(modeComps.map(function(spec) { return container.create(spec.id); } ))
     .then(function(plugins) {
       var modes = {}
         , name;
       plugins.forEach(function(mode, i) {
-        name = modeDecls[i].a['@mode'];
+        name = modeComps[i].a['@mode'];
         modes[name] = mode;
         logger.info('Loaded response mode for OAuth 2.0 authorization code flow: ' + name);
       });
