@@ -3,7 +3,7 @@
 var $require = require('proxyquire');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../app/code/response');
+var factory = require('../../app/code/grant');
 
 
 describe('code/grant', function() {
@@ -13,28 +13,22 @@ describe('code/grant', function() {
   });
   
   it('should be annotated', function() {
-    //expect(factory['@implements']).to.equal('http://schema.modulate.io/js/aaa/oauth2/exchange');
-    //expect(factory['@type']).to.equal('authorization_code');
-    expect(factory['@singleton']).to.be.undefined;
+    expect(factory['@implements']).to.equal('http://schemas.authnomicon.org/js/oauth2/grantType');
+    expect(factory['@type']).to.equal('authorization_code');
   });
 
-  /*
-  describe('factory', function() {
-    var issueCb = function(){};
+  describe('creating grant', function() {
+    var codeSpy = sinon.stub();
+    var issue = function(){};
     
-    var spy = sinon.spy(function(){ return function(req, res, next){} });
-    var factory = $require('../../app/code/response',
-      { 'oauth2orize': { exchange: { code: spy } } });
-    var exchange = factory(issueCb);
+    var factory = $require('../../app/code/grant',
+      { 'oauth2orize': { exchange: { code: codeSpy } } });
+    var exchange = factory(issue);
     
-    it('should invoke Server#authorization with callbacks', function() {
-      expect(spy).to.have.been.calledWithExactly(issueCb);
-    });
-    
-    it('should return exchange', function() {
-      expect(exchange).to.be.a('function');
+    it('should create exchange', function() {
+      expect(codeSpy).to.have.been.calledOnce;
+      expect(codeSpy).to.have.been.calledWithExactly(issue);
     });
   });
-  */
   
 });

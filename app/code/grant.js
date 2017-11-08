@@ -1,7 +1,7 @@
-exports = module.exports = function(issueCb) {
+exports = module.exports = function(issue) {
   var oauth2orize = require('oauth2orize');
   
-  return oauth2orize.exchange.code(issueCb);
+  return oauth2orize.exchange.code(issue);
 }
 
 exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/grantType';
