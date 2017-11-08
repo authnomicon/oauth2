@@ -1,6 +1,6 @@
 exports = module.exports = function(issueToken, pdp, Resources, AAA, service, verifyPassword) {
-  var TokenTransaction = require('klamm-oauth2').TokenTransaction;
   var MFARequiredError = require('oauth2orize-mfa').MFARequiredError;
+  var klamm = require('klamm-oauth2');
   
   
   return function issue(client, username, passwd, scope, body, authInfo, cb) {
@@ -78,8 +78,9 @@ exports = module.exports = function(issueToken, pdp, Resources, AAA, service, ve
         scope: scope
       };
       
-      var txn = new TokenTransaction(client, areq, user, respond);
-      service(txn);
+      var req = new klamm.TokenRequest(client, areq);
+      var txn = new klamm.TokenTransaction(user, respond);
+      service(req, txn);
     });
     
     
