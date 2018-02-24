@@ -145,5 +145,5 @@ exports['@require'] = [
   'http://schemas.modulate.io/js/aaa/services/Directory',
   'http://schemas.modulate.io/js/aaa',
   'http://schemas.authnomicon.org/js/aaa/Service',
-  'http://i.bixbyjs.org/security/authentication/password/verify'
+  'http://schemas.authnomicon.org/js/security/authentication/password/verifyFn'
 ];
