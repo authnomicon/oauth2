@@ -1,12 +1,24 @@
-exports = module.exports = function(directory) {
+exports = module.exports = function(realms) {
   return function(id, cb) {
-    // TODO: Put DirectorySelector in here
-    
-    directory.query(id, function(err, client) {
+    realms.resolve('clients', function(err, realm) {
       if (err) { return cb(err); }
-      return cb(null, client);
-    });
+      
+      var dir = realm.createDirectory(function() {
+        // The directory is ready, continue processing by fetching the client
+        // record.
+    
+        dir.get(id, function(err, client) {
+          if (err) { return cb(err); }
+          return cb(null, client);
+        });
+      }); // realm.createDirectory(readyListener)
+      
+      // TODO: Handle dir.on('error')??
+      
+    }); // realms.resolve
   };
 };
 
-exports['@require'] = [ 'http://schemas.modulate.io/js/aaa/clients/Directory' ];
+exports['@require'] = [
+  'http://schemas.modulate.io/js/aaa/realms'
+];

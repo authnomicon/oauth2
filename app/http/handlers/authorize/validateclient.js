@@ -63,9 +63,9 @@ exports = module.exports = function(realms) {
       
           return cb(null, client, redirectURI || client.redirectURIs[0], 'http://localhost:3001');
         });
-      }); // realm.createDirectory
+      }); // realm.createDirectory(readyListener)
       
-      // TODO: Handle directory.on('error')??
+      // TODO: Handle dir.on('error')??
       
     }); // realms.resolve
   };
