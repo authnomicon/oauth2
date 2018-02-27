@@ -12,13 +12,18 @@
  * the application will inform the user of the error, and must not automatically
  * redirect the user to an invalid redirection URI.
  */
-exports = module.exports = function(directory) {
+exports = module.exports = function(realms) {
   var oauth2orize = require('oauth2orize')
     , uri = require('url');
   
   return function validateClient(clientID, redirectURI, cb) {
     
-    directory.get(clientID, function(err, client) {
+    realms.resolve('clients', function(err, realm) {
+      if (err) { return cb(err); }
+    
+    var dir = realm.createDirectory(function() {
+    
+    dir.get(clientID, function(err, client) {
       if (err) { return cb(err); }
       if (!client) {
         return cb(new oauth2orize.AuthorizationError('Unknown client', 'unauthorized_client'));
@@ -56,7 +61,10 @@ exports = module.exports = function(directory) {
       
       return cb(null, client, redirectURI || client.redirectURIs[0], 'http://localhost:3001');
     });
+    
+    }); // realm.createDirectory
+    }); // realms.resolve
   };
 };
 
-exports['@require'] = [ 'http://schemas.modulate.io/js/aaa/clients/Directory' ];
+exports['@require'] = [ 'http://schemas.modulate.io/js/aaa/realms' ];
