@@ -1,4 +1,4 @@
-exports = module.exports = function(issueTokenx, /*decode,*/ services, Utilization, /*translate,*/ Tokens, rsg) {
+exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization, /*translate,*/ Tokens, rsg) {
   var oauth2orize = require('oauth2orize');
     
     
@@ -71,7 +71,12 @@ exports = module.exports = function(issueTokenx, /*decode,*/ services, Utilizati
         }
       }
       
-      services.get(info.permissions[0].resourceID, function(err, resource) {
+      
+      realms.resolve('resources', function(err, realm) {
+        
+        var dir = realm.createDirectory(function() {
+      
+      dir.get(info.permissions[0].resourceID, function(err, resource) {
         console.log('ISSUE TOKEN FOR: ');
         console.log(resource);
         
@@ -102,6 +107,12 @@ exports = module.exports = function(issueTokenx, /*decode,*/ services, Utilizati
           return cb(null, accessToken, null, tparms);
         });
       });
+      
+        }); // realm.createDirectory(readyListener)
+    
+        // TODO: Handle dir.on('error')??
+      
+      }); // realms.resolve
       
     
       // FIXME: Put the rest of this back
@@ -235,7 +246,7 @@ exports = module.exports = function(issueTokenx, /*decode,*/ services, Utilizati
 exports['@require'] = [
   '../../util/issuetoken',
   /*'http://schemas.modulate.io/js/aaa/oauth2/code/dialect/jwt/decode',*/
-  'http://schemas.modulate.io/js/aaa/services/Directory',
+  'http://schemas.modulate.io/js/aaa/realms',
   'http://schema.modulate.io/js/aaa/schemes',
   //'http://i.bixbyjs.org/tokens/dialects/jwt/translate',
   'http://i.bixbyjs.org/tokens',
