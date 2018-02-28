@@ -1,19 +1,12 @@
-exports = module.exports = function(directory) {
+exports = module.exports = function(verifyPassword) {
 
   return function(clientID, secret, cb) {
-    directory.query(clientID, function(err, client) {
-      if (err) { return cb(err); }
-      // TODO: Handle ENOTFOUND or somesuch as a undefined client
-      if (!client) {
-        return cb(null, false);
-      }
-      if (client.secret !== secret) {
-        return cb(null, false);
-      }
-      
-      return cb(null, client);
+    verifyPassword(clientID, secret, 'clients', function(err, client, info) {
+      return cb(err, client, info)
     });
   };
 };
 
-exports['@require'] = [ 'http://schemas.modulate.io/js/aaa/clients/Directory' ];
+exports['@require'] = [
+  'http://schemas.authnomicon.org/js/security/authentication/password/verifyFn'
+];
