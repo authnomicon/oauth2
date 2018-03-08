@@ -1,4 +1,4 @@
-exports = module.exports = function(service, pdp, resourcesDir, Audience) {
+exports = module.exports = function(service, pdp, realms, Audience) {
   var oauth2orize = require('oauth2orize');
   var klamm = require('klamm-oauth2');
   
@@ -140,6 +140,11 @@ exports = module.exports = function(service, pdp, resourcesDir, Audience) {
           return;
         }
         
+        
+        console.log('ABOUT TO QUERY RESOURCES DIR')
+        console.log(audience)
+        return
+        
         resourcesDir.query(audience, function(err, resource) {
           if (err) { return iter(err); }
           // TODO: Check if !resource and handle appropriately
@@ -241,6 +246,6 @@ exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/http/authoriz
 exports['@require'] = [
   'http://schemas.authnomicon.org/js/aaa/Service',
   'http://schema.modulate.io/js/aaa/PolicyDecisionPoint',
-  'http://schemas.modulate.io/js/aaa/services/Directory',
+  'http://schemas.modulate.io/js/aaa/realms',
   'http://schema.modulate.io/js/aaa/audience'
 ];
