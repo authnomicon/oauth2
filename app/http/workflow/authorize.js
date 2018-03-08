@@ -6,7 +6,7 @@ exports = module.exports = function(resume) {
   };
 };
 
-exports['@implements'] = 'http://i.bixbyjs.org/http/flows/Task';
+exports['@implements'] = 'http://i.bixbyjs.org/http/state/Prompt';
 exports['@name'] = 'oauth2-authorize';
 exports['@require'] = [
   './authorize/resume'
