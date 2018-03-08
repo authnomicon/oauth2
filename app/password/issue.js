@@ -142,7 +142,7 @@ exports = module.exports = function(issueToken, pdp, Resources, AAA, service, ve
 exports['@require'] = [
   '../util/issuetoken',
   'http://schema.modulate.io/js/aaa/PolicyDecisionPoint',
-  'http://schemas.modulate.io/js/aaa/services/Directory',
+  'http://schemas.modulate.io/js/aaa/realms',
   'http://schemas.modulate.io/js/aaa',
   'http://schemas.authnomicon.org/js/aaa/Service',
   'http://schemas.authnomicon.org/js/security/authentication/password/verifyFn'
