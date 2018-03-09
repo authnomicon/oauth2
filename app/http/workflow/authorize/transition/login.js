@@ -1,6 +1,8 @@
 exports = module.exports = function() {
   
   function transition(req, res, next) {
+    console.log('YEILD TO OAUTH2');
+    
     req.state.authN = req.state.authN || {};
     req.state.authN.via = req.state.authN.via || [];
     if (req.authInfo) {
@@ -10,6 +12,8 @@ exports = module.exports = function() {
   }
   
   function errorHandler(err, req, res, next) {
+    console.log('YEILD ERROR OAUTH2');
+    
     if (req.yieldState) {
       req.state.authN = req.state.authN || {};
       req.state.authN.failureCount =  req.yieldState.failureCount;
@@ -26,7 +30,7 @@ exports = module.exports = function() {
   
 };
 
-exports['@implements'] = 'http://i.bixbyjs.org/http/flows/transition';
-exports['@complete'] = 'login';
-exports['@continue'] = 'oauth2-authorize';
+exports['@implements'] = 'http://i.bixbyjs.org/http/state/yielder';
+exports['@resume'] = 'oauth2-authorize';
+exports['@result'] = 'login';
 exports['@require'] = [];
