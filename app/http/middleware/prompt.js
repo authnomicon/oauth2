@@ -23,9 +23,9 @@ exports = module.exports = function(flows) {
         return next(new oauth2orize.AuthorizationError('Interaction with user is required to proceed', error, null, 403));
       }
     
-      console.log('-------- PROMPTING NOW>...');
-      console.log(req.oauth2)
-      console.log(req.state);
+      //console.log('-------- PROMPTING NOW>...');
+      //console.log(req.oauth2)
+      //console.log(req.state);
     
       req.state = req.oauth2;
       req.state.handle = req.oauth2.transactionID;
@@ -40,12 +40,13 @@ exports = module.exports = function(flows) {
         break;
       }
   
-      flows.goto(prompt, options, req, res, next);
+      res.prompt(prompt);
+      //flows.goto(prompt, options, req, res, next);
     };
   };
 };
 
 exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/http/middleware/prompt';
 exports['@require'] = [
-  'http://i.bixbyjs.org/http/state/Dispatcher'
+  //'http://i.bixbyjs.org/http/state/Dispatcher'
 ];
