@@ -27,8 +27,8 @@ exports = module.exports = function(flows) {
       //console.log(req.oauth2)
       //console.log(req.state);
     
-      req.state = req.oauth2;
-      req.state.handle = req.oauth2.transactionID;
+      //req.state = req.oauth2;
+      //req.state.handle = req.oauth2.transactionID;
     
       options = req.oauth2.info;
       delete options.prompt;
