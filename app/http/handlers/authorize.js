@@ -1,9 +1,9 @@
-exports = module.exports = function(server, validateClient, processTransaction, completeTransaction, prompt, authenticate, flow, errorLogging) {
+exports = module.exports = function(server, validateClient, processTransaction, completeTransaction, prompt, authenticate, ceremony, errorLogging) {
   
   // TODO: Going to need to pass some "select account" function to passport to
   //       select a multi login based on login_hint/id_token/login_ticket
   
-  return flow('oauth2-authorize',
+  return ceremony('oauth2-authorize',
     authenticate([ 'session', 'anonymous' ]),
     server.authorization(
       validateClient,
@@ -23,6 +23,6 @@ exports['@require'] = [
   './authorize/completetransaction',
   '../middleware/prompt',
   'http://i.bixbyjs.org/http/middleware/authenticate',
-  'http://i.bixbyjs.org/http/middleware/state/flow',
+  'http://i.bixbyjs.org/http/middleware/ceremony',
   'http://i.bixbyjs.org/http/middleware/errorLogging'
 ];
