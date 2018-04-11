@@ -1,7 +1,7 @@
-exports = module.exports = function(serializeClient, deserializeClient, s) {
+exports = module.exports = function(serializeClient, deserializeClient) {
   var TransactionStore = require('../lib/transactionstore');
   
-  var store = new TransactionStore(s);
+  var store = new TransactionStore();
   store.serializeClient(serializeClient);
   store.deserializeClient(deserializeClient);
   
@@ -11,6 +11,5 @@ exports = module.exports = function(serializeClient, deserializeClient, s) {
 exports['@singleton'] = true;
 exports['@require'] = [
   './txn/serializeclient',  // TODO: rename folder to txn
-  './txn/deserializeclient',
-  'http://i.bixbyjs.org/http/state/Store'
+  './txn/deserializeclient'
 ];
