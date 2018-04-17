@@ -51,9 +51,9 @@
       "http/auth/none",
       "http/middleware/prompt",
       "http/middleware/errorhandler",
-      "http/workflow/authorize",
-      "http/workflow/authorize/transition/login",
-      "http/workflow/authorize/transition/consent"
+      "http/ceremony/authorize",
+      "http/ceremony/authorize/transition/login",
+      "http/ceremony/authorize/transition/consent"
     ]
   },
   "dependencies": {

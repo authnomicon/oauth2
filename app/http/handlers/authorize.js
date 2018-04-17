@@ -11,6 +11,7 @@ exports = module.exports = function(server, validateClient, processTransaction, 
       completeTransaction
     ),
     prompt(),
+    // TODO: Move error logging and handler into `finish` phase
     errorLogging(),
     server.authorizationErrorHandler(),
   { external: true });
