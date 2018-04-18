@@ -30,7 +30,7 @@ exports = module.exports = function() {
   
 };
 
-exports['@implements'] = 'http://i.bixbyjs.org/http/state/yielder';
-exports['@resume'] = 'oauth2-authorize';
+exports['@implements'] = 'http://i.bixbyjs.org/http/ceremony/Yield';
+exports['@state'] = 'oauth2-authorize';
 exports['@result'] = 'login';
 exports['@require'] = [];
