@@ -1,4 +1,4 @@
-exports = module.exports = function(server, validateClient, processTransaction, completeTransaction, prompt, authenticate, ceremony, errorLogging) {
+exports = module.exports = function(validateClient, processTransaction, completeTransaction, server, authenticate, ceremony) {
   
   // TODO: Going to need to pass some "select account" function to passport to
   //       select a multi login based on login_hint/id_token/login_ticket
@@ -10,17 +10,14 @@ exports = module.exports = function(server, validateClient, processTransaction, 
       processTransaction,
       completeTransaction
     ),
-    //prompt(),
   { external: true });
 };
 
 exports['@require'] = [
-  '../../server',
   './authorize/validateclient',
   './authorize/processtransaction',
   './authorize/completetransaction',
-  '../middleware/prompt',
+  '../../server',
   'http://i.bixbyjs.org/http/middleware/authenticate',
-  'http://i.bixbyjs.org/http/middleware/ceremony',
-  'http://i.bixbyjs.org/http/middleware/errorLogging'
+  'http://i.bixbyjs.org/http/middleware/ceremony'
 ];

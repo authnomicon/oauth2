@@ -18,6 +18,7 @@ exports = module.exports = function(service, pdp, realms, Audience) {
     };
     */
     
+    // Creates an interesting login trap that should be investigated for proper operation.
     //return cb(null, false, { prompt: 'login'});
     
     
