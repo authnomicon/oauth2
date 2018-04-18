@@ -18,6 +18,7 @@ exports = module.exports = function(service, pdp, realms, Audience) {
     };
     */
     
+    //return cb(null, false, { prompt: 'login'});
     
     
     function respond() {
