@@ -6,9 +6,6 @@ exports = module.exports = function(server, processTransaction, completeTransact
       completeTransaction
     ),
     prompt(),
-    // TODO: Move error logging and handler into `finish` phase
-    errorLogging(),
-    server.authorizationErrorHandler()
   ];
 };
 
