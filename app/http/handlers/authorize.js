@@ -3,7 +3,7 @@ exports = module.exports = function(server, validateClient, processTransaction, 
   // TODO: Going to need to pass some "select account" function to passport to
   //       select a multi login based on login_hint/id_token/login_ticket
   
-  return ceremony('oauth2-authorize',
+  return ceremony('oauth2/authorize',
     authenticate([ 'session', 'anonymous' ]),
     server.authorization(
       validateClient,

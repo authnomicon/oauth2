@@ -7,7 +7,7 @@ exports = module.exports = function(resume) {
 };
 
 exports['@implements'] = 'http://i.bixbyjs.org/http/ceremony/Prompt';
-exports['@name'] = 'oauth2-authorize';
+exports['@name'] = 'oauth2/authorize';
 exports['@require'] = [
   './authorize/resume'
 ];
