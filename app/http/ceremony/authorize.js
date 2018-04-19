@@ -3,7 +3,7 @@ exports = module.exports = function(resume, process, finish) {
   return {
     resume: resume,
     process: process,
-    finish: finish
+    exit: finish
   };
 };
 
