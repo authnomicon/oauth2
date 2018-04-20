@@ -1,8 +1,8 @@
-exports = module.exports = function(resume, prompt, exit) {
+exports = module.exports = function(prompt, resume, exit) {
   
   return {
-    resume: resume,
     prompt: prompt,
+    resume: resume,
     exit: exit
   };
 };
@@ -10,7 +10,7 @@ exports = module.exports = function(resume, prompt, exit) {
 exports['@implements'] = 'http://i.bixbyjs.org/http/ceremony/Prompt';
 exports['@name'] = 'oauth2/authorize';
 exports['@require'] = [
-  './authorize/resume',
   './authorize/prompt',
+  './authorize/resume',
   './authorize/exit'
 ];

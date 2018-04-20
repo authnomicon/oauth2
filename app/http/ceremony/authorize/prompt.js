@@ -1,4 +1,4 @@
-exports = module.exports = function(prompt) {
+exports = module.exports = function() {
 
   function prompt(req, res, next) {
     var areq = req.oauth2.req
