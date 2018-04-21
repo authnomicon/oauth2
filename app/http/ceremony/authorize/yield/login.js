@@ -2,6 +2,9 @@ exports = module.exports = function() {
   
   function transition(req, res, next) {
     console.log('YEILD TO OAUTH2');
+    console.log(req.state);
+    console.log(req.yieldState)
+    console.log(req.authInfo)
     
     req.state.authN = req.state.authN || {};
     req.state.authN.via = req.state.authN.via || [];
@@ -27,10 +30,6 @@ exports = module.exports = function() {
     transition,
     errorHandler
   ];
-  
 };
 
-exports['@implements'] = 'http://i.bixbyjs.org/http/ceremony/Yield';
-exports['@state'] = 'oauth2-authorize';
-exports['@result'] = 'login';
 exports['@require'] = [];

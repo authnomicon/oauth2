@@ -50,9 +50,7 @@
       "http/auth/secret/post",
       "http/auth/none",
       "http/middleware/errorhandler",
-      "http/ceremony/authorize",
-      "http/ceremony/authorize/transition/login",
-      "http/ceremony/authorize/transition/consent"
+      "http/ceremony/authorize"
     ]
   },
   "dependencies": {

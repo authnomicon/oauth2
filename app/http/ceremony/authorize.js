@@ -1,9 +1,12 @@
-exports = module.exports = function(prompt, resume, exit) {
+exports = module.exports = function(prompt, resume, exit, yieldLogin, yieldConsent) {
   
   return {
     prompt: prompt,
     resume: resume,
-    exit: exit
+    exit: exit,
+    yields: {
+      'login': yieldLogin
+    }
   };
 };
 
@@ -12,5 +15,7 @@ exports['@name'] = 'oauth2/authorize';
 exports['@require'] = [
   './authorize/prompt',
   './authorize/resume',
-  './authorize/exit'
+  './authorize/exit',
+  './authorize/yield/login',
+  './authorize/yield/consent'
 ];
