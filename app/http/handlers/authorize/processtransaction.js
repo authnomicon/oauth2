@@ -6,10 +6,31 @@ exports = module.exports = function(service, pdp, realms, Audience) {
   return function processTransaction(client, user, scope, type, areq, locals, cb) {
   //return function processTransaction(oauthTxn, cb) {
     console.log('PROCESS TRANSACTION!!!!');
+    console.log(user)
     console.log(areq);
     console.log(locals);
     
     //console.log(oauthTxn)
+    locals = locals || {};
+    
+    if (!user) {
+      return cb(null, false, { prompt: 'login'});
+    }
+    if (!locals.consent) {
+      return cb(null, false, { prompt: 'consent'});
+    }
+    if (locals.consent) {
+      var resource = { id: 'http://www.example.com/',
+       name: 'Example Service',
+       tokenTypes: 
+        [ { type: 'application/fe26.2' },
+          { type: 'urn:ietf:params:oauth:token-type:jwt',
+            secret: 'some-shared-with-rs-s3cr1t-asdfasdfaieraadsfiasdfasd' } ] }
+       return cb(null, true, { permissions: [ { resource: resource, scope: 'foo' } ]});
+    }
+    
+    
+    
     
     /*
     var txn = {
@@ -33,6 +54,11 @@ exports = module.exports = function(service, pdp, realms, Audience) {
         // TODO:
       } else {
         // TODO: Compute the scopes to put in the access token somehow, with grant etc.
+        
+        console.log('AUTHORIZED!');
+        console.log(txn.resources)
+        console.log(txn.resources[0])
+        
         return cb(null, true, { permissions: [ { resource: txn.resources[0], scope: 'foo' } ]});
       }
       
