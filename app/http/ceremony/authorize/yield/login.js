@@ -6,11 +6,19 @@ exports = module.exports = function() {
     console.log(req.yieldState)
     console.log(req.authInfo)
     
-    req.state.authN = req.state.authN || {};
-    req.state.authN.via = req.state.authN.via || [];
+    req.state.authN = req.state.authN || {
+      methods: []
+    };
+    
     if (req.authInfo) {
-      req.state.authN.via.push(req.authInfo)
+      if (req.authInfo.method) { req.state.authN.methods.push(req.authInfo.method) }
     }
+    
+    
+    //req.state.authN.via = req.state.authN.via || [];
+    //if (req.authInfo) {
+    //  req.state.authN.via.push(req.authInfo)
+    //}
     return next();
   }
   
