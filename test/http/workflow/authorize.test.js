@@ -1,7 +1,7 @@
 /* global describe, it */
 
 var expect = require('chai').expect;
-var factory = require('../../../app/http/workflow/authorize');
+var factory = require('../../../app/http/ceremony/authorize');
 
 
 describe('http/workflow/authorize', function() {
