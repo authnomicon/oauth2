@@ -6,6 +6,9 @@ exports = module.exports = function(service, pdp, realms, Audience) {
   return function processTransaction(client, user, scope, type, areq, locals, cb) {
   //return function processTransaction(oauthTxn, cb) {
     console.log('PROCESS TRANSACTION!!!!');
+    console.log(areq);
+    console.log(locals);
+    
     //console.log(oauthTxn)
     
     /*
