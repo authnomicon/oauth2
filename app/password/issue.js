@@ -5,9 +5,7 @@ exports = module.exports = function(issueToken, aaa, verifyPassword) {
   return function issue(client, username, passwd, scope, body, authInfo, cb) {
     
     verifyPassword(username, passwd, function(err, user) {
-      console.log('PASSWORD VERIFIED');
-      console.log(err);
-      console.log(user);
+      if (err) { return cb(err); }
       
       var audience = body.audience;
       
@@ -18,8 +16,7 @@ exports = module.exports = function(issueToken, aaa, verifyPassword) {
         audience: audience
       };
       
-      var req = aaa.request(options, function(res) {
-        console.log(res);
+      var req = aaa.request(options, function(dec) {
       
         function ondecision(result) {
           if (result === true) {
@@ -75,13 +72,13 @@ exports = module.exports = function(issueToken, aaa, verifyPassword) {
         }
       
         function onend() {
-          res.removeListener('decision', ondecision);
-          res.removeListener('prompt', onprompt);
+          dec.removeListener('decision', ondecision);
+          dec.removeListener('prompt', onprompt);
         }
       
-        res.once('decision', ondecision);
-        res.once('prompt', onprompt);
-        res.once('end', onend);
+        dec.once('decision', ondecision);
+        dec.once('prompt', onprompt);
+        dec.once('end', onend);
       });
     
       req.on('error', function(err) {
