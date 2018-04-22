@@ -3,19 +3,9 @@ exports = module.exports = function(aaa, service, pdp, realms, Audience) {
   
   
   return function processTransaction(client, user, scope, type, areq, locals, cb) {
-  //return function processTransaction(oauthTxn, cb) {
-    //console.log('PROCESS TRANSACTION!!!!');
-    //console.log(user)
-    //console.log(areq);
-    //console.log(scope);
-    //console.log(type);
-    //console.log(locals);
-    
-    //console.log(oauthTxn)
     locals = locals || {};
     
     var audience = areq.audience;
-    
     
     var options = {
       client: client,
@@ -24,9 +14,7 @@ exports = module.exports = function(aaa, service, pdp, realms, Audience) {
       audience: audience
     };
     
-    //var req = new klamm.Request(client, user, scope, audience, type);
     var req = aaa.request(options, function(res) {
-      console.log(res);
       
       function ondecision(result) {
         if (result === true) {
@@ -76,54 +64,6 @@ exports = module.exports = function(aaa, service, pdp, realms, Audience) {
     
     return;
     
-    function respond() {
-      if (this.allowed === undefined) {
-        return cb(null, false, this.prompt);
-      } else if (this.allowed == false) {
-        console.log('DENY IT');
-        // TODO:
-      } else {
-        // TODO: Compute the scopes to put in the access token somehow, with grant etc.
-        
-        console.log('AUTHORIZED!');
-        console.log(txn.resources)
-        console.log(txn.resources[0])
-        
-        return cb(null, true, { permissions: [ { resource: txn.resources[0], scope: 'foo' } ]});
-      }
-      
-      
-      /*
-      if (this._prompt) {
-        // TODO: Pass locals here again???
-        return cb(null, false, this._prompt);
-      }
-      
-      // responde with access token
-      return cb(null, true)
-      */
-    }
-    
-    var req = new klamm.AuthorizationRequest(client, areq);
-    var txn = new klamm.AuthorizationTransaction(user, respond);
-    service(req, txn, null);
-    return;
-    
-    
-    /*
-    if (areq.prompt && areq.prompt.indexOf('none') !== -1) {
-      // FIXME: Do this properly
-      //return cb(null, true);
-      return cb(new oauth2orize.AuthorizationError('Interaction with user is required to proceed', 'interaction_required', null, 400));
-    }
-    */
-    
-    if (!user) {
-      if (locals && locals.authN && locals.authN.failureCount >= 3) {
-        return cb(new oauth2orize.AuthorizationError('Too many login failures', 'access_denied'));
-      }
-      return cb(null, false, { prompt: 'login', maxAttempts: 3 });
-    }
     
     // TODO: Put this in for MFA
     /*
@@ -154,99 +94,14 @@ exports = module.exports = function(aaa, service, pdp, realms, Audience) {
     }
     */
     
+    // TODO: Parse audience as identifier, select directory based on realm
     
-    // TODO: reference undefined variable causes bad stack trace.  find and fix
-    //push(consent)
-    locals = locals || {}
-    
-    var consents = locals.consent || [];
-    //if (locals.consent) {
-    //  consents.push(locals.consent);
-    //}
-    
-    
-    function onDecisionReached(resources, decisions) {
-      var locals = {
-        resources: resources,
-        decisions: decisions,
-        consents: consents
-      }
-      
-      // FIXME: Remove this, hack for test
-      return cb(null, true, { permissions: [ { resource: resources[0], scope: 'foo' } ]});
-      
-      if (consents.length == 1) {
-        return cb(null, true, { permissions: [ { resource: resources[0], scope: 'foo' } ]});
-      }
-      
-      return cb(null, false, { prompt: 'consent', scope: [ 'foo', 'bar' ] }, locals);
-    }
-    
-    function onAudienceInferred(err, audiences) {
-      if (err) { return cb(err); }
-      
-      var resources = []
-        , decisions = []
-        , audience
-        , i = 0;
-      
-      (function iter(err) {
-        if (err) { return cb(err); }
-      
-        audience = audiences[i++];
-        // TODO: Parse audience as identifier, select directory based on realm
-        
-        if (!audience) {
-          onDecisionReached(resources, decisions);
-          return;
-        }
-        
-        
-        console.log('ABOUT TO QUERY RESOURCES DIR')
-        console.log(audience)
-        return
-        
-        resourcesDir.query(audience, function(err, resource) {
-          if (err) { return iter(err); }
-          // TODO: Check if !resource and handle appropriately
-          
-          resources.push(resource);
-          pdp.eval(user, resource, client, function(err, decision, info) {
-            if (err) { return iter(err); }
-            
-            decisions.push({ result: decision });
-            return iter();
-          });
-        });
-        
-        
-        /*
-        services.query(audience, function(err, service) {
-          if (err) { return cb(err); }
           // TODO: Return error if no service or use defaults???
         
           // TODO: Metadata about the service needed when issuing a token should be
           //       serailized for later use, as an optimization to avoid a query.
-        
-          var locals = {
-            service: service
-          }
-          // TODO: Implement a way to check for already existing policies/grants
-          return cb(null, false, { prompt: 'consent', scope: [ 'foo', 'bar' ] }, locals);
-        });
-        */
-      })();
-    }
     
-    
-    
-    var iopts = {
-      audience: areq.audience,
-      resource: areq.resource,
-      scope: areq.scope,
-    };
-    
-    Audience.infer(iopts, onAudienceInferred);
+    // TODO: Implement a way to check for already existing policies/grants
     
     /*
     if (areq.webMessageTarget) {
@@ -286,19 +141,6 @@ exports = module.exports = function(aaa, service, pdp, realms, Audience) {
         }
       }
     }
-    */
-    
-    // TODO: Implement some way to authorize things, using a decorator
-    /*
-    var req = {
-      rel: 'oauth2-authorize',
-      user: user,
-      client: client
-    };
-    
-    authorize(req, function(err) {
-      return cb(null, false);
-    });
     */
   };
 };
