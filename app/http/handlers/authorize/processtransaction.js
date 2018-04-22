@@ -28,19 +28,44 @@ exports = module.exports = function(aaa, service, pdp, realms, Audience) {
     var req = aaa.request(options, function(res) {
       console.log(res);
       
+      function ondecision(result) {
+        if (result === true) {
+          if (!locals.consent) {
+            return cb(null, false, { prompt: 'consent'});
+          }
+          
+          var resource = { id: 'http://www.example.com/',
+           name: 'Example Service',
+           tokenTypes: 
+            [ { type: 'application/fe26.2' },
+              { type: 'urn:ietf:params:oauth:token-type:jwt',
+                secret: 'some-shared-with-rs-s3cr1t-asdfasdfaieraadsfiasdfasd' } ] }
+        
+          //res.resources = [ resource ]
+          // TODO: Get res.resources here
+        
+          return cb(null, true, { permissions: [ { resource: resource, scope: 'foo' } ]});
+        } else {
+          return cb(null, false);
+        }
+        
+        // TODO: Handle indeterminte by prompting?  Or attenuating scope?
+      }
+      
       function onprompt(name, options) {
-        console.log('PROMPT!');
-        console.log(name);
-        console.log(options)
-        
-        //res.removeListener('prompt', callbackB);
-        
         var opts = options || {};
         opts.prompt = name;
         return cb(null, false, opts);
       }
       
+      function onend() {
+        res.removeListener('decision', ondecision);
+        res.removeListener('prompt', onprompt);
+      }
+      
+      res.once('decision', ondecision);
       res.once('prompt', onprompt);
+      res.once('end', onend);
     });
     
     req.on('error', function(err) {
