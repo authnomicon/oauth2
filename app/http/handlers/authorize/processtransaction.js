@@ -1,6 +1,5 @@
 exports = module.exports = function(aaa, service, pdp, realms, Audience) {
   var oauth2orize = require('oauth2orize');
-  var klamm = require('klamm-oauth2');
   
   
   return function processTransaction(client, user, scope, type, areq, locals, cb) {

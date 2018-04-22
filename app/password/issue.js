@@ -1,6 +1,6 @@
 exports = module.exports = function(issueToken, pdp, Resources, AAA, service, verifyPassword) {
   var MFARequiredError = require('oauth2orize-mfa').MFARequiredError;
-  var klamm = require('klamm-oauth2');
+  //var klamm = require('klamm-oauth2');
   
   
   return function issue(client, username, passwd, scope, body, authInfo, cb) {
