@@ -14,7 +14,7 @@ exports = module.exports = function(aaa, service, pdp, realms, Audience) {
       audience: audience
     };
     
-    var req = aaa.request(options, function(res) {
+    var dreq = aaa.request(options, function(dec) {
       
       function ondecision(result) {
         if (result === true) {
@@ -47,20 +47,20 @@ exports = module.exports = function(aaa, service, pdp, realms, Audience) {
       }
       
       function onend() {
-        res.removeListener('decision', ondecision);
-        res.removeListener('prompt', onprompt);
+        dec.removeListener('decision', ondecision);
+        dec.removeListener('prompt', onprompt);
       }
       
-      res.once('decision', ondecision);
-      res.once('prompt', onprompt);
-      res.once('end', onend);
+      dec.once('decision', ondecision);
+      dec.once('prompt', onprompt);
+      dec.once('end', onend);
     });
     
-    req.on('error', function(err) {
+    dreq.on('error', function(err) {
       // TODO:
     })
     
-    req.send();
+    dreq.send();
     
     return;
     

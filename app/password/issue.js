@@ -16,7 +16,7 @@ exports = module.exports = function(issueToken, aaa, verifyPassword) {
         audience: audience
       };
       
-      var req = aaa.request(options, function(dec) {
+      var dreq = aaa.request(options, function(dec) {
       
         function ondecision(result) {
           if (result === true) {
@@ -81,11 +81,11 @@ exports = module.exports = function(issueToken, aaa, verifyPassword) {
         dec.once('end', onend);
       });
     
-      req.on('error', function(err) {
+      dreq.on('error', function(err) {
         // TODO:
       })
     
-      req.send();
+      dreq.send();
     });
   };
 };
