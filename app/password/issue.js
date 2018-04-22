@@ -1,4 +1,4 @@
-exports = module.exports = function(issueToken, aaa, pdp, Resources, AAA, service, verifyPassword) {
+exports = module.exports = function(issueToken, aaa, verifyPassword) {
   var MFARequiredError = require('oauth2orize-mfa').MFARequiredError;
   
   
@@ -96,9 +96,5 @@ exports = module.exports = function(issueToken, aaa, pdp, Resources, AAA, servic
 exports['@require'] = [
   '../util/issuetoken',
   'http://schemas.authnomicon.org/js/aaa',
-  'http://schema.modulate.io/js/aaa/PolicyDecisionPoint',
-  'http://schemas.modulate.io/js/aaa/realms',
-  'http://schemas.modulate.io/js/aaa',
-  'http://schemas.authnomicon.org/js/aaa/Service',
   'http://schemas.authnomicon.org/js/security/authentication/password/verifyFn'
 ];
