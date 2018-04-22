@@ -5,6 +5,7 @@ exports = module.exports = function() {
       , prompt = req.oauth2.info.prompt
       , error = 'interaction_required'
       , options;
+      
   
     if (areq.prompt && areq.prompt.indexOf('none') !== -1) {
       switch (prompt) {

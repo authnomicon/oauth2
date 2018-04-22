@@ -1,17 +1,56 @@
-exports = module.exports = function(authorize, service, pdp, realms, Audience) {
+exports = module.exports = function(aaa, service, pdp, realms, Audience) {
   var oauth2orize = require('oauth2orize');
   var klamm = require('klamm-oauth2');
   
   
   return function processTransaction(client, user, scope, type, areq, locals, cb) {
   //return function processTransaction(oauthTxn, cb) {
-    console.log('PROCESS TRANSACTION!!!!');
-    console.log(user)
-    console.log(areq);
-    console.log(locals);
+    //console.log('PROCESS TRANSACTION!!!!');
+    //console.log(user)
+    //console.log(areq);
+    //console.log(scope);
+    //console.log(type);
+    //console.log(locals);
     
     //console.log(oauthTxn)
     locals = locals || {};
+    
+    var audience = areq.audience;
+    
+    
+    var options = {
+      client: client,
+      user: user,
+      scope: scope,
+      audience: audience
+    };
+    
+    //var req = new klamm.Request(client, user, scope, audience, type);
+    var req = aaa.request(options, function(res) {
+      console.log(res);
+      
+      function onprompt(name, options) {
+        console.log('PROMPT!');
+        console.log(name);
+        console.log(options)
+        
+        //res.removeListener('prompt', callbackB);
+        
+        var opts = options || {};
+        opts.prompt = name;
+        return cb(null, false, opts);
+      }
+      
+      res.once('prompt', onprompt);
+    });
+    
+    req.on('error', function(err) {
+      // TODO:
+    })
+    
+    req.send();
+    
+    return;
     
     
     function respond2() {
@@ -309,7 +348,7 @@ exports = module.exports = function(authorize, service, pdp, realms, Audience) {
 
 exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/http/authorize/processTransactionFunc';
 exports['@require'] = [
-  'http://schemas.authnomicon.org/js/authorize',
+  'http://schemas.authnomicon.org/js/aaa',
   'http://schemas.authnomicon.org/js/aaa/Service',
   'http://schema.modulate.io/js/aaa/PolicyDecisionPoint',
   'http://schemas.modulate.io/js/aaa/realms',
