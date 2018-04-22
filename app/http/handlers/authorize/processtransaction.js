@@ -1,4 +1,4 @@
-exports = module.exports = function(aaa, service, pdp, realms, Audience) {
+exports = module.exports = function(aaa) {
   var oauth2orize = require('oauth2orize');
   
   
@@ -147,9 +147,5 @@ exports = module.exports = function(aaa, service, pdp, realms, Audience) {
 
 exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/http/authorize/processTransactionFunc';
 exports['@require'] = [
-  'http://schemas.authnomicon.org/js/aaa',
-  'http://schemas.authnomicon.org/js/aaa/Service',
-  'http://schema.modulate.io/js/aaa/PolicyDecisionPoint',
-  'http://schemas.modulate.io/js/aaa/realms',
-  'http://schema.modulate.io/js/aaa/audience'
+  'http://schemas.authnomicon.org/js/aaa'
 ];
