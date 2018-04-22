@@ -3,7 +3,7 @@
 var $require = require('proxyquire');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../app/code/grant');
+var factory = require('../../../../app/http/grant/code/grant');
 
 
 describe('code/grant', function() {
@@ -21,7 +21,7 @@ describe('code/grant', function() {
     var codeSpy = sinon.stub();
     var issue = function(){};
     
-    var factory = $require('../../app/code/grant',
+    var factory = $require('../../../../app/http/grant/code/grant',
       { 'oauth2orize': { exchange: { code: codeSpy } } });
     var exchange = factory(issue);
     

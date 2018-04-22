@@ -3,7 +3,7 @@
 var $require = require('proxyquire');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../app/code/response');
+var factory = require('../../../../app/http/grant/code/response');
 
 
 describe('code/response', function() {
