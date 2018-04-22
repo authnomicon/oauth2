@@ -1,4 +1,4 @@
-exports = module.exports = function(service, pdp, realms, Audience) {
+exports = module.exports = function(authorize, service, pdp, realms, Audience) {
   var oauth2orize = require('oauth2orize');
   var klamm = require('klamm-oauth2');
   
@@ -12,6 +12,40 @@ exports = module.exports = function(service, pdp, realms, Audience) {
     
     //console.log(oauthTxn)
     locals = locals || {};
+    
+    
+    function respond2() {
+      console.log('KLAMM RESPOND');
+      
+      if (this.allowed === undefined) {
+        return cb(null, false, this.prompt);
+      } else if (this.allowed == false) {
+        console.log('DENY IT');
+        // TODO:
+      } else {
+        // TODO: Compute the scopes to put in the access token somehow, with grant etc.
+        
+        console.log('AUTHORIZED!');
+        //console.log(txn.resources)
+        //console.log(txn.resources[0])
+        
+        var resource = { id: 'http://www.example.com/',
+         name: 'Example Service',
+         tokenTypes: 
+          [ { type: 'application/fe26.2' },
+            { type: 'urn:ietf:params:oauth:token-type:jwt',
+              secret: 'some-shared-with-rs-s3cr1t-asdfasdfaieraadsfiasdfasd' } ] }
+        
+              console.log(txn.resources = [ resource ]);
+        
+        return cb(null, true, { permissions: [ { resource: txn.resources[0], scope: 'foo' } ]});
+      }
+    }
+    
+    var req = new klamm.AuthorizationRequest(client, areq);
+    var txn = new klamm.AuthorizationTransaction(user, respond2);
+    authorize(req, txn, null);
+    return;
     
     if (!user) {
       return cb(null, false, { prompt: 'login'});
@@ -275,6 +309,7 @@ exports = module.exports = function(service, pdp, realms, Audience) {
 
 exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/http/authorize/processTransactionFunc';
 exports['@require'] = [
+  'http://schemas.authnomicon.org/js/authorize',
   'http://schemas.authnomicon.org/js/aaa/Service',
   'http://schema.modulate.io/js/aaa/PolicyDecisionPoint',
   'http://schemas.modulate.io/js/aaa/realms',
