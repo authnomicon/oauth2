@@ -40,7 +40,7 @@
       "ext/modes/webmessage",
       "http/grant/token/response",
       "http/grant/token/issue",
-      "password/grant",
+      "http/exchange/password/grant",
       "util/issuetoken",
       "http/authorization",
       "http/handlers/authorize/processtransaction",
