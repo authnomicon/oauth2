@@ -26,7 +26,7 @@
   ],
   "main": "./app",
   "assembly": {
-    "namespace": "oauth2",
+    "namespace": "org.authnomicon/oauth2",
     "components": [
       "server",
       "http/grant/code/exchange",
