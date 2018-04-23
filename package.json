@@ -29,7 +29,7 @@
     "namespace": "oauth2",
     "components": [
       "server",
-      "http/grant/code/grant",
+      "http/grant/code/exchange",
       "http/grant/code/response",
       "http/grant/code/issue/code",
       "http/grant/code/tokens/authorization-code/interpret",
@@ -40,7 +40,7 @@
       "ext/modes/webmessage",
       "http/grant/token/response",
       "http/grant/token/issue",
-      "http/exchange/password/grant",
+      "http/exchange/password/exchange",
       "util/issuetoken",
       "http/authorization",
       "http/handlers/authorize/processtransaction",
