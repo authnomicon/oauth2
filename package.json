@@ -30,7 +30,7 @@
     "components": [
       "server",
       "http/grant/code/exchange",
-      "http/grant/code/response",
+      "http/grant/code/grant",
       "http/grant/code/issue/code",
       "http/grant/code/tokens/authorization-code/interpret",
       "http/grant/code/tokens/authorization-code/translate",
@@ -38,7 +38,7 @@
       "ext/webmessage",
       "ext/modes/formpost",
       "ext/modes/webmessage",
-      "http/grant/token/response",
+      "http/grant/token/grant",
       "http/grant/token/issue",
       "http/exchange/password/exchange",
       "util/issuetoken",

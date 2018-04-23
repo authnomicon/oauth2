@@ -24,7 +24,7 @@ exports = module.exports = function(container, store, logger) {
     })
     .then(function(server) {
       // Register response types with the OAuth 2.0 server.
-      var typeComps = container.components('http://schemas.authnomicon.org/js/oauth2/responseType')
+      var typeComps = container.components('http://schemas.authnomicon.org/js/http/oauth2/Grant')
     
       return Promise.all(typeComps.map(function(spec) { return container.create(spec.id); } ))
         .then(function(plugins) {
