@@ -19,6 +19,12 @@ exports = module.exports = function(issueToken, aaa, verifyPassword) {
       var dreq = aaa.request(options, function(dec) {
       
         function ondecision(result) {
+          
+          var areq = { scope: scope };
+          var ctx = { methods: [ 'password' ] };
+          return cb(new MFARequiredError('Multi-factor authentication required', null, areq, user, ctx));
+          
+          
           if (result === true) {
             var resource = { id: 'http://www.example.com/',
              name: 'Example Service',
