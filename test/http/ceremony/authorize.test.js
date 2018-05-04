@@ -4,7 +4,7 @@ var expect = require('chai').expect;
 var factory = require('../../../app/http/ceremony/authorize');
 
 
-describe('http/workflow/authorize', function() {
+describe('http/ceremony/authorize', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
