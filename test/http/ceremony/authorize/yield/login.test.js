@@ -6,15 +6,20 @@ var sinon = require('sinon');
 var factory = require('../../../../../app/http/ceremony/authorize/yield/login');
 
 
-describe('http/workflow/authorize/transition/login', function() {
+describe('http/ceremony/authorize/yield/login', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
   });
   
+  it('should be annotated', function() {
+    expect(factory['@implements']).to.be.undefined;
+    expect(factory['@singleton']).to.be.undefined;
+  });
+  
   describe('handler', function() {
     
-    describe('transitioning from password login', function() {
+    describe('yielding from password login', function() {
       var request, response, error;
       
       before(function(done) {
@@ -25,16 +30,15 @@ describe('http/workflow/authorize/transition/login', function() {
             request = req;
             
             req.state = {
-              name: 'oauth2-authorize',
+              name: 'oauth2/authorize',
               client: 's6BhdRkqt3',
               redirectURI: 'https://client.example.com/cb',
-              req: {
+              request: {
                 clientID: 's6BhdRkqt3',
                 redirectURI: 'https://client.example.com/cb',
                 type: 'code',
                 scope: [ 'openid', 'profile', 'email' ]
-              },
-              handle: 'af0ifjsldkj'
+              }
             };
             req.authInfo = { method: 'password' };
           })
@@ -46,9 +50,7 @@ describe('http/workflow/authorize/transition/login', function() {
       
       it('should update authentication contenxt', function() {
         expect(request.state.authN).to.deep.equal({
-          via: [ {
-            method: 'password'
-          } ]
+          methods: [ 'password' ]
         });
       });
     }); // default behavior
