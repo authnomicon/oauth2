@@ -10,6 +10,7 @@ exports = module.exports = function() {
     }
     
     
+    // TODO: Via should contain IdPs, if using federated auth
     //req.state.authN.via = req.state.authN.via || [];
     //if (req.authInfo) {
     //  req.state.authN.via.push(req.authInfo)
