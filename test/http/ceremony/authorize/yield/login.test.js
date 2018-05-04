@@ -42,8 +42,8 @@ describe('http/ceremony/authorize/yield/login', function() {
             };
             req.authInfo = { method: 'password' };
           })
-          .next(function(res) {
-            done();
+          .next(function(err) {
+            done(err);
           })
           .dispatch();
       });
@@ -53,7 +53,7 @@ describe('http/ceremony/authorize/yield/login', function() {
           methods: [ 'password' ]
         });
       });
-    }); // default behavior
+    }); // yielding from password login
     
   }); // handler
   
