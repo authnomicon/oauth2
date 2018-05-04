@@ -13,8 +13,9 @@ describe('password/grant', function() {
   });
   
   it('should be annotated', function() {
-    expect(factory['@implements']).to.equal('http://schemas.authnomicon.org/js/oauth2/grantType');
+    expect(factory['@implements']).to.equal('http://schemas.authnomicon.org/js/http/oauth2/Exchange');
     expect(factory['@type']).to.equal('password');
+    expect(factory['@singleton']).to.be.undefined;
   });
 
   describe('creating grant', function() {
