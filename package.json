@@ -1,7 +1,7 @@
 {
   "name": "@authnomicon/oauth2",
   "version": "0.0.0",
-  "description": "Injectable OAuth 2.0 implementation for Bixby.js.",
+  "description": "OAuth 2.0 components for the Authnomicon project.",
   "keywords": [
     "oauth2"
   ],
@@ -12,10 +12,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/authnomicon/aaa-oauth2.git"
+    "url": "git://github.com/authnomicon/oauth2.git"
   },
   "bugs": {
-    "url": "http://github.com/authnomicon/aaa-oauth2/issues"
+    "url": "http://github.com/authnomicon/oauth2/issues"
   },
   "license": "MIT",
   "licenses": [
