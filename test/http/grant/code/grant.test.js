@@ -15,6 +15,7 @@ describe('http/grant/code/grant', function() {
   it('should be annotated', function() {
     expect(factory['@implements']).to.equal('http://schemas.authnomicon.org/js/http/oauth2/Grant');
     expect(factory['@type']).to.equal('code');
+    expect(factory['@singleton']).to.be.undefined;
   });
   
   describe('creating grant', function() {
@@ -55,6 +56,6 @@ describe('http/grant/code/grant', function() {
       });
     }); // without additional response modes
     
-  }); // creating response
+  }); // creating grant
   
 });

@@ -13,11 +13,12 @@ describe('http/grant/code/exchange', function() {
   });
   
   it('should be annotated', function() {
-    expect(factory['@implements']).to.equal('http://schemas.authnomicon.org/js/oauth2/grantType');
+    expect(factory['@implements']).to.equal('http://schemas.authnomicon.org/js/http/oauth2/Exchange');
     expect(factory['@type']).to.equal('authorization_code');
+    expect(factory['@singleton']).to.be.undefined;
   });
 
-  describe('creating grant', function() {
+  describe('creating exchange', function() {
     var codeSpy = sinon.stub();
     var issue = function(){};
     
