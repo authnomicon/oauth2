@@ -11,7 +11,8 @@ describe('http/authorization', function() {
   });
   
   it('should be annotated', function() {
-    expect(factory['@implements']).to.equal('http://schemas.authnomicon.org/js/oauth2/http/AuthorizationService');
+    expect(factory['@implements']).to.equal('http://schemas.authnomicon.org/js/http/oauth2/AuthorizationService');
+    expect(factory['@singleton']).to.be.undefined;
   });
   
 });

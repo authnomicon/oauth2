@@ -11,7 +11,8 @@ describe('http/token', function() {
   });
   
   it('should be annotated', function() {
-    expect(factory['@implements']).to.equal('http://schemas.authnomicon.org/js/oauth2/http/TokenService');
+    expect(factory['@implements']).to.equal('http://schemas.authnomicon.org/js/http/oauth2/TokenService');
+    expect(factory['@singleton']).to.be.undefined;
   });
   
 });
