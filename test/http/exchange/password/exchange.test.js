@@ -6,7 +6,7 @@ var sinon = require('sinon');
 var factory = require('../../../../app/http/exchange/password/exchange');
 
 
-describe('password/grant', function() {
+describe('http/exchange/password/exchange', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
@@ -18,7 +18,7 @@ describe('password/grant', function() {
     expect(factory['@singleton']).to.be.undefined;
   });
 
-  describe('creating grant', function() {
+  describe('creating exchange', function() {
     var passwordSpy = sinon.stub();
     var issue = function(){};
     

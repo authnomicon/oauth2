@@ -6,18 +6,18 @@ var sinon = require('sinon');
 var factory = require('../../../../app/http/grant/code/grant');
 
 
-describe('code/response', function() {
+describe('http/grant/code/grant', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
   });
   
   it('should be annotated', function() {
-    expect(factory['@implements']).to.equal('http://schemas.authnomicon.org/js/oauth2/responseType');
+    expect(factory['@implements']).to.equal('http://schemas.authnomicon.org/js/http/oauth2/Grant');
     expect(factory['@type']).to.equal('code');
   });
   
-  describe('creating response', function() {
+  describe('creating grant', function() {
     var container = {
       components: function(){},
       create: function(){}
@@ -38,7 +38,7 @@ describe('code/response', function() {
       
       var grant;
       before(function(done) {
-        var factory = $require('../../app/code/grant',
+        var factory = $require('../../../../app/http/grant/code/grant',
           { 'oauth2orize': { grant: { code: codeSpy } } });
         
         var promise = factory(container, issue);
