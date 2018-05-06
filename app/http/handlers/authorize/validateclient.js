@@ -18,8 +18,11 @@ exports = module.exports = function(realms) {
   
   return function validateClient(clientID, redirectURI, cb) {
     
-    realms.resolve('clients', function(err, realm) {
-      if (err) { return cb(err); }
+    realms.get(clientID, 'clients', function(err, client) {
+      console.log('GOT CLIENT!');
+      console.log(err);
+      console.log(client);
+      return;
     
       var dir = realm.createDirectory(function() {
         // The directory is ready, continue processing by fetching the client
