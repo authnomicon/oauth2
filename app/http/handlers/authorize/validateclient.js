@@ -22,13 +22,13 @@ exports = module.exports = function(realms) {
       console.log('GOT CLIENT!');
       console.log(err);
       console.log(client);
-      return;
+      //return;
     
-      var dir = realm.createDirectory(function() {
+      //var dir = realm.createDirectory(function() {
         // The directory is ready, continue processing by fetching the client
         // record.
         
-        dir.get(clientID, function(err, client) {
+        //dir.get(clientID, function(err, client) {
           if (err) { return cb(err); }
           if (!client) {
             return cb(new oauth2orize.AuthorizationError('Unknown client', 'unauthorized_client'));
@@ -65,8 +65,8 @@ exports = module.exports = function(realms) {
           }
       
           return cb(null, client, redirectURI || client.redirectURIs[0], 'http://localhost:3001');
-        });
-      }); // realm.createDirectory(readyListener)
+        //});
+      //}); // realm.createDirectory(readyListener)
       
       // TODO: Handle dir.on('error')??
       
