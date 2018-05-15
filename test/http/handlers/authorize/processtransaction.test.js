@@ -17,7 +17,7 @@ describe('http/handlers/authorize/processtransaction', function() {
   
   describe('processTransaction', function() {
     
-    describe('that requires login', function() {
+    describe.skip('that requires login', function() {
       function service(req, txn) {
         txn.prompt('login');
       }
