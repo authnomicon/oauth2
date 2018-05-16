@@ -68,6 +68,7 @@
     "chai": "^4.1.1",
     "chai-date-proximity": "0.0.3",
     "chai-express-handler": "0.0.3",
+    "flowstate": "^0.5.0",
     "make-node": "^0.3.0",
     "mocha": "^4.0.1",
     "proxyquire": "^1.7.0",
