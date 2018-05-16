@@ -19,116 +19,57 @@ describe('http/ceremony/authorize/resume', function() {
   });
   
   describe('handler', function() {
+    var server = {
+      resume: function(){
+        return function(req, res, next) {
+          next();
+        };
+      }
+    }
+    function processTransaction() {};
+    function completeTransaction() {};
     
-    describe('completing transaction', function() {
-      var request, response, error;
+    
+    describe('default behavior', function() {
+      var request, response, prompt;
       
-      var processTransaction = function(client, user, scope, type, areq, locals, cb){
-        return cb(null, true, { scope: scope });
-      };
-      var completeTransaction = function(req, txn, cb){
-        return cb(null);
-      };
+      before(function() {
+        sinon.spy(server, 'resume');
+      });
       
+      after(function() {
+        server.resume.restore();
+      });
       
       before(function(done) {
-        var server = oauth2orize.createServer();
-        server.deserializeClient(function(id, cb) {
-          return cb(null, { id: id });
-        })
-        server.grant('code', 'response', function(txn, res, complete, next) {
-          complete(function(err) {
-            if (err) { return next(err); }
-            res.redirect('/callback?code=SplxlOBeZQQYbYS6WxSbIA');
-          });
-        })
-        
         var handler = factory(processTransaction, completeTransaction, server);
         
         chai.express.handler(handler)
           .req(function(req) {
             request = req;
-            request.body = { transaction_id: 't1' };
-            request.session = {};
-            request.session.authorize = {};
-            request.session.authorize['t1'] = {
-              client: 's6BhdRkqt3',
-              req: {
-                clientID: 's6BhdRkqt3',
-                redirectURI: 'https://client.example.com/cb',
-                type: 'code',
-                scope: [ 'openid', 'profile', 'email' ]
-              }
-            };
-          })
-          .end(function(res) {
-            response = res;
-            done();
-          })
-          .dispatch();
-      });
-      
-      it('should respond', function() {
-        expect(response.getHeader('Location')).to.equal('/callback?code=SplxlOBeZQQYbYS6WxSbIA');
-      });
-    }); // completing transaction
-    
-    describe('prompting', function() {
-      var request, response, error;
-      
-      var processTransaction = function(client, user, scope, type, areq, locals, cb){
-        return cb(null, false, { prompt: 'consent' });
-      };
-      var completeTransaction = function(req, txn, cb){
-        return cb(null);
-      };
-      
-      
-      before(function(done) {
-        var server = oauth2orize.createServer();
-        server.deserializeClient(function(id, cb) {
-          return cb(null, { id: id });
-        });
-        server.serializeClient(function(client, cb) {
-          return cb(null, client.id);
-        });
-        
-        var handler = factory(processTransaction, completeTransaction, server);
-        
-        chai.express.handler(handler)
-          .req(function(req) {
-            request = req;
-            request.body = { transaction_id: 't1' };
-            request.session = {};
-            request.session.authorize = {};
-            request.session.authorize['t1'] = {
-              client: 's6BhdRkqt3',
-              req: {
-                clientID: 's6BhdRkqt3',
-                redirectURI: 'https://client.example.com/cb',
-                type: 'code',
-                scope: [ 'openid', 'profile', 'email' ]
-              }
-            };
           })
           .res(function(res) {
-            res.prompt = function() {
-              this.redirect('/consent');
-            }
-            
             response = res;
+            res.prompt = function(p) {
+              prompt = p;
+              this.end();
+            }
           })
           .end(function(res) {
-            response = res;
             done();
           })
           .dispatch();
       });
       
-      it('should respond', function() {
-        expect(response.getHeader('Location')).to.equal('/consent');
+      it('should add resume middleware to stack', function() {
+        expect(server.resume.callCount).to.equal(1);
+        expect(server.resume).to.be.calledWithExactly(processTransaction, completeTransaction);
       });
-    }); // prompting
+      
+      it('should prompt', function() {
+        expect(prompt).to.be.undefined;
+      });
+    }); // default behavior
     
   });
   

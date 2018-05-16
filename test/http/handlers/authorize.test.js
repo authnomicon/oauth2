@@ -50,7 +50,7 @@ describe('http/handlers/authorize', function() {
       };
     }
     
-    describe.only('default behavior', function() {
+    describe('default behavior', function() {
       var request, response;
       
       before(function() {
