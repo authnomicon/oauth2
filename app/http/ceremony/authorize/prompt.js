@@ -1,4 +1,6 @@
 exports = module.exports = function() {
+  var oauth2orize = require('oauth2orize');
+
 
   function prompt(req, res, next) {
     var areq = req.oauth2.req
