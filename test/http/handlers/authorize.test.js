@@ -23,7 +23,7 @@ describe('http/handlers/authorize', function() {
     manager.use('oauth2/authorize', {
       prompt:  [
         function(req, res, next) {
-          res.render('consent');
+          res.xprompt('consent');
         }
       ]
     })
@@ -50,8 +50,8 @@ describe('http/handlers/authorize', function() {
       };
     }
     
-    describe('default behavior', function() {
-      var request, response, view, h;
+    describe.only('default behavior', function() {
+      var request, response;
       
       before(function() {
         sinon.spy(server, 'authorization');
@@ -67,15 +67,14 @@ describe('http/handlers/authorize', function() {
         chai.express.handler(handler)
           .req(function(req) {
             request = req;
-            req.session = {};
           })
           .res(function(res) {
             response = res;
-            res.locals = {};
+            res.xprompt = function(prompt) {
+              this.end();
+            }
           })
-          .render(function(res, v) {
-            h = Object.keys(request.session.state)[0];
-            view = v;
+          .end(function(res) {
             done();
           })
           .dispatch();
@@ -99,26 +98,8 @@ describe('http/handlers/authorize', function() {
         expect(request.state.isComplete()).to.equal(false);
       });
       
-      it('should set session', function() {
-        var state = {};
-        state[h] = {
-          name: 'oauth2/authorize'
-        };
-        
-        expect(request.session).to.deep.equal({
-          state: state
-        });
-      });
-      
-      it('should set locals', function() {
-        expect(response.locals).to.deep.equal({
-          state: h
-        });
-      });
-      
-      it('should render', function() {
+      it('should end', function() {
         expect(response.statusCode).to.equal(200);
-        expect(view).to.equal('consent');
       });
     }); // default behavior
     
