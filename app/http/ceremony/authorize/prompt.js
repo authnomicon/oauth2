@@ -3,9 +3,8 @@ exports = module.exports = function() {
   function prompt(req, res, next) {
     var areq = req.oauth2.req
       , prompt = req.oauth2.info.prompt
-      , error = 'interaction_required'
-      , options;
-      
+      , options = req.oauth2.info
+      , error = 'interaction_required';
   
     if (areq.prompt && areq.prompt.indexOf('none') !== -1) {
       switch (prompt) {
@@ -21,26 +20,17 @@ exports = module.exports = function() {
       return next(new oauth2orize.AuthorizationError('Interaction with user is required to proceed', error, null, 403));
     }
 
-    //console.log('-------- PROMPTING NOW>...');
-    //console.log(req.oauth2)
-    //console.log(req.state);
-
-    //req.state = req.oauth2;
-    //req.state.handle = req.oauth2.transactionID;
-
-    options = req.oauth2.info;
     delete options.prompt;
-
     switch (prompt) {
     case 'consent':
-      options.clientID = req.oauth2.client.id;
+      options.client = req.oauth2.client;
       // TODO: Add audience
       break;
     }
 
     res.prompt(prompt, options);
-    //flows.goto(prompt, options, req, res, next);
   }
+
 
   return [
     prompt
