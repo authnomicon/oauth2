@@ -38,7 +38,7 @@ exports = module.exports = function() {
       break;
     }
 
-    res.prompt(prompt);
+    res.prompt(prompt, options);
     //flows.goto(prompt, options, req, res, next);
   }
 
