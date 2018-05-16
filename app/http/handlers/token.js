@@ -16,7 +16,7 @@ exports = module.exports = function(IoC, server, parse, authenticate, errorLoggi
           stack.push(mfaRequiredErrorHandler());
           return stack;
         }, function(err) {
-          logger.notice('OAuth 2.0 Multi-Factor Authorization not available');
+          logger.notice('OAuth 2.0 multi-factor authorization not available');
           return stack;
         });
     })
