@@ -1,4 +1,4 @@
-exports = module.exports = function(container, server, parse, authenticate, errorLogging, logger) {
+exports = module.exports = function(IoC, server, parse, authenticate, errorLogging, logger) {
   //return server.token();
   
   // curl --data "client_id=1&client_secret=secret&grant_type=authorization_code&code=1234" http://127.0.0.1:8080/token
@@ -11,7 +11,7 @@ exports = module.exports = function(container, server, parse, authenticate, erro
   
   return Promise.resolve(stack)
     .then(function(stack) {
-      return container.create('http://schemas.authnomicon.org/js/oauth2/http/middleware/mfaRequiredErrorHandler')
+      return IoC.create('http://schemas.authnomicon.org/js/oauth2/http/middleware/mfaRequiredErrorHandler')
         .then(function(mfaRequiredErrorHandler) {
           stack.push(mfaRequiredErrorHandler());
           return stack;
