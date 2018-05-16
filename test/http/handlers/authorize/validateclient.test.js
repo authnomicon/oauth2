@@ -11,8 +11,13 @@ describe('http/handlers/authorize/validateclient', function() {
     expect(factory).to.be.a('function');
   });
   
+  it('should be annotated', function() {
+    expect(factory['@implements']).to.be.undefined;
+    expect(factory['@singleton']).to.be.undefined;
+  });
+  
   describe('validateClient', function() {
-    var directory = {
+    var ds = {
       get: function(){}
     };
     
@@ -20,7 +25,7 @@ describe('http/handlers/authorize/validateclient', function() {
       var client, redirectURI;
     
       before(function() {
-        sinon.stub(directory, 'get').yields(null, {
+        sinon.stub(ds, 'get').yields(null, {
           id: 's6BhdRkqt3',
           name: 'Example Client',
           redirectURIs: [
@@ -30,21 +35,22 @@ describe('http/handlers/authorize/validateclient', function() {
       });
     
       after(function() {
-        directory.get.restore();
+        ds.get.restore();
       });
     
       before(function(done) {
-        var validateClient = factory(directory);
-        validateClient('s6BhdRkqt3', 'https://client.example.com/cb', function(e, c, r) {
-          if (e) { return done(e); }
+        var validateClient = factory(ds);
+        validateClient('s6BhdRkqt3', 'https://client.example.com/cb', function(err, c, r) {
+          if (err) { return done(err); }
           client = c;
           redirectURI = r;
           done()
         });
       });
       
-      it('should get client from data store', function() {
-        expect(directory.get).to.have.been.calledWith('s6BhdRkqt3');
+      it('should get client from directory services', function() {
+        expect(ds.get.args[0][0]).to.equal('s6BhdRkqt3');
+        expect(ds.get.args[0][1]).to.equal('clients');
       });
     
       it('should yield client', function() {
@@ -66,7 +72,7 @@ describe('http/handlers/authorize/validateclient', function() {
       var client, redirectURI;
     
       before(function() {
-        sinon.stub(directory, 'get').yields(null, {
+        sinon.stub(ds, 'get').yields(null, {
           id: 's6BhdRkqt3',
           name: 'Example Client',
           redirectURIs: [
@@ -76,21 +82,22 @@ describe('http/handlers/authorize/validateclient', function() {
       });
     
       after(function() {
-        directory.get.restore();
+        ds.get.restore();
       });
     
       before(function(done) {
-        var validateClient = factory(directory);
-        validateClient('s6BhdRkqt3', undefined, function(e, c, r) {
-          if (e) { return done(e); }
+        var validateClient = factory(ds);
+        validateClient('s6BhdRkqt3', undefined, function(err, c, r) {
+          if (err) { return done(err); }
           client = c;
           redirectURI = r;
           done()
         });
       });
       
-      it('should get client from data store', function() {
-        expect(directory.get).to.have.been.calledWith('s6BhdRkqt3');
+      it('should get client from directory services', function() {
+        expect(ds.get.args[0][0]).to.equal('s6BhdRkqt3');
+        expect(ds.get.args[0][1]).to.equal('clients');
       });
     
       it('should yield client', function() {
@@ -112,7 +119,7 @@ describe('http/handlers/authorize/validateclient', function() {
       var client, redirectURI;
     
       before(function() {
-        sinon.stub(directory, 'get').yields(null, {
+        sinon.stub(ds, 'get').yields(null, {
           id: 's6BhdRkqt3',
           name: 'Example Client',
           redirectURIs: [
@@ -123,21 +130,22 @@ describe('http/handlers/authorize/validateclient', function() {
       });
     
       after(function() {
-        directory.get.restore();
+        ds.get.restore();
       });
     
       before(function(done) {
-        var validateClient = factory(directory);
-        validateClient('s6BhdRkqt3', 'https://client.example.com/2/cb', function(e, c, r) {
-          if (e) { return done(e); }
+        var validateClient = factory(ds);
+        validateClient('s6BhdRkqt3', 'https://client.example.com/2/cb', function(err, c, r) {
+          if (err) { return done(err); }
           client = c;
           redirectURI = r;
           done()
         });
       });
       
-      it('should get client from data store', function() {
-        expect(directory.get).to.have.been.calledWith('s6BhdRkqt3');
+      it('should get client from directory services', function() {
+        expect(ds.get.args[0][0]).to.equal('s6BhdRkqt3');
+        expect(ds.get.args[0][1]).to.equal('clients');
       });
     
       it('should yield client', function() {
@@ -157,20 +165,20 @@ describe('http/handlers/authorize/validateclient', function() {
     }); // validating a valid authorization request when multiple URIs are registered
     
     describe('validating an invalid authorization request caused by unknown client', function() {
-      var err, client, redirectURI;
+      var error, client, redirectURI;
     
       before(function() {
-        sinon.stub(directory, 'get').yields(null);
+        sinon.stub(ds, 'get').yields(null);
       });
       
       after(function() {
-        directory.get.restore();
+        ds.get.restore();
       });
       
       before(function(done) {
-        var validateClient = factory(directory);
+        var validateClient = factory(ds);
         validateClient('s6BhdRkqt3', 'https://client.example.com/cb', function(e, c, r) {
-          err = e;
+          error = e;
           client = c;
           redirectURI = r;
           done()
@@ -178,10 +186,10 @@ describe('http/handlers/authorize/validateclient', function() {
       });
       
       it('should yield error', function() {
-        expect(err).to.be.an.instanceOf(Error);
-        expect(err.message).to.equal('Unknown client');
-        expect(err.code).to.equal('unauthorized_client');
-        expect(err.status).to.equal(403);
+        expect(error).to.be.an.instanceOf(Error);
+        expect(error.message).to.equal('Unknown client');
+        expect(error.code).to.equal('unauthorized_client');
+        expect(error.status).to.equal(403);
       });
     
       it('should not yield client', function() {
@@ -194,23 +202,23 @@ describe('http/handlers/authorize/validateclient', function() {
     }); // validating an invalid authorization request caused by unknown client
     
     describe('validating an invalid authorization request caused by no registered redirect URIs', function() {
-      var err, client, redirectURI;
+      var error, client, redirectURI;
     
       before(function() {
-        sinon.stub(directory, 'get').yields(null, {
+        sinon.stub(ds, 'get').yields(null, {
           id: 's6BhdRkqt3',
           name: 'Example Client'
         });
       });
     
       after(function() {
-        directory.get.restore();
+        ds.get.restore();
       });
       
       before(function(done) {
-        var validateClient = factory(directory);
+        var validateClient = factory(ds);
         validateClient('s6BhdRkqt3', 'https://client.example.com/cb', function(e, c, r) {
-          err = e;
+          error = e;
           client = c;
           redirectURI = r;
           done()
@@ -218,10 +226,10 @@ describe('http/handlers/authorize/validateclient', function() {
       });
       
       it('should yield error', function() {
-        expect(err).to.be.an.instanceOf(Error);
-        expect(err.message).to.equal('Client has no registered redirect URIs');
-        expect(err.code).to.equal('unauthorized_client');
-        expect(err.status).to.equal(403);
+        expect(error).to.be.an.instanceOf(Error);
+        expect(error.message).to.equal('Client has no registered redirect URIs');
+        expect(error.code).to.equal('unauthorized_client');
+        expect(error.status).to.equal(403);
       });
     
       it('should not yield client', function() {
@@ -234,10 +242,10 @@ describe('http/handlers/authorize/validateclient', function() {
     }); // validating an invalid authorization request caused by no registered redirect URIs
     
     describe('validating an invalid authorization request caused by empty set of redirect URIs', function() {
-      var err, client, redirectURI;
+      var error, client, redirectURI;
     
       before(function() {
-        sinon.stub(directory, 'get').yields(null, {
+        sinon.stub(ds, 'get').yields(null, {
           id: 's6BhdRkqt3',
           name: 'Example Client',
           redirectURIs: []
@@ -245,13 +253,13 @@ describe('http/handlers/authorize/validateclient', function() {
       });
     
       after(function() {
-        directory.get.restore();
+        ds.get.restore();
       });
       
       before(function(done) {
-        var validateClient = factory(directory);
+        var validateClient = factory(ds);
         validateClient('s6BhdRkqt3', 'https://client.example.com/cb', function(e, c, r) {
-          err = e;
+          error = e;
           client = c;
           redirectURI = r;
           done()
@@ -259,10 +267,10 @@ describe('http/handlers/authorize/validateclient', function() {
       });
       
       it('should yield error', function() {
-        expect(err).to.be.an.instanceOf(Error);
-        expect(err.message).to.equal('Client has no registered redirect URIs');
-        expect(err.code).to.equal('unauthorized_client');
-        expect(err.status).to.equal(403);
+        expect(error).to.be.an.instanceOf(Error);
+        expect(error.message).to.equal('Client has no registered redirect URIs');
+        expect(error.code).to.equal('unauthorized_client');
+        expect(error.status).to.equal(403);
       });
     
       it('should not yield client', function() {
@@ -275,10 +283,10 @@ describe('http/handlers/authorize/validateclient', function() {
     }); // validating an invalid authorization request caused by empty set of redirect URIs
     
     describe('validating an invalid authorization request caused by using unregistered redirect URI', function() {
-      var err, client, redirectURI;
+      var error, client, redirectURI;
     
       before(function() {
-        sinon.stub(directory, 'get').yields(null, {
+        sinon.stub(ds, 'get').yields(null, {
           id: 's6BhdRkqt3',
           name: 'Example Client',
           redirectURIs: [
@@ -289,13 +297,13 @@ describe('http/handlers/authorize/validateclient', function() {
       });
     
       after(function() {
-        directory.get.restore();
+        ds.get.restore();
       });
       
       before(function(done) {
-        var validateClient = factory(directory);
+        var validateClient = factory(ds);
         validateClient('s6BhdRkqt3', 'https://client.example.com/0/cb', function(e, c, r) {
-          err = e;
+          error = e;
           client = c;
           redirectURI = r;
           done()
@@ -303,10 +311,10 @@ describe('http/handlers/authorize/validateclient', function() {
       });
       
       it('should yield error', function() {
-        expect(err).to.be.an.instanceOf(Error);
-        expect(err.message).to.equal('Client not permitted to use redirect URI');
-        expect(err.code).to.equal('unauthorized_client');
-        expect(err.status).to.equal(403);
+        expect(error).to.be.an.instanceOf(Error);
+        expect(error.message).to.equal('Client not permitted to use redirect URI');
+        expect(error.code).to.equal('unauthorized_client');
+        expect(error.status).to.equal(403);
       });
     
       it('should not yield client', function() {
@@ -319,10 +327,10 @@ describe('http/handlers/authorize/validateclient', function() {
     }); // validating an invalid authorization request caused by using unregistered redirect URI
     
     describe('validating an invalid authorization request caused by not including a redirect URI when multiple redirect URIs are registered', function() {
-      var err, client, redirectURI;
+      var error, client, redirectURI;
     
       before(function() {
-        sinon.stub(directory, 'get').yields(null, {
+        sinon.stub(ds, 'get').yields(null, {
           id: 's6BhdRkqt3',
           name: 'Example Client',
           redirectURIs: [
@@ -333,13 +341,13 @@ describe('http/handlers/authorize/validateclient', function() {
       });
     
       after(function() {
-        directory.get.restore();
+        ds.get.restore();
       });
     
       before(function(done) {
-        var validateClient = factory(directory);
+        var validateClient = factory(ds);
         validateClient('s6BhdRkqt3', undefined, function(e, c, r) {
-          err = e;
+          error = e;
           client = c;
           redirectURI = r;
           done()
@@ -347,10 +355,10 @@ describe('http/handlers/authorize/validateclient', function() {
       });
       
       it('should yield error', function() {
-        expect(err).to.be.an.instanceOf(Error);
-        expect(err.message).to.equal('Missing required parameter: redirect_uri');
-        expect(err.code).to.equal('invalid_request');
-        expect(err.status).to.equal(400);
+        expect(error).to.be.an.instanceOf(Error);
+        expect(error.message).to.equal('Missing required parameter: redirect_uri');
+        expect(error.code).to.equal('invalid_request');
+        expect(error.status).to.equal(400);
       });
     
       it('should not yield client', function() {
@@ -363,20 +371,20 @@ describe('http/handlers/authorize/validateclient', function() {
     }); // validating an invalid client request caused by not including a redirect URI when multiple redirect URIs are registered
     
     describe('error encountered while accessing client data store', function() {
-      var err, client, redirectURI;
+      var error, client, redirectURI;
     
       before(function() {
-        sinon.stub(directory, 'get').yields(new Error('Data access failed'));
+        sinon.stub(ds, 'get').yields(new Error('Directory services failure'));
       });
     
       after(function() {
-        directory.get.restore();
+        ds.get.restore();
       });
     
       before(function(done) {
-        var validateClient = factory(directory);
+        var validateClient = factory(ds);
         validateClient('s6BhdRkqt3', 'https://client.example.com/cb', function(e, c, r) {
-          err = e;
+          error = e;
           client = c;
           redirectURI = r;
           done()
@@ -384,12 +392,12 @@ describe('http/handlers/authorize/validateclient', function() {
       });
       
       it('should attempt to get client from data store', function() {
-        expect(directory.get).to.have.been.calledWith('s6BhdRkqt3');
+        expect(ds.get).to.have.been.calledWith('s6BhdRkqt3');
       });
       
       it('should yield error', function() {
-        expect(err).to.be.an.instanceOf(Error);
-        expect(err.message).to.equal('Data access failed');
+        expect(error).to.be.an.instanceOf(Error);
+        expect(error.message).to.equal('Directory services failure');
       });
     
       it('should not yield client', function() {

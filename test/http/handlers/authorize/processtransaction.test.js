@@ -65,7 +65,7 @@ describe('http/handlers/authorize/processtransaction', function() {
         });
       });
       
-      it('should now allow', function() {
+      it('should not allow', function() {
         expect(allow).to.equal(false);
       });
       
