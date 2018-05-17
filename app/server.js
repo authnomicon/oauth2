@@ -9,7 +9,7 @@ exports = module.exports = function(container, store, logger) {
   return Promise.resolve(server)
     .then(function(server) {
       // Register request parameter extensions with the OAuth 2.0 server.
-      var paramDecls = container.components('http://schemas.authnomicon.org/js/aaa/oauth2/request/parameters');
+      var paramDecls = container.components('http://schemas.authnomicon.org/js/http/oauth2/RequestParameters');
     
       return Promise.all(paramDecls.map(function(spec) { return container.create(spec.id); } ))
         .then(function(plugins) {
