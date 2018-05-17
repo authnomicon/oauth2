@@ -32,8 +32,14 @@ exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization
       //console.log('UNSEALED CODE');
       //console.log(info);
       
+      //console.log('DECIPHERING CODE');
+      //console.log(code);
+      
     Tokens.decipher(code, { dialect: 'http://schemas.authnomicon.org/tokens/jwt/authorization-code' }, function(err, claims) {
       if (err) { return cb(err); }
+      
+      //console.log(claims);
+      //return
       
       var info = claims;
       var conf, i, len;

@@ -1,4 +1,4 @@
-exports = module.exports = function(Tokens) {
+exports = module.exports = function(tokens) {
   
   return function issueCode(client, redirectURI, user, ares, areq, locals, cb) {
     var ctx = {};
@@ -20,8 +20,17 @@ exports = module.exports = function(Tokens) {
     opt.confidential = false;
     
     // TODO: Ensure that code has a TTL of 10 minutes
-    Tokens.cipher(ctx, opt, function(err, code) {
+    console.log('CIPHER THE CODE');
+    console.log(ctx);
+    console.log(opt);
+    
+    //tokens.encode('urn:ietf:params:oauth:token-type:authorization_code', ctx, opt, function(err, code) {
+    tokens.encode('urn:ietf:params:oauth:token-type:authorization_code', ctx, ctx.audience, function(err, code) {
       if (err) { return cb(err); }
+      
+      console.log(code);
+      return;
+      
       return cb(null, code);
     });
   };
@@ -29,5 +38,5 @@ exports = module.exports = function(Tokens) {
 
 exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/issueCodeFunc';
 exports['@require'] = [
-  'http://i.bixbyjs.org/tokens'
+  'http://i.bixbyjs.org/security/tokens'
 ];
