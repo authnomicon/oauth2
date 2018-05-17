@@ -4,13 +4,13 @@ exports = module.exports = function(container, issue, logger) {
   
   // TODO: require('oauth2orize-idpiframerm')
   
-  var modeDecls = container.components('http://schemas.authnomicon.org/js/oauth2/responseMode');
-  return Promise.all(modeDecls.map(function(spec) { return container.create(spec.id); } ))
+  var components = container.components('http://schemas.authnomicon.org/js/http/oauth2/ResponseMode');
+  return Promise.all(components.map(function(comp) { return comp.create(); } ))
     .then(function(plugins) {
       var modes = {}
         , name;
       plugins.forEach(function(mode, i) {
-        name = modeDecls[i].a['@mode'];
+        name = components[i].a['@mode'];
         if (name == 'query') {
           // The default response mode of this response type is the fragment
           // encoding.  In accordance with security considerations, this
@@ -23,7 +23,7 @@ exports = module.exports = function(container, issue, logger) {
         }
         
         modes[name] = mode;
-        logger.info('Loaded response mode for OAuth 2.0 implicit flow: ' + name);
+        logger.info('Loaded response mode for OAuth 2.0 implicit grant: ' + name);
       });
       
       return oauth2orize.grant.token({
