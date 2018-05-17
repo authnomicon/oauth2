@@ -1,4 +1,4 @@
-exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization, /*translate,*/ Tokens, rsg) {
+exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization, /*translate,*/ tokens, Tokens, rsg) {
   var oauth2orize = require('oauth2orize');
     
     
@@ -35,7 +35,15 @@ exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization
       //console.log('DECIPHERING CODE');
       //console.log(code);
       
-    Tokens.decipher(code, { dialect: 'http://schemas.authnomicon.org/tokens/jwt/authorization-code' }, function(err, claims) {
+    //Tokens.decipher(code, { dialect: 'http://schemas.authnomicon.org/tokens/jwt/authorization-code' }, function(err, claims) {
+    tokens.decode('urn:ietf:params:oauth:token-type:authorization_code', code, function(err, claims) {
+      console.log('DECODED!');
+      console.log(err);
+      console.log(claims)
+      
+      return;
+      
+      
       if (err) { return cb(err); }
       
       //console.log(claims);
@@ -255,6 +263,7 @@ exports['@require'] = [
   'http://schemas.modulate.io/js/aaa/realms',
   'http://schema.modulate.io/js/aaa/schemes',
   //'http://i.bixbyjs.org/tokens/dialects/jwt/translate',
+  'http://i.bixbyjs.org/security/tokens',
   'http://i.bixbyjs.org/tokens',
   // TODO: Collaps this into the facade that combines Encoder and Negotiator
   //'http://i.bixbyjs.org/tokens/Negotiator',
