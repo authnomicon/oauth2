@@ -18,6 +18,7 @@ exports = module.exports = function(tokens) {
     opt.dialect = 'http://schemas.authnomicon.org/tokens/jwt/authorization-code';
     // TODO: Make this confidential
     opt.confidential = false;
+    opt.audience = ctx.audience;
     
     // TODO: Ensure that code has a TTL of 10 minutes
     console.log('CIPHER THE CODE');
@@ -25,12 +26,8 @@ exports = module.exports = function(tokens) {
     console.log(opt);
     
     //tokens.encode('urn:ietf:params:oauth:token-type:authorization_code', ctx, opt, function(err, code) {
-    tokens.encode('urn:ietf:params:oauth:token-type:authorization_code', ctx, ctx.audience, function(err, code) {
+    tokens.encode('urn:ietf:params:oauth:token-type:authorization_code', ctx, opt, function(err, code) {
       if (err) { return cb(err); }
-      
-      console.log(code);
-      return;
-      
       return cb(null, code);
     });
   };
