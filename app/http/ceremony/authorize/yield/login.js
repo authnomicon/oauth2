@@ -18,10 +18,8 @@ exports = module.exports = function() {
   }
   
   function errorHandler(err, req, res, next) {
-    if (req.yieldState) {
-      req.state.authN = req.state.authN || {};
-      req.state.authN.failureCount =  req.yieldState.failureCount;
-    }
+    req.state.authN = req.state.authN || {};
+    req.state.authN.failureCount = (req.state.authN.failureCount || 0) + (req.yieldState.failureCount || 0);
     
     return next(err);
   }

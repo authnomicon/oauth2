@@ -48,7 +48,7 @@ describe('http/ceremony/authorize/yield/login', function() {
           .dispatch();
       });
       
-      it('should update authentication contenxt', function() {
+      it('should update authentication context', function() {
         expect(request.state.authN).to.deep.equal({
           methods: [ 'password' ]
         });
@@ -87,12 +87,148 @@ describe('http/ceremony/authorize/yield/login', function() {
           .dispatch();
       });
       
-      it('should update authentication contenxt', function() {
+      it('should update authentication context', function() {
         expect(request.state.authN).to.deep.equal({
           methods: [ 'password', 'otp' ]
         });
       });
     }); // yielding from OTP multi-factor login
+    
+    describe('login error handling', function() {
+      var request, response, error;
+      
+      before(function(done) {
+        var handler = factory();
+        
+        chai.express.handler(handler)
+          .req(function(req) {
+            request = req;
+            
+            req.state = {
+              name: 'oauth2/authorize',
+              client: 's6BhdRkqt3',
+              redirectURI: 'https://client.example.com/cb',
+              request: {
+                clientID: 's6BhdRkqt3',
+                redirectURI: 'https://client.example.com/cb',
+                type: 'code',
+                scope: [ 'openid', 'profile', 'email' ]
+              }
+            };
+            req.yieldState = {
+              failureCount: 1
+            };
+            req.authInfo = { method: 'password' };
+          })
+          .next(function(err) {
+            error = err;
+            done();
+          })
+          .dispatch(new Error('login failure'));
+      });
+      
+      it('should error', function() {
+        expect(error).to.be.an.instanceOf(Error);
+        expect(error.message).to.equal('login failure');
+      });
+      
+      it('should update authentication context', function() {
+        expect(request.state.authN).to.deep.equal({
+          failureCount: 1
+        });
+      });
+    }); // login error handling
+    
+    describe('multi-factor login error handling', function() {
+      var request, response, error;
+      
+      before(function(done) {
+        var handler = factory();
+        
+        chai.express.handler(handler)
+          .req(function(req) {
+            request = req;
+            
+            req.state = {
+              name: 'oauth2/authorize',
+              client: 's6BhdRkqt3',
+              redirectURI: 'https://client.example.com/cb',
+              request: {
+                clientID: 's6BhdRkqt3',
+                redirectURI: 'https://client.example.com/cb',
+                type: 'code',
+                scope: [ 'openid', 'profile', 'email' ]
+              },
+              authN: {
+                failureCount: 1
+              }
+            };
+            req.yieldState = {
+              failureCount: 3
+            };
+            req.authInfo = { method: 'otp' };
+          })
+          .next(function(err) {
+            error = err;
+            done();
+          })
+          .dispatch(new Error('login failure'));
+      });
+      
+      it('should error', function() {
+        expect(error).to.be.an.instanceOf(Error);
+        expect(error.message).to.equal('login failure');
+      });
+      
+      it('should update authentication context', function() {
+        expect(request.state.authN).to.deep.equal({
+          failureCount: 4
+        });
+      });
+    }); // multi-factor login error handling
+    
+    describe('error handling', function() {
+      var request, response, error;
+      
+      before(function(done) {
+        var handler = factory();
+        
+        chai.express.handler(handler)
+          .req(function(req) {
+            request = req;
+            
+            req.state = {
+              name: 'oauth2/authorize',
+              client: 's6BhdRkqt3',
+              redirectURI: 'https://client.example.com/cb',
+              request: {
+                clientID: 's6BhdRkqt3',
+                redirectURI: 'https://client.example.com/cb',
+                type: 'code',
+                scope: [ 'openid', 'profile', 'email' ]
+              }
+            };
+            req.yieldState = {};
+            req.authInfo = { method: 'password' };
+          })
+          .next(function(err) {
+            error = err;
+            done();
+          })
+          .dispatch(new Error('login failure'));
+      });
+      
+      it('should error', function() {
+        expect(error).to.be.an.instanceOf(Error);
+        expect(error.message).to.equal('login failure');
+      });
+      
+      it('should update authentication context', function() {
+        expect(request.state.authN).to.deep.equal({
+          failureCount: 0
+        });
+      });
+    }); // error handling
     
   }); // handler
   
