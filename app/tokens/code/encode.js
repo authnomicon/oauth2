@@ -7,30 +7,29 @@ exports = module.exports = function() {
   return function encode(msg, cb) {
     console.log('ENCODE MESSAGE');
     console.log(msg)
-    return;
     
     
     var claims = {}
       , perm, i, len;
       
-    claims.sub = ctx.user.id;
-    claims.cid = ctx.client.id;
+    claims.sub = msg.user.id;
+    claims.cid = msg.client.id;
     
     // TODO: Add `azp` claim if client is confidential and expected to authenticate??
     
     claims.prm = [];
-    for (i = 0, len = ctx.permissions.length; i < len; ++i) {
-      perm = ctx.permissions[i];
+    for (i = 0, len = msg.permissions.length; i < len; ++i) {
+      perm = msg.permissions[i];
       claims.prm.push({
         rid: perm.resource.id,
         scp: perm.scope
       });
     }
     
-    if (ctx.redirectURI) {
+    if (msg.redirectURI) {
       // TODO: Write a draft spec about this usage.
       claims.cnf = claims.cnf || {};
-      claims.cnf.redirect_uri = ctx.redirectURI;
+      claims.cnf.redirect_uri = msg.redirectURI;
     }
     
     

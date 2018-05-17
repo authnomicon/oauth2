@@ -1,4 +1,4 @@
-exports = module.exports = function(encode) {
+exports = module.exports = function(encode, decode) {
   
   return {
     encode: encode,
@@ -7,8 +7,9 @@ exports = module.exports = function(encode) {
 };
 
 exports['@implements'] = 'http://i.bixbyjs.org/security/tokens/Schema';
-exports['@type'] = 'http://schemas.authnomicon.org/oauth/token/authorization-code';
-exports['@schema'] = 'http://schemas.authnomicon.org/jwt/authorization-code';
+exports['@type'] = 'urn:ietf:params:oauth:token-type:authorization_code';
+exports['@schema'] = 'urn:ietf:params:oauth:token-type:jwt';
 exports['@require'] = [
-  './encode'
+  './encode',
+  './decode'
 ];
