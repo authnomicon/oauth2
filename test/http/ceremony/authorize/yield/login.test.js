@@ -55,6 +55,45 @@ describe('http/ceremony/authorize/yield/login', function() {
       });
     }); // yielding from password login
     
+    describe('yielding from OTP multi-factor login', function() {
+      var request, response, error;
+      
+      before(function(done) {
+        var handler = factory();
+        
+        chai.express.handler(handler)
+          .req(function(req) {
+            request = req;
+            
+            req.state = {
+              name: 'oauth2/authorize',
+              client: 's6BhdRkqt3',
+              redirectURI: 'https://client.example.com/cb',
+              request: {
+                clientID: 's6BhdRkqt3',
+                redirectURI: 'https://client.example.com/cb',
+                type: 'code',
+                scope: [ 'openid', 'profile', 'email' ]
+              },
+              authN: {
+                methods: [ 'password' ]
+              }
+            };
+            req.authInfo = { method: 'otp' };
+          })
+          .next(function(err) {
+            done(err);
+          })
+          .dispatch();
+      });
+      
+      it('should update authentication contenxt', function() {
+        expect(request.state.authN).to.deep.equal({
+          methods: [ 'password', 'otp' ]
+        });
+      });
+    }); // yielding from OTP multi-factor login
+    
   }); // handler
   
 });

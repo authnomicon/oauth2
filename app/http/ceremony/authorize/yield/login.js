@@ -1,9 +1,8 @@
 exports = module.exports = function() {
   
   function transition(req, res, next) {
-    req.state.authN = req.state.authN || {
-      methods: []
-    };
+    req.state.authN = req.state.authN || {};
+    req.state.authN.methods = req.state.authN.methods || [];
     
     if (req.authInfo) {
       if (req.authInfo.method) { req.state.authN.methods.push(req.authInfo.method) }
