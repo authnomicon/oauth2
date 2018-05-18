@@ -6,10 +6,10 @@ exports = module.exports = function(tokens) {
     ctx.client = client;
     ctx.permissions = ares.permissions;
     ctx.redirectURI = redirectURI;
-    ctx.audience = [ {
-      id: 'http://localhost/authorization_code',
-      secret: 'some-secret-shared-with-oauth-authorization-server'
-    } ];
+    //ctx.audience = [ {
+    //  id: 'http://localhost/authorization_code',
+    //  secret: 'some-secret-shared-with-oauth-authorization-server'
+    //} ];
     // TODO: Add PKCE challenge here (if any)
     
     var opt = {};
@@ -18,7 +18,11 @@ exports = module.exports = function(tokens) {
     opt.dialect = 'http://schemas.authnomicon.org/tokens/jwt/authorization-code';
     // TODO: Make this confidential
     opt.confidential = false;
-    opt.audience = ctx.audience;
+    //opt.audience = ctx.audience;
+    opt.audience = [ {
+      id: 'http://localhost/authorization_code',
+      secret: 'some-secret-shared-with-oauth-authorization-server'
+    } ];
     
     // TODO: Ensure that code has a TTL of 10 minutes
     console.log('CIPHER THE CODE');

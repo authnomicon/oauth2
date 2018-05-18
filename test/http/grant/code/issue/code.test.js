@@ -16,8 +16,11 @@ describe('http/grant/code/issue/code', function() {
     expect(factory['@singleton']).to.be.undefined;
   });
   
-  /*
   describe('issue', function() {
+    var tokens = {
+      encode: function(){}
+    };
+    
     var client = {
       id: 's6BhdRkqt3',
       name: 'Example Client'
@@ -27,25 +30,20 @@ describe('http/grant/code/issue/code', function() {
       displayName: 'John Doe'
     };
     
-    var translate;
-    var Tokens = {
-      seal: function(){}
-    };
-    
     
     describe('issuing an authorization code', function() {
       var code;
       
       before(function() {
-        translate = sinon.stub().yields(null, { sub: '1', cid: 's6BhdRkqt3' });
-        sinon.stub(Tokens, 'seal').yields(null, 'SplxlOBeZQQYbYS6WxSbIA');
+        sinon.stub(tokens, 'encode').yields(null, 'SplxlOBeZQQYbYS6WxSbIA');
       });
       
       after(function() {
-        Tokens.seal.restore();
+        tokens.encode.restore();
       });
       
       before(function(done) {
+        
         var ares = {
           allow: true,
           permissions: [ {
@@ -54,18 +52,18 @@ describe('http/grant/code/issue/code', function() {
           } ]
         }
         
-        var issueCb = factory(translate, Tokens);
-        issueCb(client, 'https://client.example.com/cb', user, ares, {}, {}, function(e, c) {
-          if (e) { return done(e); }
+        var issue = factory(tokens);
+        issue(client, 'https://client.example.com/cb', user, ares, {}, {}, function(err, c) {
+          if (err) { return done(err); }
           code = c;
           done();
         });
       });
       
-      it('should translate context into claims', function() {
-        expect(translate).to.have.been.calledOnce;
-        var call = translate.getCall(0);
-        expect(call.args[0]).to.deep.equal({
+      it('should encode token', function() {
+        expect(tokens.encode.callCount).to.equal(1);
+        expect(tokens.encode.args[0][0]).to.equal('urn:ietf:params:oauth:token-type:authorization_code');
+        expect(tokens.encode.args[0][1]).to.deep.equal({
           user: {
             id: '1',
             displayName: 'John Doe'
@@ -82,22 +80,11 @@ describe('http/grant/code/issue/code', function() {
         });
       });
       
-      it('should seal claims into token', function() {
-        expect(Tokens.seal).to.have.been.calledOnce;
-        var call = Tokens.seal.getCall(0);
-        expect(call.args[0]).to.equal('application/jwt');
-        expect(call.args[1]).to.deep.equal({
-          sub: '1',
-          cid: 's6BhdRkqt3'
-        });
-      });
-      
       it('should yield authorization code', function() {
         expect(code).to.equal('SplxlOBeZQQYbYS6WxSbIA');
       });
     }); // issuing an authorization code
     
   }); // issue
-  */
   
 });
