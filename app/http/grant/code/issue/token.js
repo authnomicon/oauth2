@@ -1,4 +1,4 @@
-exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization, /*translate,*/ tokens, Tokens, rsg) {
+exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization, /*translate,*/ tokens, Tokens, rsg, ds) {
   var oauth2orize = require('oauth2orize');
     
     
@@ -86,11 +86,16 @@ exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization
       }
       
       
-      realms.resolve('resources', function(err, realm) {
+      //realms.resolve('resources', function(err, realm) {
+        console.log(info.permissions[0])
+      ds.get(info.permissions[0].resource.id, 'resources', function(err, resource) {
+        console.log('GOT RESOURC!');
+        console.log(resource)
         
-        var dir = realm.createDirectory(function() {
+        
+        //var dir = realm.createDirectory(function() {
       
-      dir.get(info.permissions[0].resource.id, function(err, resource) {
+      //dir.get(info.permissions[0].resource.id, function(err, resource) {
         console.log('ISSUE TOKEN FOR: ');
         console.log(resource);
         
@@ -120,9 +125,9 @@ exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization
           if (err) { return cb(err); }
           return cb(null, accessToken, null, tparms);
         });
-      });
+        //});
       
-        }); // realm.createDirectory(readyListener)
+        //}); // realm.createDirectory(readyListener)
     
         // TODO: Handle dir.on('error')??
       
@@ -267,5 +272,6 @@ exports['@require'] = [
   'http://i.bixbyjs.org/tokens',
   // TODO: Collaps this into the facade that combines Encoder and Negotiator
   //'http://i.bixbyjs.org/tokens/Negotiator',
-  'http://i.bixbyjs.org/crypto/RSG'
+  'http://i.bixbyjs.org/crypto/RSG',
+  'http://schemas.authnomicon.org/js/ds'
 ];
