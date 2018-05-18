@@ -19,35 +19,13 @@ exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization
           //       itself, which may just support Bearer or not, etc.
   
   return function issueToken(client, code, redirectURI, body, authInfo, cb) {
-    // FIXME: Hardcode to skip this.
-    //return cb(null, 'SOME-A-TOKEN')
     
     
     // TODO: Pass self trust store to token verify, using list of issuers like `ca` to Node's http
     // module
     
-    //Tokens.unseal(code, function(err, info) {
-      // Rename dialect, to translate and interpret
-      
-      //console.log('UNSEALED CODE');
-      //console.log(info);
-      
-      //console.log('DECIPHERING CODE');
-      //console.log(code);
-      
-    //Tokens.decipher(code, { dialect: 'http://schemas.authnomicon.org/tokens/jwt/authorization-code' }, function(err, claims) {
     tokens.decode('urn:ietf:params:oauth:token-type:authorization_code', code, function(err, claims) {
-      console.log('DECODED!');
-      console.log(err);
-      console.log(claims)
-      
-      //return;
-      
-      
       if (err) { return cb(err); }
-      
-      //console.log(claims);
-      //return
       
       var info = claims;
       var conf, i, len;
@@ -62,11 +40,6 @@ exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization
         
         for (i = 0, len = info.confirmation.length; i < len; ++i) {
           conf = info.confirmation[i];
-          
-          console.log('CHECK THIS:');
-          console.log(conf)
-          console.log(redirectURI);
-          
           
           switch (conf.method) {
           case 'redirect-uri':
@@ -85,21 +58,8 @@ exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization
         }
       }
       
-      
-      //realms.resolve('resources', function(err, realm) {
-        console.log(info.permissions[0])
       ds.get(info.permissions[0].resource.id, 'resources', function(err, resource) {
-        console.log('GOT RESOURC!');
-        console.log(resource)
-        
-        
-        //var dir = realm.createDirectory(function() {
-      
-      //dir.get(info.permissions[0].resource.id, function(err, resource) {
-        console.log('ISSUE TOKEN FOR: ');
-        console.log(resource);
-        
-        console.log('X1');
+        if (err) { return cb(err); }
         
         var ctx = {};
         ctx.user = info.user;
