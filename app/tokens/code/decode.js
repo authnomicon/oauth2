@@ -12,15 +12,15 @@ exports = module.exports = function() {
       , prm, keys, key
       , i, len;
     
-    ctx.userID = claims.sub;
-    ctx.clientID = claims.client_id;
+    ctx.user = { id: claims.sub };
+    ctx.client = { id: claims.client_id };
     ctx.permissions = [];
     
     if (claims.permissions) {
       for (i = 0, len = claims.permissions.length; i < len; ++i) {
         prm = claims.permissions[i];
         ctx.permissions.push({
-          resourceID: prm.resource_id,
+          resource: { id: prm.resource_id },
           scope: prm.scope.split(' ')
         });
       }

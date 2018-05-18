@@ -41,10 +41,10 @@ describe('tokens/code/decode', function() {
       
       it('should encode', function() {
         expect(message).to.deep.equal({
-          userID: '1',
-          clientID: 's6BhdRkqt3',
+          user: { id: '1' },
+          client: { id: 's6BhdRkqt3' },
           permissions: [ {
-            resourceID: '112210f47de98100',
+            resource: { id: '112210f47de98100' },
             scope: [ 'read:foo', 'write:foo', 'read:bar' ]
           } ]
         });

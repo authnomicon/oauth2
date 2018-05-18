@@ -54,7 +54,7 @@ exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization
         
       // Verify that the authorization code was issued to the client that is
       // attempting to exchange it for an access token.
-      if (client.id !== info.clientID) {
+      if (client.id !== info.client.id) {
         return cb(null, false);
       }
       
@@ -90,14 +90,14 @@ exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization
         
         var dir = realm.createDirectory(function() {
       
-      dir.get(info.permissions[0].resourceID, function(err, resource) {
+      dir.get(info.permissions[0].resource.id, function(err, resource) {
         console.log('ISSUE TOKEN FOR: ');
         console.log(resource);
         
         console.log('X1');
         
         var ctx = {};
-        ctx.user = { id: info.userID };
+        ctx.user = info.user;
         ctx.client = client;
         ctx.permissions = [ { resource: resource, scope: info.permissions[0].scope } ];
         ctx.audience = [ {
