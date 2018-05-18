@@ -1,4 +1,4 @@
-exports = module.exports = function(negotiateTokenContent, negotiateTokenType, Tokens) {
+exports = module.exports = function(negotiateTokenContent, negotiateTokenType, tokens) {
   
   return function issueToken(ctx, options, cb) {
     console.log('ISSUE TOKEN!');
@@ -19,11 +19,12 @@ exports = module.exports = function(negotiateTokenContent, negotiateTokenType, T
     
     copts.dialect = options.dialect || copts.dialect;
     copts.confidential = false;
+    copts.audience = ctx.audience;
     
     //copts.type = 'http://schemas.modulate.io/tokens/jwt/twilio';
     //copts.dialect = 'http://schemas.modulate.io/tokens/jwt/twilio';
     
-    Tokens.cipher(ctx, copts, function(err, token) {
+    tokens.encode('access', ctx, copts, function(err, token) {
       if (err) { return cb(err); }
       return cb(null, token);
     });
@@ -35,5 +36,5 @@ exports['@singleton'] = true;
 exports['@require'] = [
   './negotiateTokenContent',
   './negotiateTokenType',
-  'http://i.bixbyjs.org/tokens'
+  'http://i.bixbyjs.org/security/tokens'
 ];
