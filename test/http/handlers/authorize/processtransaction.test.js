@@ -65,6 +65,22 @@ describe('http/handlers/authorize/processtransaction', function() {
         });
       });
       
+      it('should request authorization', function() {
+        expect(aaa.request.callCount).to.equal(1);
+        expect(aaa.request.args[0][0]).to.deep.equal({
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'Example Client',
+            redirectURIs: [
+              'https://client.example.com/cb'
+            ]
+          },
+          user: undefined,
+          scope: undefined,
+          audience: undefined
+        });
+      });
+      
       it('should not allow', function() {
         expect(allow).to.equal(false);
       });
