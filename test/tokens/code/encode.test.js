@@ -42,7 +42,6 @@ describe('tokens/code/encode', function() {
         
         var encode = factory();
         encode(msg, function(err, c) {
-          console.log(err)
           if (err) { return done(err); }
           claims = c;
           done();

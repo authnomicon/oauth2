@@ -5,12 +5,9 @@ exports = module.exports = function() {
   
   
   return function encode(msg, cb) {
-    console.log('ENCODE MESSAGE');
-    console.log(msg)
-    
-    
     var claims = {}
-      , perm, i, len;
+      , perm
+      , i, len;
       
     claims.sub = msg.user.id;
     claims.client_id = msg.client.id;
@@ -35,8 +32,7 @@ exports = module.exports = function() {
     
     // TODO: https://openid.bitbucket.io/draft-acdc-01.html
     // cnf claim with PKCE
-      
-      
+  
     return cb(null, claims);
   };
 };

@@ -1,7 +1,7 @@
 exports = module.exports = function() {
   
   
-  return function decode(tok, options, cb) {
+  return function decode(tok, cb) {
     console.log('NORMALIZE FROM JWT AUTHZ CODE:');
     console.log(tok);
     
@@ -68,6 +68,3 @@ exports = module.exports = function() {
     return cb(null, ctx);
   };
 };
-
-exports['@implements'] = 'http://i.bixbyjs.org/tokens/interpretClaimsFunc';
-exports['@dialect'] = 'http://schemas.authnomicon.org/tokens/jwt/authorization-code';
