@@ -3,9 +3,10 @@ exports = module.exports = function() {
   
   return function decode(tok, options, cb) {
     console.log('NORMALIZE FROM JWT AUTHZ CODE:');
-    console.log(claims);
+    console.log(tok);
     
-    var claims = tok.claims;
+    //var claims = tok.claims;
+    var claims = tok;
     
     var ctx = {}
       , prm, keys, key

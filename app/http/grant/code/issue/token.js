@@ -41,7 +41,7 @@ exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization
       console.log(err);
       console.log(claims)
       
-      return;
+      //return;
       
       
       if (err) { return cb(err); }
