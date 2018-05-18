@@ -208,13 +208,11 @@ describe('http/handlers/authorize/processtransaction', function() {
         expect(info).to.deep.equal({
           permissions: [ {
             resource: {
-            id: '112210f47de98100',
-            identifier: 'https://api.example.com/',
-            name: 'Example API'
-          },
-            "scope": [
-              "foo"
-            ]
+              id: '112210f47de98100',
+              identifier: 'https://api.example.com/',
+              name: 'Example API'
+            },
+            scope: [ 'foo' ]
           } ]
         });
       });
