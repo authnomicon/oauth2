@@ -123,7 +123,7 @@ describe('http/handlers/authorize/processtransaction', function() {
         var dec = new EventEmitter();
         dreq.send = function() {
           process.nextTick(function() {
-            dec.emit('decision', true, [ 'read:foo', 'write:foo' ]);
+            dec.emit('decision', true, [ 'read:foo', 'write:foo', 'write:bar' ]);
             dec.emit('end');
           });
         };
@@ -212,7 +212,7 @@ describe('http/handlers/authorize/processtransaction', function() {
               identifier: 'https://api.example.com/',
               name: 'Example API'
             },
-            scope: [ 'read:foo', 'write:foo' ]
+            scope: [ 'read:foo', 'write:foo', 'write:bar' ]
           } ]
         });
       });

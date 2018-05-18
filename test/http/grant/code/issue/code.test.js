@@ -43,11 +43,14 @@ describe('http/grant/code/issue/code', function() {
       });
       
       before(function(done) {
-        
         var ares = {
           allow: true,
           permissions: [ {
-            resource: 'https://api.example.com/',
+            resource: {
+              id: '112210f47de98100',
+              identifier: 'https://api.example.com/',
+              name: 'Example API'
+            },
             scope: [ 'read:foo', 'write:foo', 'read:bar' ]
           } ]
         }
@@ -73,7 +76,11 @@ describe('http/grant/code/issue/code', function() {
             name: 'Example Client'
           },
           permissions: [ {
-            resource: 'https://api.example.com/',
+            resource: {
+              id: '112210f47de98100',
+              identifier: 'https://api.example.com/',
+              name: 'Example API'
+            },
             scope: [ 'read:foo', 'write:foo', 'read:bar' ]
           } ],
           redirectURI: 'https://client.example.com/cb'
