@@ -147,6 +147,10 @@ describe('http/handlers/authorize/processtransaction', function() {
             'https://client.example.com/cb'
           ]
         };
+        var user = {
+          id: '1',
+          displayName: 'John Doe'
+        };
         var areq = {
           type: 'code',
           clientID: 's6BhdRkqt3',
@@ -154,7 +158,7 @@ describe('http/handlers/authorize/processtransaction', function() {
         };
       
         var processTransaction = factory(resources, aaa, ds);
-        processTransaction(client, undefined, areq.scope, areq.type, areq, undefined, function(err, a, i) {
+        processTransaction(client, user, areq.scope, areq.type, areq, undefined, function(err, a, i) {
           if (err) { return done(err); }
           allow = a;
           info = i;
@@ -184,7 +188,10 @@ describe('http/handlers/authorize/processtransaction', function() {
               'https://client.example.com/cb'
             ]
           },
-          user: undefined,
+          user: {
+            id: '1',
+            displayName: 'John Doe'
+          },
           resource: {
             id: '112210f47de98100',
             identifier: 'https://api.example.com/',
