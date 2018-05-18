@@ -13,12 +13,12 @@ exports = module.exports = function() {
       , i, len;
     
     ctx.userID = claims.sub;
-    ctx.clientID = claims.cid;
+    ctx.clientID = claims.client_id;
     ctx.permissions = [];
     
-    if (claims.prm) {
-      for (i = 0, len = claims.prm.length; i < len; ++i) {
-        prm = claims.prm[i];
+    if (claims.permissions) {
+      for (i = 0, len = claims.permissions.length; i < len; ++i) {
+        prm = claims.permissions[i];
         ctx.permissions.push({
           resourceID: prm.rid,
           scope: prm.scp

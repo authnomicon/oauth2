@@ -13,14 +13,14 @@ exports = module.exports = function() {
       , perm, i, len;
       
     claims.sub = msg.user.id;
-    claims.cid = msg.client.id;
+    claims.client_id = msg.client.id;
     
     // TODO: Add `azp` claim if client is confidential and expected to authenticate??
     
-    claims.prm = [];
+    claims.permissions = [];
     for (i = 0, len = msg.permissions.length; i < len; ++i) {
       perm = msg.permissions[i];
-      claims.prm.push({
+      claims.permissions.push({
         rid: perm.resource.id,
         scp: perm.scope
       });
