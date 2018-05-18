@@ -9,7 +9,4 @@ exports = module.exports = function() {
   };
 };
 
-exports['@singleton'] = true;
-exports['@require'] = [
-  './infer'
-];
+exports['@require'] = [];

@@ -1,4 +1,4 @@
-exports = module.exports = function(aaa) {
+exports = module.exports = function(resources, aaa) {
   var oauth2orize = require('oauth2orize');
   
   
@@ -151,5 +151,6 @@ exports = module.exports = function(aaa) {
 
 exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/http/authorize/processTransactionFunc';
 exports['@require'] = [
+  'http://schemas.authnomicon.org/js/oauth2/resources',
   'http://schemas.authnomicon.org/js/aaa'
 ];
