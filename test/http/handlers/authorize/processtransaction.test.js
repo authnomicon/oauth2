@@ -69,7 +69,17 @@ describe('http/handlers/authorize/processtransaction', function() {
         });
       });
       
-      
+      it('should infer resource', function() {
+        expect(resources.infer.callCount).to.equal(1);
+        expect(resources.infer.args[0][0]).to.equal(undefined);
+        expect(resources.infer.args[0][1]).to.deep.equal({
+          id: 's6BhdRkqt3',
+          name: 'Example Client',
+          redirectURIs: [
+            'https://client.example.com/cb'
+          ]
+        });
+      });
       
       it('should request authorization', function() {
         expect(aaa.request.callCount).to.equal(1);
