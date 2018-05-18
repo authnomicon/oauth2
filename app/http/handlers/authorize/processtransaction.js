@@ -32,7 +32,7 @@ exports = module.exports = function(aaa) {
           //res.resources = [ resource ]
           // TODO: Get res.resources here
         
-          return cb(null, true, { permissions: [ { resource: resource, scope: 'foo' } ]});
+          return cb(null, true, { permissions: [ { resource: resource, scope: [ 'foo' ] } ]});
         } else {
           return cb(null, false);
         }

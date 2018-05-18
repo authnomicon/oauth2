@@ -21,8 +21,8 @@ exports = module.exports = function() {
     for (i = 0, len = msg.permissions.length; i < len; ++i) {
       perm = msg.permissions[i];
       claims.permissions.push({
-        rid: perm.resource.id,
-        scp: perm.scope
+        resource_id: perm.resource.id,
+        scope: perm.scope.join(' ')
       });
     }
     

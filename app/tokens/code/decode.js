@@ -20,8 +20,8 @@ exports = module.exports = function() {
       for (i = 0, len = claims.permissions.length; i < len; ++i) {
         prm = claims.permissions[i];
         ctx.permissions.push({
-          resourceID: prm.rid,
-          scope: prm.scp
+          resourceID: prm.resource_id,
+          scope: prm.scope.split(' ')
         });
       }
     }
