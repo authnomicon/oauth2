@@ -32,8 +32,6 @@
       "http/grant/code/exchange",
       "http/grant/code/grant",
       "http/grant/code/issue/code",
-      "http/grant/code/tokens/authorization-code/interpret",
-      "http/grant/code/tokens/authorization-code/translate",
       "http/grant/token/grant",
       "http/grant/token/issue",
       "http/exchange/password/exchange",
