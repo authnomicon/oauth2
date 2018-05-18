@@ -19,7 +19,7 @@ exports = module.exports = function(resources, aaa, ds) {
     
         var dreq = aaa.request(options, function(dec) {
       
-          function ondecision(result) {
+          function ondecision(result, scope) {
             if (result === true) {
               //if (!locals.consent) {
               //  return cb(null, false, { prompt: 'consent'});
@@ -37,7 +37,7 @@ exports = module.exports = function(resources, aaa, ds) {
               //res.resources = [ resource ]
               // TODO: Get res.resources here
         
-              return cb(null, true, { permissions: [ { resource: resource, scope: [ 'foo' ] } ]});
+              return cb(null, true, { permissions: [ { resource: resource, scope: scope } ]});
             } else {
               return cb(null, false);
             }

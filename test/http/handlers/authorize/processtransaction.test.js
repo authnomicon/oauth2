@@ -212,7 +212,7 @@ describe('http/handlers/authorize/processtransaction', function() {
               identifier: 'https://api.example.com/',
               name: 'Example API'
             },
-            scope: [ 'foo' ]
+            scope: [ 'read:foo', 'write:foo' ]
           } ]
         });
       });
