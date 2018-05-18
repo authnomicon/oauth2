@@ -1,13 +1,7 @@
 exports = module.exports = function() {
   
   
-  return function decode(tok, cb) {
-    console.log('NORMALIZE FROM JWT AUTHZ CODE:');
-    console.log(tok);
-    
-    //var claims = tok.claims;
-    var claims = tok;
-    
+  return function decode(claims, cb) {
     var ctx = {}
       , prm, keys, key
       , i, len;
@@ -60,10 +54,6 @@ exports = module.exports = function() {
     // and standardized "header-like" claims (such as confirmation), which
     // may depend on the scheme negoatiated (PoP, Named)
     // https://tools.ietf.org/html/draft-sakimura-oauth-rjwtprof-05
-    
-    
-    console.log('GOT SECURE CONTEXT AZ CODE!');
-    console.log(ctx);
     
     return cb(null, ctx);
   };
