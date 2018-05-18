@@ -87,8 +87,6 @@ exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization
       
     
       function onServiceLoaded(err, service) {
-        if (err) { return cb(err); }
-        
         // TODO: Load this from directory if necessary
         var grant = info.grant;
         
@@ -143,44 +141,8 @@ exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization
           
         params.peer = service;
         //params.algorithm = 'hmac-sha256';
-        
-        console.log('ENCODE THESE CLAIMS!');
-        console.log(type);
-        console.log(claims);
-        console.log(params);
-        console.log('--');
-        
-        
-        var ctx = {};
-        ctx.user = info.user;
-        ctx.client = client;
-        ctx.resources = [ service ];
-        
-        translate(ctx, function(err, claims) {
-          if (err) { return cb(err); }
           
-          Tokens.encode(type, claims, params, function(err, token) {
-            if (err) { return cb(err); }
-            // TODO: offline access, params with scope and expires in
-          
-            var tparms = {
-              token_type: sparms.type
-            };
-            
-            console.log('ENCODED TOKEN!');
-            console.log(token);
-            
-            return cb(null, token, null, tparms);
-            //return cb(null, token, confirmation.key);
-          });
-          
-          
-        });
       } // onServiceLoaded
-    
-      // TODO: This directory query can be optimized way if things are serialized into
-      //       th requestToken
-      services.get(info.permissions[0].resource, onServiceLoaded);
     });
   };
 };
