@@ -18,11 +18,11 @@ describe('http/handlers/authorize/processtransaction', function() {
   });
   
   describe('processTransaction', function() {
-    var aaa = {
-      request: function(){}
-    }
     var resources = {
       infer: function(){}
+    }
+    var aaa = {
+      request: function(){}
     }
     
     
@@ -39,6 +39,7 @@ describe('http/handlers/authorize/processtransaction', function() {
           });
         };
         
+        sinon.stub(resources, 'infer').yields(null, 'https://api.example.com/');
         sinon.stub(aaa, 'request').returns(dreq).yields(dec);
       });
       
@@ -68,6 +69,8 @@ describe('http/handlers/authorize/processtransaction', function() {
         });
       });
       
+      
+      
       it('should request authorization', function() {
         expect(aaa.request.callCount).to.equal(1);
         expect(aaa.request.args[0][0]).to.deep.equal({
@@ -79,7 +82,7 @@ describe('http/handlers/authorize/processtransaction', function() {
             ]
           },
           user: undefined,
-          resource: undefined
+          resource: 'https://api.example.com/'
         });
       });
       

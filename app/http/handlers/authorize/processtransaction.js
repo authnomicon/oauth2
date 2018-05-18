@@ -64,7 +64,11 @@ exports = module.exports = function(resources, aaa) {
     }
     
     
-    proceed(areq.audience);
+    if (!areq.audience) {
+      resources.infer(proceed);
+    } else {
+      proceed(areq.audience);
+    }
     
     return;
     
