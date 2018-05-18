@@ -24,6 +24,9 @@ describe('http/handlers/authorize/processtransaction', function() {
     var aaa = {
       request: function(){}
     }
+    var ds = {
+      get: function(){}
+    }
     
     
     describe('that requires login', function() {
@@ -39,11 +42,13 @@ describe('http/handlers/authorize/processtransaction', function() {
           });
         };
         
-        sinon.stub(resources, 'infer').yields(null, 'https://api.example.com/');
+        sinon.stub(resources, 'infer').yields(null, '112210f47de98100');
         sinon.stub(aaa, 'request').returns(dreq).yields(dec);
+        sinon.stub(ds, 'get').yields(null, { id: '112210f47de98100', identifier: 'https://api.example.com/', name: 'Example API' });
       });
       
       after(function() {
+        ds.get.restore();
         aaa.request.restore();
         resources.infer.restore();
       });
@@ -61,7 +66,7 @@ describe('http/handlers/authorize/processtransaction', function() {
           clientID: 's6BhdRkqt3'
         };
       
-        var processTransaction = factory(resources, aaa);
+        var processTransaction = factory(resources, aaa, ds);
         processTransaction(client, undefined, areq.scope, areq.type, areq, undefined, function(err, a, i) {
           if (err) { return done(err); }
           allow = a;
@@ -93,7 +98,11 @@ describe('http/handlers/authorize/processtransaction', function() {
             ]
           },
           user: undefined,
-          resource: 'https://api.example.com/'
+          resource: {
+            id: '112210f47de98100',
+            identifier: 'https://api.example.com/',
+            name: 'Example API'
+          }
         });
       });
       
@@ -121,10 +130,13 @@ describe('http/handlers/authorize/processtransaction', function() {
         
         sinon.stub(resources, 'infer').yields(null, 'https://api.example.com/');
         sinon.stub(aaa, 'request').returns(dreq).yields(dec);
+        sinon.stub(ds, 'get').yields(null, { id: '112210f47de98100', identifier: 'https://api.example.com/', name: 'Example API' });
       });
       
       after(function() {
+        ds.get.restore();
         aaa.request.restore();
+        resources.infer.restore();
       });
       
       before(function(done) {
@@ -141,7 +153,7 @@ describe('http/handlers/authorize/processtransaction', function() {
           scope: [ 'read:foo', 'write:foo', 'write:bar' ]
         };
       
-        var processTransaction = factory(resources, aaa);
+        var processTransaction = factory(resources, aaa, ds);
         processTransaction(client, undefined, areq.scope, areq.type, areq, undefined, function(err, a, i) {
           if (err) { return done(err); }
           allow = a;
@@ -173,7 +185,11 @@ describe('http/handlers/authorize/processtransaction', function() {
             ]
           },
           user: undefined,
-          resource: 'https://api.example.com/'
+          resource: {
+            id: '112210f47de98100',
+            identifier: 'https://api.example.com/',
+            name: 'Example API'
+          }
         });
       });
       
@@ -182,22 +198,13 @@ describe('http/handlers/authorize/processtransaction', function() {
       });
       
       it('should supply result', function() {
-        console.log(info);
-        
         expect(info).to.deep.equal({
           permissions: [ {
             resource: {
-              id: 'http://www.example.com/',
-              name: 'Example Service',
-              tokenTypes: [ {
-                  type: 'application/fe26.2'
-                 },
-                {
-                  "secret": "some-shared-with-rs-s3cr1t-asdfasdfaieraadsfiasdfasd",
-                  "type": "urn:ietf:params:oauth:token-type:jwt"
-                }
-              ]
-            },
+            id: '112210f47de98100',
+            identifier: 'https://api.example.com/',
+            name: 'Example API'
+          },
             "scope": [
               "foo"
             ]

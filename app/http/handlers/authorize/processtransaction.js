@@ -1,73 +1,80 @@
-exports = module.exports = function(resources, aaa) {
+exports = module.exports = function(resources, aaa, ds) {
   var oauth2orize = require('oauth2orize');
   
   
   return function processTransaction(client, user, scope, type, areq, locals, cb) {
     locals = locals || {};
     
-    function proceed(err, resource) {
+    function inferred(err, resourceID) {
       if (err) { return cb(err); }
     
-      var options = {
-        client: client,
-        user: user,
-        resource: resource
-      };
+      ds.get(resourceID, 'resources', function(err, resource) {
+        if (err) { return cb(err); }
+        
+        var options = {
+          client: client,
+          user: user,
+          resource: resource
+        };
     
-      var dreq = aaa.request(options, function(dec) {
+        var dreq = aaa.request(options, function(dec) {
       
-        function ondecision(result) {
-          if (result === true) {
-            //if (!locals.consent) {
-            //  return cb(null, false, { prompt: 'consent'});
-            //}
+          function ondecision(result) {
+            if (result === true) {
+              //if (!locals.consent) {
+              //  return cb(null, false, { prompt: 'consent'});
+              //}
           
-            var resource = { id: 'http://www.example.com/',
-             name: 'Example Service',
-             tokenTypes: 
-              [ { type: 'application/fe26.2' },
-                { type: 'urn:ietf:params:oauth:token-type:jwt',
-                  secret: 'some-shared-with-rs-s3cr1t-asdfasdfaieraadsfiasdfasd' } ] }
+              /*
+              var resource = { identifier: 'http://www.example.com/',
+               name: 'Example Service',
+               tokenTypes: 
+                [ { type: 'application/fe26.2' },
+                  { type: 'urn:ietf:params:oauth:token-type:jwt',
+                    secret: 'some-shared-with-rs-s3cr1t-asdfasdfaieraadsfiasdfasd' } ] }
+              */
         
-            //res.resources = [ resource ]
-            // TODO: Get res.resources here
+              //res.resources = [ resource ]
+              // TODO: Get res.resources here
         
-            return cb(null, true, { permissions: [ { resource: resource, scope: [ 'foo' ] } ]});
-          } else {
-            return cb(null, false);
+              return cb(null, true, { permissions: [ { resource: resource, scope: [ 'foo' ] } ]});
+            } else {
+              return cb(null, false);
+            }
+        
+            // TODO: Handle indeterminte by prompting?  Or attenuating scope?
           }
+      
+          function onprompt(name, options) {
+            var opts = options || {};
+            opts.prompt = name;
+            return cb(null, false, opts);
+          }
+      
+          function onend() {
+            dec.removeListener('decision', ondecision);
+            dec.removeListener('prompt', onprompt);
+          }
+      
+          dec.once('decision', ondecision);
+          dec.once('prompt', onprompt);
+          dec.once('end', onend);
+        }); // aaa.request
+    
+        dreq.on('error', function(err) {
+          // TODO:
+        });
+    
+        dreq.send();
         
-          // TODO: Handle indeterminte by prompting?  Or attenuating scope?
-        }
+      }); // ds.get
       
-        function onprompt(name, options) {
-          var opts = options || {};
-          opts.prompt = name;
-          return cb(null, false, opts);
-        }
-      
-        function onend() {
-          dec.removeListener('decision', ondecision);
-          dec.removeListener('prompt', onprompt);
-        }
-      
-        dec.once('decision', ondecision);
-        dec.once('prompt', onprompt);
-        dec.once('end', onend);
-      });
-    
-      dreq.on('error', function(err) {
-        // TODO:
-      })
-    
-      dreq.send();
-    }
-    
+    } // proceed
     
     if (!areq.audience) {
-      resources.infer(scope, client, proceed);
+      resources.infer(scope, client, inferred);
     } else {
-      proceed(areq.audience);
+      inferred(areq.audience);
     }
     
     return;
@@ -156,5 +163,6 @@ exports = module.exports = function(resources, aaa) {
 exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/http/authorize/processTransactionFunc';
 exports['@require'] = [
   'http://schemas.authnomicon.org/js/oauth2/resources',
-  'http://schemas.authnomicon.org/js/aaa'
+  'http://schemas.authnomicon.org/js/aaa',
+  'http://schemas.authnomicon.org/js/ds'
 ];
