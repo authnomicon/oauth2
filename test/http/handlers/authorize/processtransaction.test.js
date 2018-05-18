@@ -21,6 +21,9 @@ describe('http/handlers/authorize/processtransaction', function() {
     var aaa = {
       request: function(){}
     }
+    var resources = {
+      infer: function(){}
+    }
     
     
     describe('that requires login', function() {
@@ -56,7 +59,7 @@ describe('http/handlers/authorize/processtransaction', function() {
           clientID: 's6BhdRkqt3'
         };
       
-        var processTransaction = factory(aaa);
+        var processTransaction = factory(resources, aaa);
         processTransaction(client, undefined, areq.scope, areq.type, areq, undefined, function(err, a, i) {
           if (err) { return done(err); }
           allow = a;
