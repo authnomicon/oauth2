@@ -68,15 +68,8 @@ exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization
         ctx.audience = [ {
           id: 'http://localhost/userinfo'
         } ];
-      
-        console.log('NOW SERIALIZE THIS TO JWT ACCESS TOKEN:');
-        console.log(ctx);
         
         issueTokenx(ctx, function(err, accessToken) {
-          console.log('ISSUED ACCESS TOKEN!');
-          console.log(err);
-          console.log(accessToken);
-          
           // TODO:
           var tparms = {
           };
@@ -85,41 +78,12 @@ exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization
           if (err) { return cb(err); }
           return cb(null, accessToken, null, tparms);
         });
-        //});
-      
-        //}); // realm.createDirectory(readyListener)
-    
-        // TODO: Handle dir.on('error')??
       
       }); // realms.resolve
       
     
       // FIXME: Put the rest of this back
       return;
-      
-      if (err) { return cb(err); }
-      // TODO: if(!info)
-    
-      if (typeof info.user == 'string') {
-        info.user = { id: info.user };
-      }
-      if (typeof info.client == 'string') {
-        info.client = { id: info.client };
-      }
-      
-      if (client.id !== info.client.id) {
-        // Verify that the authorization code was issued to the client that is
-        // attempting to exchange it.
-        return cb(null, false);
-      }
-      
-      if (info.redirectURI !== redirectURI) {
-        // Verify that the redirect URI matches the value sent in the initial
-        // authorization request.
-        // 
-        // Refer to Section 4.1.3 of RFC 6749 for further details.
-        return cb(new oauth2orize.TokenError('Mismatched redirect URI', 'invalid_grant'));
-      }
       
     
       function onServiceLoaded(err, service) {
