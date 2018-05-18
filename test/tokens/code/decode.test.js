@@ -39,7 +39,7 @@ describe('tokens/code/decode', function() {
         });
       });
       
-      it('should encode', function() {
+      it('should decode', function() {
         expect(message).to.deep.equal({
           user: { id: '1' },
           client: { id: 's6BhdRkqt3' },

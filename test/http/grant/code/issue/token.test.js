@@ -16,6 +16,63 @@ describe('http/grant/code/issue/token', function() {
     expect(factory['@singleton']).to.be.undefined;
   });
   
+  describe('issue', function() {
+    var tokens = {
+      decode: function(){}
+    };
+    
+    var client = {
+      id: 's6BhdRkqt3',
+      name: 'Example Client'
+    };
+    
+    
+    describe('issuing an access token', function() {
+      var token;
+      
+      before(function() {
+        sinon.stub(tokens, 'decode').yields(null, {
+          user: {
+            id: '1',
+            displayName: 'John Doe'
+          },
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'Example Client'
+          },
+          permissions: [ {
+            resource: {
+              id: '112210f47de98100',
+              identifier: 'https://api.example.com/',
+              name: 'Example API'
+            },
+            scope: [ 'read:foo', 'write:foo', 'read:bar' ]
+          } ],
+          redirectURI: 'https://client.example.com/cb'
+        });
+      });
+      
+      after(function() {
+        tokens.decode.restore();
+      });
+      
+      before(function(done) {
+        var issue = factory(null, null, null, tokens);
+        issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(err, c) {
+          if (err) { return done(err); }
+          code = c;
+          done();
+        });
+      });
+      
+      it('should yield authorization code', function() {
+        expect(code).to.equal('SplxlOBeZQQYbYS6WxSbIA');
+      });
+    }); // issuing an access token
+    
+  });
+  
+  
   /*
   describe('issue', function() {
     var client = {
