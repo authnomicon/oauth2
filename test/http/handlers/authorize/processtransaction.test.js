@@ -76,8 +76,7 @@ describe('http/handlers/authorize/processtransaction', function() {
             ]
           },
           user: undefined,
-          scope: undefined,
-          audience: undefined
+          resource: undefined
         });
       });
       

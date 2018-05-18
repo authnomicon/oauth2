@@ -5,62 +5,66 @@ exports = module.exports = function(aaa) {
   return function processTransaction(client, user, scope, type, areq, locals, cb) {
     locals = locals || {};
     
-    var audience = areq.audience;
+    function proceed(err, resource) {
+      if (err) { return cb(err); }
     
-    var options = {
-      client: client,
-      user: user,
-      scope: scope,
-      audience: audience
-    };
+      var options = {
+        client: client,
+        user: user,
+        resource: resource
+      };
     
-    var dreq = aaa.request(options, function(dec) {
+      var dreq = aaa.request(options, function(dec) {
       
-      function ondecision(result) {
-        if (result === true) {
-          if (!locals.consent) {
-            return cb(null, false, { prompt: 'consent'});
-          }
+        function ondecision(result) {
+          if (result === true) {
+            if (!locals.consent) {
+              return cb(null, false, { prompt: 'consent'});
+            }
           
-          var resource = { id: 'http://www.example.com/',
-           name: 'Example Service',
-           tokenTypes: 
-            [ { type: 'application/fe26.2' },
-              { type: 'urn:ietf:params:oauth:token-type:jwt',
-                secret: 'some-shared-with-rs-s3cr1t-asdfasdfaieraadsfiasdfasd' } ] }
+            var resource = { id: 'http://www.example.com/',
+             name: 'Example Service',
+             tokenTypes: 
+              [ { type: 'application/fe26.2' },
+                { type: 'urn:ietf:params:oauth:token-type:jwt',
+                  secret: 'some-shared-with-rs-s3cr1t-asdfasdfaieraadsfiasdfasd' } ] }
         
-          //res.resources = [ resource ]
-          // TODO: Get res.resources here
+            //res.resources = [ resource ]
+            // TODO: Get res.resources here
         
-          return cb(null, true, { permissions: [ { resource: resource, scope: [ 'foo' ] } ]});
-        } else {
-          return cb(null, false);
+            return cb(null, true, { permissions: [ { resource: resource, scope: [ 'foo' ] } ]});
+          } else {
+            return cb(null, false);
+          }
+        
+          // TODO: Handle indeterminte by prompting?  Or attenuating scope?
         }
-        
-        // TODO: Handle indeterminte by prompting?  Or attenuating scope?
-      }
       
-      function onprompt(name, options) {
-        var opts = options || {};
-        opts.prompt = name;
-        return cb(null, false, opts);
-      }
+        function onprompt(name, options) {
+          var opts = options || {};
+          opts.prompt = name;
+          return cb(null, false, opts);
+        }
       
-      function onend() {
-        dec.removeListener('decision', ondecision);
-        dec.removeListener('prompt', onprompt);
-      }
+        function onend() {
+          dec.removeListener('decision', ondecision);
+          dec.removeListener('prompt', onprompt);
+        }
       
-      dec.once('decision', ondecision);
-      dec.once('prompt', onprompt);
-      dec.once('end', onend);
-    });
+        dec.once('decision', ondecision);
+        dec.once('prompt', onprompt);
+        dec.once('end', onend);
+      });
     
-    dreq.on('error', function(err) {
-      // TODO:
-    })
+      dreq.on('error', function(err) {
+        // TODO:
+      })
     
-    dreq.send();
+      dreq.send();
+    }
+    
+    
+    proceed(areq.audience);
     
     return;
     
