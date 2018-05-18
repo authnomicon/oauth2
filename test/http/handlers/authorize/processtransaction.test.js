@@ -45,6 +45,7 @@ describe('http/handlers/authorize/processtransaction', function() {
       
       after(function() {
         aaa.request.restore();
+        resources.infer.restore();
       });
       
       before(function(done) {
@@ -104,6 +105,106 @@ describe('http/handlers/authorize/processtransaction', function() {
         expect(info).to.deep.equal({ prompt: 'login' });
       });
     }); // that requires login
+    
+    describe('that permits access', function() {
+      var allow, info;
+      
+      before(function() {
+        var dreq = new EventEmitter();
+        var dec = new EventEmitter();
+        dreq.send = function() {
+          process.nextTick(function() {
+            dec.emit('decision', true, [ 'read:foo', 'write:foo' ]);
+            dec.emit('end');
+          });
+        };
+        
+        sinon.stub(resources, 'infer').yields(null, 'https://api.example.com/');
+        sinon.stub(aaa, 'request').returns(dreq).yields(dec);
+      });
+      
+      after(function() {
+        aaa.request.restore();
+      });
+      
+      before(function(done) {
+        var client = {
+          id: 's6BhdRkqt3',
+          name: 'Example Client',
+          redirectURIs: [
+            'https://client.example.com/cb'
+          ]
+        };
+        var areq = {
+          type: 'code',
+          clientID: 's6BhdRkqt3',
+          scope: [ 'read:foo', 'write:foo', 'write:bar' ]
+        };
+      
+        var processTransaction = factory(resources, aaa);
+        processTransaction(client, undefined, areq.scope, areq.type, areq, undefined, function(err, a, i) {
+          if (err) { return done(err); }
+          allow = a;
+          info = i;
+          done();
+        });
+      });
+      
+      it('should infer resource', function() {
+        expect(resources.infer.callCount).to.equal(1);
+        expect(resources.infer.args[0][0]).to.deep.equal([ 'read:foo', 'write:foo', 'write:bar' ]);
+        expect(resources.infer.args[0][1]).to.deep.equal({
+          id: 's6BhdRkqt3',
+          name: 'Example Client',
+          redirectURIs: [
+            'https://client.example.com/cb'
+          ]
+        });
+      });
+      
+      it('should request authorization', function() {
+        expect(aaa.request.callCount).to.equal(1);
+        expect(aaa.request.args[0][0]).to.deep.equal({
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'Example Client',
+            redirectURIs: [
+              'https://client.example.com/cb'
+            ]
+          },
+          user: undefined,
+          resource: 'https://api.example.com/'
+        });
+      });
+      
+      it('should allow', function() {
+        expect(allow).to.equal(true);
+      });
+      
+      it('should supply result', function() {
+        console.log(info);
+        
+        expect(info).to.deep.equal({
+          permissions: [ {
+            resource: {
+              id: 'http://www.example.com/',
+              name: 'Example Service',
+              tokenTypes: [ {
+                  type: 'application/fe26.2'
+                 },
+                {
+                  "secret": "some-shared-with-rs-s3cr1t-asdfasdfaieraadsfiasdfasd",
+                  "type": "urn:ietf:params:oauth:token-type:jwt"
+                }
+              ]
+            },
+            "scope": [
+              "foo"
+            ]
+          } ]
+        });
+      });
+    }); // that permits access
     
   }); // processTransaction
   

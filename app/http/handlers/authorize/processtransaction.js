@@ -18,9 +18,9 @@ exports = module.exports = function(resources, aaa) {
       
         function ondecision(result) {
           if (result === true) {
-            if (!locals.consent) {
-              return cb(null, false, { prompt: 'consent'});
-            }
+            //if (!locals.consent) {
+            //  return cb(null, false, { prompt: 'consent'});
+            //}
           
             var resource = { id: 'http://www.example.com/',
              name: 'Example Service',
