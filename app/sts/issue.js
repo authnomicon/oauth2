@@ -1,6 +1,6 @@
 exports = module.exports = function(negotiateTokenContent, negotiateTokenType, tokens) {
   
-  return function issueToken(ctx, audience, options, cb) {
+  return function issueToken(ctx, audience, presenter, options, cb) {
     console.log('ISSUE TOKEN!');
     console.log(ctx);
     

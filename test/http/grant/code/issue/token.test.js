@@ -110,6 +110,10 @@ describe('http/grant/code/issue/token', function() {
         expect(sts.issue.args[0][1]).to.deep.equal([
           { id: 'http://localhost/userinfo' }
         ]);
+        expect(sts.issue.args[0][2]).to.deep.equal({
+          id: 's6BhdRkqt3',
+          name: 'Example Client'
+        });
       });
       
       it('should yield access token', function() {

@@ -72,7 +72,7 @@ exports = module.exports = function(sts, tokens, ds) {
         } ];
         
         
-        sts.issue(msg, audience, function(err, accessToken) {
+        sts.issue(msg, audience, client, function(err, accessToken) {
           // TODO:
           var tparms = {
           };
