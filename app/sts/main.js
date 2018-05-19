@@ -9,5 +9,5 @@ exports = module.exports = function(issue) {
 exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/sts';
 exports['@singleton'] = true;
 exports['@require'] = [
-  './issuetoken'
+  './issue'
 ];
