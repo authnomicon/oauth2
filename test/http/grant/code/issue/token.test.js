@@ -67,14 +67,18 @@ describe('http/grant/code/issue/token', function() {
       });
       
       before(function(done) {
-        var issueTokenx = sinon.stub().yields(null, '2YotnFZFEjr1zCsicMWpAA');
-        
         var issue = factory(sts, null, null, tokens, null, null, ds);
         issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(err, t) {
           if (err) { return done(err); }
           token = t;
           done();
         });
+      });
+      
+      it('should decode authorization code', function() {
+        expect(tokens.decode.callCount).to.equal(1);
+        expect(tokens.decode.args[0][0]).to.equal('urn:ietf:params:oauth:token-type:authorization_code');
+        expect(tokens.decode.args[0][1]).to.equal('SplxlOBeZQQYbYS6WxSbIA');
       });
       
       it('should yield access token', function() {

@@ -88,6 +88,7 @@ describe('http/handlers/authorize/processtransaction', function() {
       });
       
       it('should get resource from directory services', function() {
+        expect(ds.get.callCount).to.equal(1);
         expect(ds.get.args[0][0]).to.equal('112210f47de98100');
         expect(ds.get.args[0][1]).to.equal('resources');
       });
@@ -133,7 +134,7 @@ describe('http/handlers/authorize/processtransaction', function() {
           });
         };
         
-        sinon.stub(resources, 'infer').yields(null, 'https://api.example.com/');
+        sinon.stub(resources, 'infer').yields(null, '112210f47de98100');
         sinon.stub(aaa, 'request').returns(dreq).yields(dec);
         sinon.stub(ds, 'get').yields(null, { id: '112210f47de98100', identifier: 'https://api.example.com/', name: 'Example API' });
       });
@@ -181,6 +182,12 @@ describe('http/handlers/authorize/processtransaction', function() {
             'https://client.example.com/cb'
           ]
         });
+      });
+      
+      it('should get resource from directory services', function() {
+        expect(ds.get.callCount).to.equal(1);
+        expect(ds.get.args[0][0]).to.equal('112210f47de98100');
+        expect(ds.get.args[0][1]).to.equal('resources');
       });
       
       it('should request authorization', function() {
