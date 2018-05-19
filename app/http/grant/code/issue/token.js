@@ -69,7 +69,12 @@ exports = module.exports = function(sts, tokens, ds) {
           id: 'http://localhost/userinfo'
         } ];
         
-        sts.issue(ctx, function(err, accessToken) {
+        var to = [ {
+          id: 'http://localhost/userinfo'
+        } ];
+        
+        
+        sts.issue(ctx, to, function(err, accessToken) {
           // TODO:
           var tparms = {
           };

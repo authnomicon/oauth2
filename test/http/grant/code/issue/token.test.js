@@ -87,7 +87,7 @@ describe('http/grant/code/issue/token', function() {
         expect(ds.get.args[0][1]).to.equal('resources');
       });
       
-      it('should issue access', function() {
+      it('should issue access token', function() {
         expect(sts.issue.callCount).to.equal(1);
         expect(sts.issue.args[0][0]).to.deep.equal({
           user: {
@@ -110,6 +110,9 @@ describe('http/grant/code/issue/token', function() {
             id: 'http://localhost/userinfo'
           } ]
         });
+        expect(sts.issue.args[0][1]).to.deep.equal([
+          { id: 'http://localhost/userinfo' }
+        ]);
       });
       
       it('should yield access token', function() {
