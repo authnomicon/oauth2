@@ -13,7 +13,9 @@ exports = module.exports = function(negotiateTokenContent, negotiateTokenType, t
     // FIXME:
     ctx.audience = audience;
     
-    var topts = negotiateTokenType(ctx.client, ctx.audience);
+    negotiateTokenType(ctx.client, ctx.audience, function(err, topts) {
+      
+    
     console.log(topts);
     
     var copts = negotiateTokenContent(ctx.audience);
@@ -30,6 +32,7 @@ exports = module.exports = function(negotiateTokenContent, negotiateTokenType, t
     tokens.encode('access', ctx, copts, function(err, token) {
       if (err) { return cb(err); }
       return cb(null, token);
+    });
     });
   };
 };
