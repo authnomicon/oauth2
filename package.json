@@ -35,7 +35,7 @@
       "http/grant/token/grant",
       "http/grant/token/issue",
       "http/exchange/password/exchange",
-      "util/issuetoken",
+      "sts/issuetoken",
       "http/authorization",
       "http/handlers/authorize/processtransaction",
       "http/handlers/authorize/completetransaction",

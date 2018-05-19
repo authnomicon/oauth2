@@ -97,7 +97,7 @@ exports = module.exports = function(issueToken, aaa, verifyPassword) {
 };
 
 exports['@require'] = [
-  '../../../util/issuetoken',
+  '../../../sts/issuetoken',
   'http://schemas.authnomicon.org/js/aaa',
   'http://schemas.authnomicon.org/js/security/authentication/password/verifyFn'
 ];

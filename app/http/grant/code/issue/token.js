@@ -149,7 +149,7 @@ exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization
 
 
 exports['@require'] = [
-  '../../../../util/issuetoken',
+  '../../../../sts/issuetoken',
   /*'http://schemas.modulate.io/js/aaa/oauth2/code/dialect/jwt/decode',*/
   'http://schemas.modulate.io/js/aaa/realms',
   'http://schema.modulate.io/js/aaa/schemes',
