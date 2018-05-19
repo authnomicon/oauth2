@@ -61,20 +61,18 @@ exports = module.exports = function(sts, tokens, ds) {
       ds.get(info.permissions[0].resource.id, 'resources', function(err, resource) {
         if (err) { return cb(err); }
         
-        var ctx = {};
-        ctx.user = info.user;
-        ctx.client = client;
-        ctx.permissions = [ { resource: resource, scope: info.permissions[0].scope } ];
-        ctx.audience = [ {
+        var msg = {};
+        msg.user = info.user;
+        msg.client = client;
+        msg.permissions = [
+          { resource: resource, scope: info.permissions[0].scope }
+        ];
+        var audience = [ {
           id: 'http://localhost/userinfo'
         } ];
         
-        var to = [ {
-          id: 'http://localhost/userinfo'
-        } ];
         
-        
-        sts.issue(ctx, to, function(err, accessToken) {
+        sts.issue(msg, audience, function(err, accessToken) {
           // TODO:
           var tparms = {
           };
@@ -83,7 +81,6 @@ exports = module.exports = function(sts, tokens, ds) {
           if (err) { return cb(err); }
           return cb(null, accessToken, null, tparms);
         });
-      
       }); // ds.get
       
     

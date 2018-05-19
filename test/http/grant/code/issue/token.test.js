@@ -105,9 +105,6 @@ describe('http/grant/code/issue/token', function() {
               name: 'Example API'
             },
             scope: [ 'read:foo', 'write:foo', 'read:bar' ]
-          } ],
-          audience: [ {
-            id: 'http://localhost/userinfo'
           } ]
         });
         expect(sts.issue.args[0][1]).to.deep.equal([
