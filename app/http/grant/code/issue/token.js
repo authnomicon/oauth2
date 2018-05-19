@@ -27,19 +27,18 @@ exports = module.exports = function(sts, tokens, ds) {
     tokens.decode('urn:ietf:params:oauth:token-type:authorization_code', code, function(err, claims) {
       if (err) { return cb(err); }
       
-      var info = claims;
       var conf, i, len;
         
       // Verify that the authorization code was issued to the client that is
       // attempting to exchange it for an access token.
-      if (client.id !== info.client.id) {
+      if (client.id !== claims.client.id) {
         return cb(null, false);
       }
       
-      if (info.confirmation) {
+      if (claims.confirmation) {
         
-        for (i = 0, len = info.confirmation.length; i < len; ++i) {
-          conf = info.confirmation[i];
+        for (i = 0, len = claims.confirmation.length; i < len; ++i) {
+          conf = claims.confirmation[i];
           
           switch (conf.method) {
           case 'redirect-uri':
@@ -58,18 +57,19 @@ exports = module.exports = function(sts, tokens, ds) {
         }
       }
       
-      ds.get(info.permissions[0].resource.id, 'resources', function(err, resource) {
+      ds.get(claims.permissions[0].resource.id, 'resources', function(err, resource) {
         if (err) { return cb(err); }
         
         var msg = {};
-        msg.user = info.user;
+        msg.user = claims.user;
         msg.client = client;
         msg.permissions = [
-          { resource: resource, scope: info.permissions[0].scope }
+          { resource: resource, scope: claims.permissions[0].scope }
         ];
         var audience = [ {
-          id: 'http://localhost/userinfo'
+          identifier: 'http://localhost/userinfo'
         } ];
+        //var audience = [ resource ];
         
         
         sts.issue(msg, audience, client, function(err, accessToken) {

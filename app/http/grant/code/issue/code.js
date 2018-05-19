@@ -20,7 +20,8 @@ exports = module.exports = function(tokens) {
     opt.confidential = false;
     //opt.audience = ctx.audience;
     opt.audience = [ {
-      id: 'http://localhost/authorization_code',
+      id: 'AS1AC',
+      identifier: 'http://localhost/authorization_code',
       secret: 'some-secret-shared-with-oauth-authorization-server'
     } ];
     
