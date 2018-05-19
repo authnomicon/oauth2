@@ -67,7 +67,7 @@ describe('http/grant/code/issue/token', function() {
       });
       
       before(function(done) {
-        var issue = factory(sts, null, null, tokens, null, null, ds);
+        var issue = factory(sts, tokens, ds);
         issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(err, t) {
           if (err) { return done(err); }
           token = t;

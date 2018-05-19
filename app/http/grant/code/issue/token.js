@@ -1,4 +1,4 @@
-exports = module.exports = function(sts, /*decode,*/ realms, Utilization, /*translate,*/ tokens, Tokens, rsg, ds) {
+exports = module.exports = function(sts, tokens, ds) {
   var oauth2orize = require('oauth2orize');
     
     
@@ -79,7 +79,7 @@ exports = module.exports = function(sts, /*decode,*/ realms, Utilization, /*tran
           return cb(null, accessToken, null, tparms);
         });
       
-      }); // realms.resolve
+      }); // ds.get
       
     
       // FIXME: Put the rest of this back
@@ -147,17 +147,8 @@ exports = module.exports = function(sts, /*decode,*/ realms, Utilization, /*tran
   };
 };
 
-
 exports['@require'] = [
   'http://schemas.authnomicon.org/js/oauth2/sts',
-  /*'http://schemas.modulate.io/js/aaa/oauth2/code/dialect/jwt/decode',*/
-  'http://schemas.modulate.io/js/aaa/realms',
-  'http://schema.modulate.io/js/aaa/schemes',
-  //'http://i.bixbyjs.org/tokens/dialects/jwt/translate',
   'http://i.bixbyjs.org/security/tokens',
-  'http://i.bixbyjs.org/tokens',
-  // TODO: Collaps this into the facade that combines Encoder and Negotiator
-  //'http://i.bixbyjs.org/tokens/Negotiator',
-  'http://i.bixbyjs.org/crypto/RSG',
   'http://schemas.authnomicon.org/js/ds'
 ];
