@@ -23,6 +23,9 @@ describe('http/grant/code/issue/token', function() {
     var tokens = {
       decode: function(){}
     };
+    var sts = {
+      issue: function(){}
+    };
     
     var client = {
       id: 's6BhdRkqt3',
@@ -54,9 +57,11 @@ describe('http/grant/code/issue/token', function() {
           } ],
           redirectURI: 'https://client.example.com/cb'
         });
+        sinon.stub(sts, 'issue').yields(null, '2YotnFZFEjr1zCsicMWpAA');
       });
       
       after(function() {
+        sts.issue.restore();
         tokens.decode.restore();
         ds.get.restore();
       });
@@ -64,7 +69,7 @@ describe('http/grant/code/issue/token', function() {
       before(function(done) {
         var issueTokenx = sinon.stub().yields(null, '2YotnFZFEjr1zCsicMWpAA');
         
-        var issue = factory(issueTokenx, null, null, tokens, null, null, ds);
+        var issue = factory(sts, null, null, tokens, null, null, ds);
         issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(err, t) {
           if (err) { return done(err); }
           token = t;
