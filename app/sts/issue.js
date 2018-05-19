@@ -39,7 +39,7 @@ exports = module.exports = function(negotiateTokenContent, negotiateTokenType, t
 
 exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/util/issueToken';
 exports['@require'] = [
-  './negotiateTokenContent',
+  './negotiate/content',
   './negotiate/type',
   'http://i.bixbyjs.org/security/tokens'
 ];
