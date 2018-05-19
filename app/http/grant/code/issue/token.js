@@ -66,11 +66,7 @@ exports = module.exports = function(sts, tokens, ds) {
         msg.permissions = [
           { resource: resource, scope: claims.permissions[0].scope }
         ];
-        var audience = [ {
-          identifier: 'http://localhost/userinfo'
-        } ];
-        //var audience = [ resource ];
-        
+        var audience = [ resource ];
         
         sts.issue(msg, audience, client, function(err, accessToken) {
           // TODO:

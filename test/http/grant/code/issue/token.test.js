@@ -108,7 +108,9 @@ describe('http/grant/code/issue/token', function() {
           } ]
         });
         expect(sts.issue.args[0][1]).to.deep.equal([
-          { id: 'http://localhost/userinfo' }
+          { id: '112210f47de98100',
+            identifier: 'https://api.example.com/',
+            name: 'Example API' }
         ]);
         expect(sts.issue.args[0][2]).to.deep.equal({
           id: 's6BhdRkqt3',
