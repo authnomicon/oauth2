@@ -1,4 +1,4 @@
-exports = module.exports = function(issueToken, aaa, verifyPassword) {
+exports = module.exports = function(sts, aaa, verifyPassword) {
   var MFARequiredError = require('oauth2orize-mfa').MFARequiredError;
   
   
@@ -97,7 +97,7 @@ exports = module.exports = function(issueToken, aaa, verifyPassword) {
 };
 
 exports['@require'] = [
-  '../../../sts/issuetoken',
+  'http://schemas.authnomicon.org/js/oauth2/sts',
   'http://schemas.authnomicon.org/js/aaa',
   'http://schemas.authnomicon.org/js/security/authentication/password/verifyFn'
 ];

@@ -49,6 +49,7 @@
       "http/auth/none",
       "http/middleware/errorhandler",
       "http/ceremony/authorize",
+      "sts/main",
       "resources/main",
       "tokens/code/schema"
     ]

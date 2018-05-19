@@ -1,4 +1,4 @@
-exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization, /*translate,*/ tokens, Tokens, rsg, ds) {
+exports = module.exports = function(sts, /*decode,*/ realms, Utilization, /*translate,*/ tokens, Tokens, rsg, ds) {
   var oauth2orize = require('oauth2orize');
     
     
@@ -69,7 +69,7 @@ exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization
           id: 'http://localhost/userinfo'
         } ];
         
-        issueTokenx(ctx, function(err, accessToken) {
+        sts.issue(ctx, function(err, accessToken) {
           // TODO:
           var tparms = {
           };
@@ -149,7 +149,7 @@ exports = module.exports = function(issueTokenx, /*decode,*/ realms, Utilization
 
 
 exports['@require'] = [
-  '../../../../sts/issuetoken',
+  'http://schemas.authnomicon.org/js/oauth2/sts',
   /*'http://schemas.modulate.io/js/aaa/oauth2/code/dialect/jwt/decode',*/
   'http://schemas.modulate.io/js/aaa/realms',
   'http://schema.modulate.io/js/aaa/schemes',
