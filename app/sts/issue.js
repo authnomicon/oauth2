@@ -13,7 +13,7 @@ exports = module.exports = function(negotiateTokenContent, negotiateTokenType, t
     // FIXME:
     ctx.audience = audience;
     
-    negotiateTokenType(ctx.client, ctx.audience, function(err, topts) {
+    negotiateTokenType(ctx.audience, ctx.client, function(err, topts) {
       
     
     console.log(topts);

@@ -1,6 +1,8 @@
 exports = module.exports = function() {
   
   // format and structure
+  // TODO: Rename this to confirmation?
+  
   return function negotiateTokenContent(peers) {
     console.log('NEGOTIATE TOKEN FORMAT!');
     console.log(peers);
