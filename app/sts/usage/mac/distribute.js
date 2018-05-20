@@ -1,10 +1,15 @@
-exports = module.exports = function() {
+exports = module.exports = function(rsg) {
   
   return function keyGeneration(resources, client, cb) {
     if (!Array.isArray(resources)) {
       resources = [ resources ];
     }
     
-    return cb(null, { secret: 'foo' });
+    var key = rsg.generate(32);
+    
+    
+    return cb(null, { secret: key });
   };
 };
+
+exports['@require'] = [ 'http://i.bixbyjs.org/crypto/RSG' ];

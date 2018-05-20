@@ -1,6 +1,7 @@
 /* global describe, it */
 
 var expect = require('chai').expect;
+var sinon = require('sinon');
 var factory = require('../../../../app/sts/usage/mac/distribute');
 
 
@@ -16,9 +17,21 @@ describe('sts/usage/mac/distribute', function() {
   });
   
   describe('negotiate', function() {
+    var rsg = {
+      generate: function(){}
+    };
+    
     
     describe('default behavior', function() {
       var type;
+      
+      before(function() {
+        sinon.stub(rsg, 'generate').returns('adijq39jdlaska9asud');
+      });
+      
+      after(function() {
+        rsg.generate.restore();
+      });
       
       before(function(done) {
         var client = {
@@ -28,7 +41,7 @@ describe('sts/usage/mac/distribute', function() {
           id: '112210f47de98100'
         }
         
-        var negotiate = factory();
+        var negotiate = factory(rsg);
         negotiate(resource, client, function(err, t) {
           if (err) { return done(err); }
           type = t;
@@ -37,7 +50,7 @@ describe('sts/usage/mac/distribute', function() {
       });
       
       it('should yield type', function() {
-        expect(type).to.deep.equal({ secret: 'foo' });
+        expect(type).to.deep.equal({ secret: 'adijq39jdlaska9asud' });
       });
     });
     
