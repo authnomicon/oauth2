@@ -10,6 +10,9 @@ exports = module.exports = function() {
     
     var supportedTypes = resources[0].tokenUsagesSupported || [ 'bearer' ]
       , resource, i, len;
+      
+    // Filter the array of supported types to those supported by the resource
+    // servers this token will be used to authorize access to.
     for (i = 1, len = resources.length; i < len; ++i) {
       resource = resources[i];
       if (resource.tokenUsagesSupported) {
@@ -19,6 +22,8 @@ exports = module.exports = function() {
       }
     }
     
+    // Filter the array of supported types to those supported by the client that
+    // is requesting access to the resource servers.
     if (client.tokenUsagesSupported) {
       supportedTypes = supportedTypes.filter(function(e) {
         return client.tokenUsagesSupported.indexOf(e) !== -1;
