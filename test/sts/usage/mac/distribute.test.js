@@ -49,7 +49,7 @@ describe('sts/usage/mac/distribute', function() {
         });
       });
       
-      it('should generate session key', function() {
+      it('should generate key', function() {
         expect(rsg.generate.callCount).to.equal(1);
         expect(rsg.generate.args[0][0]).to.equal(32);
       });
