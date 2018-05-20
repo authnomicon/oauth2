@@ -49,7 +49,12 @@ describe('sts/usage/mac/distribute', function() {
         });
       });
       
-      it('should yield type', function() {
+      it('should generate session key', function() {
+        expect(rsg.generate.callCount).to.equal(1);
+        expect(rsg.generate.args[0][0]).to.equal(32);
+      });
+      
+      it('should yield key', function() {
         expect(type).to.deep.equal({ secret: 'adijq39jdlaska9asud' });
       });
     });
