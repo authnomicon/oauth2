@@ -37,19 +37,38 @@ describe('sts/issue', function() {
       });
     
       before(function(done) {
-        var client = {
-          id: 's6BhdRkqt3'
-        }
-        var resource = {
-          id: '112210f47de98100'
-        }
+        var claims = {
+          user: {
+            id: '1',
+            displayName: 'John Doe'
+          },
+          scope: [ 'beep', 'boop' ]
+        };
+        var presenter = {
+          id: 's6BhdRkqt3',
+          name: 'Example Client'
+        };
+        var audience = [
+          { id: '112210f47de98100',
+            identifier: 'https://api.example.com/',
+            name: 'Example API' }
+        ];
       
         var negotiate = factory(negotiateContentStub, negotiateTypeStub, tokens);
-        negotiate(resource, client, {}, function(err, t) {
+        negotiate(claims, audience, presenter, {}, function(err, t) {
           if (err) { return done(err); }
           token = t;
           done();
         });
+      });
+      
+      it('should negotiate token type', function() {
+        expect(negotiateTypeStub.callCount).to.equal(1);
+        expect(negotiateTypeStub.args[0][0]).to.deep.equal([
+          { id: '112210f47de98100',
+            identifier: 'https://api.example.com/',
+            name: 'Example API' }
+        ]);
       });
     
       it('should yield token', function() {
