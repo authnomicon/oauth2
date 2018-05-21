@@ -1,8 +1,8 @@
 exports = module.exports = function(negotiateTokenContent, negotiateTokenType, tokens) {
   
-  return function issueToken(ctx, audience, presenter, options, cb) {
+  return function issueToken(claims, audience, presenter, options, cb) {
     console.log('ISSUE TOKEN!');
-    console.log(ctx);
+    console.log(claims);
     
     if (typeof options == 'function') {
       cb = options;
@@ -11,25 +11,25 @@ exports = module.exports = function(negotiateTokenContent, negotiateTokenType, t
     options = options || {};
     
     // FIXME:
-    ctx.audience = audience;
+    claims.audience = audience;
     
-    negotiateTokenType(ctx.audience, ctx.client, function(err, topts) {
+    negotiateTokenType(claims.audience, claims.client, function(err, topts) {
       
     
     console.log(topts);
     
-    negotiateTokenContent(ctx.audience, function(err, copts) {
+    negotiateTokenContent(claims.audience, function(err, copts) {
     console.log(copts);
     
     
     copts.dialect = options.dialect || copts.dialect;
     copts.confidential = false;
-    copts.audience = ctx.audience;
+    copts.audience = claims.audience;
     
     //copts.type = 'http://schemas.modulate.io/tokens/jwt/twilio';
     //copts.dialect = 'http://schemas.modulate.io/tokens/jwt/twilio';
     
-    tokens.encode('access', ctx, copts, function(err, token) {
+    tokens.encode('access', claims, copts, function(err, token) {
       if (err) { return cb(err); }
       return cb(null, token);
     });
