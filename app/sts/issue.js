@@ -17,22 +17,21 @@ exports = module.exports = function(negotiateFormat, negotiateType, tokens) {
       if (err) { return cb(err); }
       
       
-    negotiateFormat(claims.audience, function(err, copts) {
-    console.log(copts);
+      negotiateFormat(claims.audience, function(err, copts) {
+        if (err) { return cb(err); }
+        
+        copts.dialect = options.dialect || copts.dialect;
+        copts.confidential = false;
+        copts.audience = claims.audience;
     
+        //copts.type = 'http://schemas.modulate.io/tokens/jwt/twilio';
+        //copts.dialect = 'http://schemas.modulate.io/tokens/jwt/twilio';
     
-    copts.dialect = options.dialect || copts.dialect;
-    copts.confidential = false;
-    copts.audience = claims.audience;
-    
-    //copts.type = 'http://schemas.modulate.io/tokens/jwt/twilio';
-    //copts.dialect = 'http://schemas.modulate.io/tokens/jwt/twilio';
-    
-    tokens.encode('access', claims, copts, function(err, token) {
-      if (err) { return cb(err); }
-      return cb(null, token);
-    });
-    });
+        tokens.encode('access', claims, copts, function(err, token) {
+          if (err) { return cb(err); }
+          return cb(null, token);
+        });
+      }); // negotiateFormat
     }); // negotiateType
   };
 };
