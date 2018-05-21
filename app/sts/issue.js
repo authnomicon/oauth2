@@ -18,7 +18,7 @@ exports = module.exports = function(negotiateTokenContent, negotiateTokenType, t
     
     console.log(topts);
     
-    var copts = negotiateTokenContent(ctx.audience);
+    negotiateTokenContent(ctx.audience, function(err, copts) {
     console.log(copts);
     
     
@@ -32,6 +32,7 @@ exports = module.exports = function(negotiateTokenContent, negotiateTokenType, t
     tokens.encode('access', ctx, copts, function(err, token) {
       if (err) { return cb(err); }
       return cb(null, token);
+    });
     });
     });
   };
