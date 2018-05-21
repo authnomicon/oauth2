@@ -1,4 +1,4 @@
-exports = module.exports = function(negotiateTokenContent, negotiateType, tokens) {
+exports = module.exports = function(negotiateFormat, negotiateType, tokens) {
   
   return function issueToken(claims, audience, presenter, options, cb) {
     console.log('ISSUE TOKEN!');
@@ -13,11 +13,11 @@ exports = module.exports = function(negotiateTokenContent, negotiateType, tokens
     // FIXME:
     claims.audience = audience;
     
-    negotiateType(claims.audience, claims.client, function(err, topts) {
+    negotiateType(audience, presenter, function(err, topts) {
       if (err) { return cb(err); }
       
       
-    negotiateTokenContent(claims.audience, function(err, copts) {
+    negotiateFormat(claims.audience, function(err, copts) {
     console.log(copts);
     
     
