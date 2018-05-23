@@ -37,7 +37,6 @@ describe('http/grant/code/issue/token', function() {
       var token, attrs;
       
       before(function() {
-        sinon.stub(ds, 'get').yields(null, { id: '112210f47de98100', identifier: 'https://api.example.com/', name: 'Example API' });
         sinon.stub(codes, 'decode').yields(null, {
           user: {
             id: '1',
@@ -57,13 +56,14 @@ describe('http/grant/code/issue/token', function() {
           } ],
           redirectURI: 'https://client.example.com/cb'
         });
+        sinon.stub(ds, 'get').yields(null, { id: '112210f47de98100', identifier: 'https://api.example.com/', name: 'Example API' });
         sinon.stub(sts, 'issue').yields(null, '2YotnFZFEjr1zCsicMWpAA', { token_type: 'Bearer' });
       });
       
       after(function() {
         sts.issue.restore();
-        codes.decode.restore();
         ds.get.restore();
+        codes.decode.restore();
       });
       
       before(function(done) {

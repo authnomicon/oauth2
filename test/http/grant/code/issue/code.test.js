@@ -17,7 +17,7 @@ describe('http/grant/code/issue/code', function() {
   });
   
   describe('issue', function() {
-    var tokens = {
+    var codes = {
       encode: function(){}
     };
     
@@ -35,11 +35,11 @@ describe('http/grant/code/issue/code', function() {
       var code;
       
       before(function() {
-        sinon.stub(tokens, 'encode').yields(null, 'SplxlOBeZQQYbYS6WxSbIA');
+        sinon.stub(codes, 'encode').yields(null, 'SplxlOBeZQQYbYS6WxSbIA');
       });
       
       after(function() {
-        tokens.encode.restore();
+        codes.encode.restore();
       });
       
       before(function(done) {
@@ -55,7 +55,7 @@ describe('http/grant/code/issue/code', function() {
           } ]
         }
         
-        var issue = factory(tokens);
+        var issue = factory(codes);
         issue(client, 'https://client.example.com/cb', user, ares, {}, {}, function(err, c) {
           if (err) { return done(err); }
           code = c;
@@ -63,10 +63,10 @@ describe('http/grant/code/issue/code', function() {
         });
       });
       
-      it('should encode token', function() {
-        expect(tokens.encode.callCount).to.equal(1);
-        expect(tokens.encode.args[0][0]).to.equal('urn:ietf:params:oauth:token-type:jwt');
-        expect(tokens.encode.args[0][1]).to.deep.equal({
+      it('should encode authorization code', function() {
+        expect(codes.encode.callCount).to.equal(1);
+        expect(codes.encode.args[0][0]).to.equal('urn:ietf:params:oauth:token-type:jwt');
+        expect(codes.encode.args[0][1]).to.deep.equal({
           user: {
             id: '1',
             displayName: 'John Doe'
