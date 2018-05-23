@@ -2,10 +2,10 @@
 
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../app/tokens/code/encode');
+var factory = require('../../../../app/tokens/authorization-code/jwt/encode');
 
 
-describe('tokens/code/encode', function() {
+describe('tokens/authorization-code/jwt/encode', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');

@@ -1,4 +1,4 @@
-exports = module.exports = function(IoC, tokens, logger) {
+exports = module.exports = function(IoC, jwt, tokens, logger) {
   var Tokens = require('tokens').Tokens;
   
   
@@ -14,6 +14,8 @@ exports = module.exports = function(IoC, tokens, logger) {
             logger.info('Loaded OAuth 2.0 authorization code schema: ' + type);
             itokens.schema(type, schema);
           });
+          
+          itokens.schema('urn:ietf:params:oauth:token-type:jwt', jwt);
         })
         .then(function() {
           return itokens;
@@ -84,6 +86,7 @@ exports['@implements'] = 'http://schemas.authnomicon.org/js/http/oauth2/tokens/a
 exports['@singleton'] = true;
 exports['@require'] = [
   '!container',
+  './jwt/schema',
   'http://i.bixbyjs.org/tokens',
   'http://i.bixbyjs.org/Logger'
 ];
