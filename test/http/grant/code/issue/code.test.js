@@ -65,7 +65,7 @@ describe('http/grant/code/issue/code', function() {
       
       it('should encode token', function() {
         expect(tokens.encode.callCount).to.equal(1);
-        expect(tokens.encode.args[0][0]).to.equal('urn:ietf:params:oauth:token-type:authorization_code');
+        expect(tokens.encode.args[0][0]).to.equal('urn:ietf:params:oauth:token-type:jwt');
         expect(tokens.encode.args[0][1]).to.deep.equal({
           user: {
             id: '1',

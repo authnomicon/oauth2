@@ -1,4 +1,4 @@
-exports = module.exports = function(tokens) {
+exports = module.exports = function(codes) {
   
   return function issueCode(client, redirectURI, user, ares, areq, locals, cb) {
     var ctx = {};
@@ -31,7 +31,7 @@ exports = module.exports = function(tokens) {
     console.log(opt);
     
     //tokens.encode('urn:ietf:params:oauth:token-type:authorization_code', ctx, opt, function(err, code) {
-    tokens.encode('urn:ietf:params:oauth:token-type:authorization_code', ctx, opt, function(err, code) {
+    codes.encode('urn:ietf:params:oauth:token-type:jwt', ctx, opt, function(err, code) {
       if (err) { return cb(err); }
       return cb(null, code);
     });
@@ -40,5 +40,5 @@ exports = module.exports = function(tokens) {
 
 exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/issueCodeFunc';
 exports['@require'] = [
-  'http://i.bixbyjs.org/security/tokens'
+  'http://schemas.authnomicon.org/js/http/oauth2/tokens/authorization-code'
 ];

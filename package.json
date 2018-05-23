@@ -51,6 +51,7 @@
       "http/ceremony/authorize",
       "sts/main",
       "resources/main",
+      "tokens/authorization-code/main",
       "tokens/code/schema"
     ]
   },

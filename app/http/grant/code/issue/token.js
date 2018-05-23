@@ -1,4 +1,4 @@
-exports = module.exports = function(sts, tokens, ds) {
+exports = module.exports = function(codes, sts, ds) {
   var oauth2orize = require('oauth2orize');
     
     
@@ -24,7 +24,7 @@ exports = module.exports = function(sts, tokens, ds) {
     // TODO: Pass self trust store to token verify, using list of issuers like `ca` to Node's http
     // module
     
-    tokens.decode('urn:ietf:params:oauth:token-type:authorization_code', code, function(err, claims) {
+    codes.decode(code, function(err, claims) {
       if (err) { return cb(err); }
       
       var conf, i, len;
@@ -142,7 +142,7 @@ exports = module.exports = function(sts, tokens, ds) {
 };
 
 exports['@require'] = [
+  'http://schemas.authnomicon.org/js/http/oauth2/tokens/authorization-code',
   'http://schemas.authnomicon.org/js/oauth2/sts',
-  'http://i.bixbyjs.org/security/tokens',
   'http://schemas.authnomicon.org/js/ds'
 ];

@@ -20,11 +20,11 @@ describe('http/grant/code/issue/token', function() {
     var ds = {
       get: function(){}
     };
-    var tokens = {
-      decode: function(){}
-    };
     var sts = {
       issue: function(){}
+    };
+    var codes = {
+      decode: function(){}
     };
     
     var client = {
@@ -38,7 +38,7 @@ describe('http/grant/code/issue/token', function() {
       
       before(function() {
         sinon.stub(ds, 'get').yields(null, { id: '112210f47de98100', identifier: 'https://api.example.com/', name: 'Example API' });
-        sinon.stub(tokens, 'decode').yields(null, {
+        sinon.stub(codes, 'decode').yields(null, {
           user: {
             id: '1',
             displayName: 'John Doe'
@@ -62,12 +62,12 @@ describe('http/grant/code/issue/token', function() {
       
       after(function() {
         sts.issue.restore();
-        tokens.decode.restore();
+        codes.decode.restore();
         ds.get.restore();
       });
       
       before(function(done) {
-        var issue = factory(sts, tokens, ds);
+        var issue = factory(codes, sts, ds);
         issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(err, t, r, a) {
           if (err) { return done(err); }
           token = t;
@@ -77,9 +77,8 @@ describe('http/grant/code/issue/token', function() {
       });
       
       it('should decode authorization code', function() {
-        expect(tokens.decode.callCount).to.equal(1);
-        expect(tokens.decode.args[0][0]).to.equal('urn:ietf:params:oauth:token-type:authorization_code');
-        expect(tokens.decode.args[0][1]).to.equal('SplxlOBeZQQYbYS6WxSbIA');
+        expect(codes.decode.callCount).to.equal(1);
+        expect(codes.decode.args[0][0]).to.equal('SplxlOBeZQQYbYS6WxSbIA');
       });
       
       it('should get resource from directory services', function() {
