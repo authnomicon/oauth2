@@ -13,7 +13,7 @@ exports = module.exports = function(format, sts) {
       
       format(params, presenter, function(err, attrs) {
         if (err) { return cb(err); }
-        return cb(null, token);
+        return cb(null, token, attrs);
       });
     });
   };

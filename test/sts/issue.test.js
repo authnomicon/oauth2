@@ -23,9 +23,9 @@ describe('sts/issue', function() {
     
   
     describe('default behavior', function() {
-      var token;
+      var token, attrs;
       
-      var parameterizeStub = sinon.stub().yields(null, {});
+      var formatStub = sinon.stub().yields(null, { token_type: 'Bearer' });
     
       before(function() {
         sinon.stub(sts, 'issue').yields(null, '2YotnFZFEjr1zCsicMWpAA');
@@ -53,15 +53,16 @@ describe('sts/issue', function() {
             name: 'Example API' }
         ];
       
-        var negotiate = factory(parameterizeStub, sts);
-        negotiate(claims, audience, presenter, {}, function(err, t) {
+        var negotiate = factory(formatStub, sts);
+        negotiate(claims, audience, presenter, {}, function(err, t, a) {
           if (err) { return done(err); }
           token = t;
+          attrs = a;
           done();
         });
       });
       
-      it('should negotiate token type', function() {
+      it('should issue token', function() {
         expect(sts.issue.callCount).to.equal(1);
         expect(sts.issue.args[0][0]).to.deep.equal({
           user: {
@@ -81,8 +82,18 @@ describe('sts/issue', function() {
         });
       });
     
+      it('should format token', function() {
+        expect(formatStub.callCount).to.equal(1);
+        expect(formatStub.args[0][0]).to.deep.equal({});
+        expect(formatStub.args[0][1]).to.deep.equal({
+          id: 's6BhdRkqt3',
+          name: 'Example Client'
+        });
+      });
+    
       it('should yield token', function() {
         expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
+        expect(attrs).to.deep.equal({ token_type: 'Bearer' });
       });
     });
   
