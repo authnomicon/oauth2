@@ -16,24 +16,21 @@ describe('sts/issue', function() {
     expect(factory['@singleton']).to.be.undefined;
   });
   
-  describe('issue', function() {
-    var tokens = {
-      encode: function(){}
+  describe('sts', function() {
+    var sts = {
+      issue: function(){}
     };
     
   
     describe('default behavior', function() {
       var token;
     
-      var negotiateFormatStub = sinon.stub().yields(null, 'jwt')
-        , negotiateTypeStub = sinon.stub().yields(null, 'bearer');
-    
       before(function() {
-        sinon.stub(tokens, 'encode').yields(null, '2YotnFZFEjr1zCsicMWpAA');
+        sinon.stub(sts, 'issue').yields(null, '2YotnFZFEjr1zCsicMWpAA');
       });
     
       after(function() {
-        tokens.encode.restore();
+        sts.issue.restore();
       });
     
       before(function(done) {
@@ -54,7 +51,7 @@ describe('sts/issue', function() {
             name: 'Example API' }
         ];
       
-        var negotiate = factory(negotiateFormatStub, negotiateTypeStub, tokens);
+        var negotiate = factory(sts);
         negotiate(claims, audience, presenter, {}, function(err, t) {
           if (err) { return done(err); }
           token = t;
@@ -63,18 +60,19 @@ describe('sts/issue', function() {
       });
       
       it('should negotiate token type', function() {
-        expect(negotiateTypeStub.callCount).to.equal(1);
-        expect(negotiateTypeStub.args[0][0]).to.deep.equal([
+        expect(sts.issue.callCount).to.equal(1);
+        expect(sts.issue.args[0][1]).to.deep.equal([
           { id: '112210f47de98100',
             identifier: 'https://api.example.com/',
             name: 'Example API' }
         ]);
-        expect(negotiateTypeStub.args[0][1]).to.deep.equal({
+        expect(sts.issue.args[0][2]).to.deep.equal({
           id: 's6BhdRkqt3',
           name: 'Example Client'
         });
       });
       
+      /*
       it('should negotiate token format', function() {
         expect(negotiateFormatStub.callCount).to.equal(1);
         expect(negotiateFormatStub.args[0][0]).to.deep.equal([
@@ -83,6 +81,33 @@ describe('sts/issue', function() {
             name: 'Example API' }
         ]);
       });
+      */
+      
+      /*
+      it('should encode token', function() {
+        expect(tokens.encode.callCount).to.equal(1);
+        expect(tokens.encode.args[0][0]).to.equal('access');
+        expect(tokens.encode.args[0][1]).to.deep.equal({
+          user: {
+            id: '1',
+            displayName: 'John Doe'
+          },
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'Example Client'
+          },
+          permissions: [ {
+            resource: {
+              id: '112210f47de98100',
+              identifier: 'https://api.example.com/',
+              name: 'Example API'
+            },
+            scope: [ 'read:foo', 'write:foo', 'read:bar' ]
+          } ],
+          redirectURI: 'https://client.example.com/cb'
+        });
+      });
+      */
     
       it('should yield token', function() {
         expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
