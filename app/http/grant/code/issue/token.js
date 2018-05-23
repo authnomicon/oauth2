@@ -68,14 +68,10 @@ exports = module.exports = function(sts, tokens, ds) {
         ];
         var audience = [ resource ];
         
-        sts.issue(msg, audience, client, function(err, accessToken) {
-          // TODO:
-          var tparms = {
-          };
-          
-          
+        sts.issue(msg, audience, client, function(err, token, attrs) {
+          // TODO: add expires_in and scope to attrs, as needed
           if (err) { return cb(err); }
-          return cb(null, accessToken, null, tparms);
+          return cb(null, token, null, attrs);
         });
       }); // ds.get
       

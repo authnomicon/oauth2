@@ -34,7 +34,7 @@ describe('http/grant/code/issue/token', function() {
     
     
     describe('issuing an access token', function() {
-      var token;
+      var token, attrs;
       
       before(function() {
         sinon.stub(ds, 'get').yields(null, { id: '112210f47de98100', identifier: 'https://api.example.com/', name: 'Example API' });
@@ -57,7 +57,7 @@ describe('http/grant/code/issue/token', function() {
           } ],
           redirectURI: 'https://client.example.com/cb'
         });
-        sinon.stub(sts, 'issue').yields(null, '2YotnFZFEjr1zCsicMWpAA');
+        sinon.stub(sts, 'issue').yields(null, '2YotnFZFEjr1zCsicMWpAA', { token_type: 'Bearer' });
       });
       
       after(function() {
@@ -68,9 +68,10 @@ describe('http/grant/code/issue/token', function() {
       
       before(function(done) {
         var issue = factory(sts, tokens, ds);
-        issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(err, t) {
+        issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(err, t, r, a) {
           if (err) { return done(err); }
           token = t;
+          attrs = a;
           done();
         });
       });
@@ -120,6 +121,7 @@ describe('http/grant/code/issue/token', function() {
       
       it('should yield access token', function() {
         expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
+        expect(attrs).to.deep.equal({ token_type: 'Bearer' });
       });
     }); // issuing an access token
     
