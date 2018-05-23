@@ -1,4 +1,4 @@
-exports = module.exports = function(parameterize, sts) {
+exports = module.exports = function(format, sts) {
   
   return function issue(claims, audience, presenter, options, cb) {
     if (typeof options == 'function') {
@@ -11,7 +11,7 @@ exports = module.exports = function(parameterize, sts) {
       if (err) { return cb(err); }
       params = params || {};
       
-      parameterize(params, presenter, function(err, params) {
+      format(params, presenter, function(err, attrs) {
         if (err) { return cb(err); }
         return cb(null, token);
       });
@@ -21,6 +21,6 @@ exports = module.exports = function(parameterize, sts) {
 
 exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/util/issueToken';
 exports['@require'] = [
-  './parameterize',
+  './format',
   'http://schemas.authnomicon.org/js/sts'
 ];

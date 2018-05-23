@@ -4,7 +4,7 @@ exports = module.exports = function(IoC, bearer, logger) {
   
   return Promise.resolve(stack)
     .then(function(parameterizers) {
-      var components = IoC.components('http://schemas.authnomicon.org/js/http/oauth2/TokenParameterizer');
+      var components = IoC.components('http://schemas.authnomicon.org/js/http/oauth2/TokenFormatter');
       return Promise.all(components.map(function(comp) { return comp.create(); } ))
         .then(function(parameterizers) {
           parameterizers.forEach(function(parameterizer, i) {
