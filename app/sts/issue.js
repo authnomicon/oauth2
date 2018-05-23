@@ -1,18 +1,11 @@
 exports = module.exports = function(sts) {
   
   return function issueToken(claims, audience, presenter, options, cb) {
-    console.log('ISSUE TOKEN!');
-    console.log(claims);
-    
     if (typeof options == 'function') {
       cb = options;
       options = undefined;
     }
     options = options || {};
-    
-    // FIXME:
-    claims.audience = audience;
-    
     
     sts.issue(claims, audience, presenter, function(err, token) {
       if (err) { return cb(err); }

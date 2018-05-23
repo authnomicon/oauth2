@@ -61,7 +61,6 @@ describe('sts/issue', function() {
       
       it('should negotiate token type', function() {
         expect(sts.issue.callCount).to.equal(1);
-        /*
         expect(sts.issue.args[0][0]).to.deep.equal({
           user: {
             id: '1',
@@ -69,7 +68,6 @@ describe('sts/issue', function() {
           },
           scope: [ 'beep', 'boop' ]
         });
-        */
         expect(sts.issue.args[0][1]).to.deep.equal([
           { id: '112210f47de98100',
             identifier: 'https://api.example.com/',
