@@ -24,6 +24,8 @@ describe('sts/issue', function() {
   
     describe('default behavior', function() {
       var token;
+      
+      var parameterizeStub = sinon.stub().yields(null, {});
     
       before(function() {
         sinon.stub(sts, 'issue').yields(null, '2YotnFZFEjr1zCsicMWpAA');
@@ -51,7 +53,7 @@ describe('sts/issue', function() {
             name: 'Example API' }
         ];
       
-        var negotiate = factory(sts);
+        var negotiate = factory(parameterizeStub, sts);
         negotiate(claims, audience, presenter, {}, function(err, t) {
           if (err) { return done(err); }
           token = t;
