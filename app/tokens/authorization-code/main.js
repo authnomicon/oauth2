@@ -6,7 +6,7 @@ exports = module.exports = function(IoC, jwt, tokens, logger) {
   
   return Promise.resolve(itokens)
     .then(function(itokens) {
-      var components = IoC.components('http://schemas.authnomicon.org/js/http/oauth2/tokens/authorization-code/Schema');
+      var components = IoC.components('http://schemas.authnomicon.org/js/oauth2/tokens/authorization-code/Schema');
       return Promise.all(components.map(function(comp) { return comp.create(); } ))
         .then(function(schemas) {
           schemas.forEach(function(schema, i) {
@@ -82,7 +82,7 @@ exports = module.exports = function(IoC, jwt, tokens, logger) {
     });
 };
 
-exports['@implements'] = 'http://schemas.authnomicon.org/js/http/oauth2/tokens/authorization-code';
+exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/tokens/authorization-code';
 exports['@singleton'] = true;
 exports['@require'] = [
   '!container',

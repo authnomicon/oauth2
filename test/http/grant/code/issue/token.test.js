@@ -20,11 +20,11 @@ describe('http/grant/code/issue/token', function() {
     var ds = {
       get: function(){}
     };
-    var sts = {
-      issue: function(){}
-    };
     var codes = {
       decode: function(){}
+    };
+    var sts = {
+      issue: function(){}
     };
     
     var client = {
@@ -67,7 +67,7 @@ describe('http/grant/code/issue/token', function() {
       });
       
       before(function(done) {
-        var issue = factory(codes, sts, ds);
+        var issue = factory(sts, codes, ds);
         issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(err, t, r, a) {
           if (err) { return done(err); }
           token = t;

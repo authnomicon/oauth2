@@ -40,5 +40,5 @@ exports = module.exports = function(codes) {
 
 exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/issueCodeFunc';
 exports['@require'] = [
-  'http://schemas.authnomicon.org/js/http/oauth2/tokens/authorization-code'
+  'http://schemas.authnomicon.org/js/oauth2/tokens/authorization-code'
 ];

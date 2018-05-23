@@ -1,4 +1,4 @@
-exports = module.exports = function(codes, sts, ds) {
+exports = module.exports = function(sts, codes, ds) {
   var oauth2orize = require('oauth2orize');
     
     
@@ -142,7 +142,7 @@ exports = module.exports = function(codes, sts, ds) {
 };
 
 exports['@require'] = [
-  'http://schemas.authnomicon.org/js/http/oauth2/tokens/authorization-code',
   'http://schemas.authnomicon.org/js/oauth2/sts',
+  'http://schemas.authnomicon.org/js/oauth2/tokens/authorization-code',
   'http://schemas.authnomicon.org/js/ds'
 ];
