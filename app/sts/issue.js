@@ -1,13 +1,13 @@
 exports = module.exports = function(format, sts) {
   
-  return function issue(claims, audience, presenter, options, cb) {
+  return function issue(claims, recipient, presenter, options, cb) {
     if (typeof options == 'function') {
       cb = options;
       options = undefined;
     }
     options = options || {};
     
-    sts.issue(claims, audience, presenter, function(err, token, params) {
+    sts.issue(claims, recipient, presenter, function(err, token, params) {
       if (err) { return cb(err); }
       params = params || {};
       
