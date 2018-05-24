@@ -24,7 +24,7 @@ exports = module.exports = function(IoC, jwt, tokens, logger) {
     .then(function(itokens) {
       var api = {};
       
-      api.encode = function(type, msg, to, cb) {
+      api.encode = function(type, msg, to, opts, cb) {
         console.log('ENCODE AUTHORIZATION CODE TOKEN!');
         console.log(msg);
         console.log(to)
@@ -40,8 +40,11 @@ exports = module.exports = function(IoC, jwt, tokens, logger) {
           console.log(err);
           console.log(claims);
           
+          opts.token = opts.token || {};
+          opts.token.confidential = opts.confidential;
+          
           if (err) { return cb(err); }
-          tokens.seal(claims, to, null, function(err, token) {
+          tokens.seal(claims, to, opts.token, function(err, token) {
             console.log('I SEALED!');
             console.log(err);
             console.log(token);

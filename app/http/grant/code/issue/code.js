@@ -29,9 +29,12 @@ exports = module.exports = function(codes) {
     console.log('CIPHER THE CODE');
     console.log(ctx);
     console.log(opt);
+
+    var opts = {}
+    opts.confidential = false;
     
     //tokens.encode('urn:ietf:params:oauth:token-type:authorization_code', ctx, opt, function(err, code) {
-    codes.encode('urn:ietf:params:oauth:token-type:jwt', ctx, opt.audience, function(err, code) {
+    codes.encode('urn:ietf:params:oauth:token-type:jwt', ctx, opt.audience, opts, function(err, code) {
       if (err) { return cb(err); }
       return cb(null, code);
     });
