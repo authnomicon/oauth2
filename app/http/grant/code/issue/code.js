@@ -31,7 +31,7 @@ exports = module.exports = function(codes) {
     console.log(opt);
     
     //tokens.encode('urn:ietf:params:oauth:token-type:authorization_code', ctx, opt, function(err, code) {
-    codes.encode('urn:ietf:params:oauth:token-type:jwt', ctx, opt, function(err, code) {
+    codes.encode('urn:ietf:params:oauth:token-type:jwt', ctx, opt.audience, function(err, code) {
       if (err) { return cb(err); }
       return cb(null, code);
     });
