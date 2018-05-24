@@ -85,6 +85,11 @@ describe('http/grant/code/issue/code', function() {
           } ],
           redirectURI: 'https://client.example.com/cb'
         });
+        expect(codes.encode.args[0][2]).to.deep.equal([{
+          id: 'AS1AC',
+          identifier: 'http://localhost/authorization_code',
+          secret: 'some-secret-shared-with-oauth-authorization-server'
+        }]);
       });
       
       it('should yield authorization code', function() {
