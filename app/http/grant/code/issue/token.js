@@ -24,7 +24,7 @@ exports = module.exports = function(sts, codes, ds) {
     // TODO: Pass self trust store to token verify, using list of issuers like `ca` to Node's http
     // module
     
-    codes.decode(code, function(err, claims) {
+    codes.decode(code, { issuer: 'http://sts.local' }, function(err, claims) {
       if (err) { return cb(err); }
       
       var conf, i, len;

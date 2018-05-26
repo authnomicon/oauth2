@@ -55,12 +55,19 @@ exports = module.exports = function(IoC, jwt, tokens, logger) {
         });
       };
       
-      api.decode = function(token, cb) {
+      api.decode = function(token, options, cb) {
+        if (typeof options == 'function') {
+          cb = options;
+          options = undefined;
+        }
+        options = options || {};
+        
+        
         console.log('DECODE!');
         //console.log(type);
         console.log(token);
         
-        tokens.unseal(token, function(err, claims) {
+        tokens.unseal(token, options, function(err, claims) {
           console.log('UNSEALED?');
           console.log(err);
           console.log(claims);
