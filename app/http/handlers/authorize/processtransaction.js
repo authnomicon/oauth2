@@ -166,5 +166,5 @@ exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/http/authoriz
 exports['@require'] = [
   'http://schemas.authnomicon.org/js/oauth2/resources',
   'http://schemas.authnomicon.org/js/aaa',
-  'http://schemas.authnomicon.org/js/ds'
+  'http://schemas.authnomicon.org/js/ds/realms'
 ];

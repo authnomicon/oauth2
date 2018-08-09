@@ -30,5 +30,5 @@ exports = module.exports = function(realms) {
 };
 
 exports['@require'] = [
-  'http://schemas.authnomicon.org/js/ds'
+  'http://schemas.authnomicon.org/js/ds/realms'
 ];

@@ -144,5 +144,5 @@ exports = module.exports = function(sts, codes, ds) {
 exports['@require'] = [
   'http://schemas.authnomicon.org/js/oauth2/sts',
   'http://schemas.authnomicon.org/js/oauth2/tokens/authorization-code',
-  'http://schemas.authnomicon.org/js/ds'
+  'http://schemas.authnomicon.org/js/ds/realms'
 ];

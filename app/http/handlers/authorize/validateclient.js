@@ -60,5 +60,5 @@ exports = module.exports = function(ds) {
 };
 
 exports['@require'] = [
-  'http://schemas.authnomicon.org/js/ds'
+  'http://schemas.authnomicon.org/js/ds/realms'
 ];
