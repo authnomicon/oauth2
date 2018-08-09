@@ -25,6 +25,8 @@ exports = module.exports = function(resources, aaa, ds) {
               //  return cb(null, false, { prompt: 'consent'});
               //}
           
+              //return cb(null, false, { prompt: 'mfa' });
+          
               /*
               var resource = { identifier: 'http://www.example.com/',
                name: 'Example Service',

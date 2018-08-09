@@ -1,5 +1,14 @@
 exports = module.exports = function(realms) {
   return function(id, cb) {
+    
+    realms.get(id, 'clients', function(err, client) {
+      if (err) { return cb(err); }
+      
+      return cb(null, client);
+      
+    }); // realms.resolve
+    
+    /*
     realms.resolve('clients', function(err, realm) {
       if (err) { return cb(err); }
       
@@ -16,9 +25,10 @@ exports = module.exports = function(realms) {
       // TODO: Handle dir.on('error')??
       
     }); // realms.resolve
+    */
   };
 };
 
 exports['@require'] = [
-  'http://schemas.modulate.io/js/aaa/realms'
+  'http://schemas.authnomicon.org/js/ds'
 ];
