@@ -1,12 +1,12 @@
-exports = module.exports = function(verifyPassword) {
+exports = module.exports = function(password) {
 
   return function(clientID, secret, cb) {
-    verifyPassword(clientID, secret, 'clients', function(err, client, info) {
+    password.verify(clientID, secret, 'clients', function(err, client, info) {
       return cb(err, client, info)
     });
   };
 };
 
 exports['@require'] = [
-  'http://schemas.authnomicon.org/js/security/authentication/password/verifyFn'
+  'http://schemas.authnomicon.org/js/cs/password'
 ];

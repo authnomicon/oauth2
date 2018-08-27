@@ -1,10 +1,10 @@
-exports = module.exports = function(sts, aaa, verifyPassword) {
+exports = module.exports = function(sts, aaa, password) {
   var MFARequiredError = require('oauth2orize-mfa').MFARequiredError;
   
   
   return function issue(client, username, passwd, scope, body, authInfo, cb) {
     
-    verifyPassword(username, passwd, function(err, user) {
+    password.verify(username, passwd, function(err, user) {
       if (err) { return cb(err); }
       
       var audience = body.audience;
@@ -99,5 +99,5 @@ exports = module.exports = function(sts, aaa, verifyPassword) {
 exports['@require'] = [
   'http://schemas.authnomicon.org/js/oauth2/sts',
   'http://schemas.authnomicon.org/js/aaa',
-  'http://schemas.authnomicon.org/js/security/authentication/password/verifyFn'
+  'http://schemas.authnomicon.org/js/cs/password'
 ];
