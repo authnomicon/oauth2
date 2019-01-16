@@ -7,10 +7,7 @@ exports = module.exports = function(authorizeHandler) {
   return router;
 };
 
-exports['@implements'] = [
-  'http://i.bixbyjs.org/http/Service',
-  'http://schemas.authnomicon.org/js/http/oauth2/AuthorizationService'
-];
+exports['@implements'] = 'http://i.bixbyjs.org/http/Service';
 exports['@path'] = '/oauth2/authorize';
 exports['@require'] = [
   './handlers/authorize'

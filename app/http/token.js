@@ -7,10 +7,7 @@ exports = module.exports = function(tokenHandler) {
   return router;
 };
 
-exports['@implements'] = [
-  'http://i.bixbyjs.org/http/Service',
-  'http://schemas.authnomicon.org/js/http/oauth2/TokenService'
-];
+exports['@implements'] = 'http://i.bixbyjs.org/http/Service';
 exports['@path'] = '/oauth2/token';
 exports['@require'] = [
   './handlers/token'

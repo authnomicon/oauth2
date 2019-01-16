@@ -11,10 +11,7 @@ describe('http/token', function() {
   });
   
   it('should be annotated', function() {
-    expect(factory['@implements']).to.deep.equal([
-      'http://i.bixbyjs.org/http/Service',
-      'http://schemas.authnomicon.org/js/http/oauth2/TokenService'
-    ]);
+    expect(factory['@implements']).to.equal('http://i.bixbyjs.org/http/Service');
     expect(factory['@path']).to.equal('/oauth2/token');
     expect(factory['@singleton']).to.be.undefined;
   });
