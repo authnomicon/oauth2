@@ -12,13 +12,13 @@
  * the application will inform the user of the error, and must not automatically
  * redirect the user to an invalid redirection URI.
  */
-exports = module.exports = function(ds) {
+exports = module.exports = function(clients) {
   var oauth2orize = require('oauth2orize')
     , uri = require('url');
   
   return function validateClient(clientID, redirectURI, cb) {
     
-    ds.get(clientID, 'clients', function(err, client) {
+    clients.get(clientID, function(err, client) {
       if (err) { return cb(err); }
       if (!client) {
         return cb(new oauth2orize.AuthorizationError('Unknown client', 'unauthorized_client'));
@@ -53,12 +53,12 @@ exports = module.exports = function(ds) {
       if (redirectURI && client.redirectURIs.indexOf(redirectURI) == -1) {
         return cb(new oauth2orize.AuthorizationError('Client not permitted to use redirect URI', 'unauthorized_client'));
       }
-  
+      
       return cb(null, client, redirectURI || client.redirectURIs[0], 'http://localhost:3001');
     }); // ds.get
   };
 };
 
 exports['@require'] = [
-  'http://schemas.authnomicon.org/js/ds/realms'
+  'http://i.authnomicon.org/oauth2/ClientRepostory'
 ];

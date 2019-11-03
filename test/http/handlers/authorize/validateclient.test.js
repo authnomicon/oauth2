@@ -50,7 +50,6 @@ describe('http/handlers/authorize/validateclient', function() {
       
       it('should get client from directory services', function() {
         expect(ds.get.args[0][0]).to.equal('s6BhdRkqt3');
-        expect(ds.get.args[0][1]).to.equal('clients');
       });
     
       it('should yield client', function() {
@@ -97,7 +96,6 @@ describe('http/handlers/authorize/validateclient', function() {
       
       it('should get client from directory services', function() {
         expect(ds.get.args[0][0]).to.equal('s6BhdRkqt3');
-        expect(ds.get.args[0][1]).to.equal('clients');
       });
     
       it('should yield client', function() {
@@ -145,7 +143,6 @@ describe('http/handlers/authorize/validateclient', function() {
       
       it('should get client from directory services', function() {
         expect(ds.get.args[0][0]).to.equal('s6BhdRkqt3');
-        expect(ds.get.args[0][1]).to.equal('clients');
       });
     
       it('should yield client', function() {
