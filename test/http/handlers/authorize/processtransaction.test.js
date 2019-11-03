@@ -90,7 +90,6 @@ describe('http/handlers/authorize/processtransaction', function() {
       it('should get resource from directory services', function() {
         expect(ds.get.callCount).to.equal(1);
         expect(ds.get.args[0][0]).to.equal('112210f47de98100');
-        expect(ds.get.args[0][1]).to.equal('resources');
       });
       
       it('should request authorization', function() {
@@ -187,7 +186,6 @@ describe('http/handlers/authorize/processtransaction', function() {
       it('should get resource from directory services', function() {
         expect(ds.get.callCount).to.equal(1);
         expect(ds.get.args[0][0]).to.equal('112210f47de98100');
-        expect(ds.get.args[0][1]).to.equal('resources');
       });
       
       it('should request authorization', function() {

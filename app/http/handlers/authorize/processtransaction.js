@@ -1,4 +1,4 @@
-exports = module.exports = function(resources, aaa, ds) {
+exports = module.exports = function(resource, aaa, resources) {
   var oauth2orize = require('oauth2orize');
   
   
@@ -8,7 +8,7 @@ exports = module.exports = function(resources, aaa, ds) {
     function inferred(err, resourceID) {
       if (err) { return cb(err); }
     
-      ds.get(resourceID, 'resources', function(err, resource) {
+      resources.get(resourceID, function(err, resource) {
         if (err) { return cb(err); }
         
         var options = {
@@ -74,7 +74,7 @@ exports = module.exports = function(resources, aaa, ds) {
     } // proceed
     
     if (!areq.audience) {
-      resources.infer(scope, client, inferred);
+      resource.infer(scope, client, inferred);
     } else {
       inferred(areq.audience);
     }
@@ -166,5 +166,5 @@ exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/http/authoriz
 exports['@require'] = [
   'http://schemas.authnomicon.org/js/oauth2/resources',
   'http://schemas.authnomicon.org/js/aaa',
-  'http://schemas.authnomicon.org/js/ds/realms'
+  'http://i.authnomicon.org/oauth2/ResourceRepostory'
 ];
