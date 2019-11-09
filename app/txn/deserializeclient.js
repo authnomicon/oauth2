@@ -1,7 +1,10 @@
-exports = module.exports = function(realms) {
+exports = module.exports = function(Clients) {
   return function(id, cb) {
     
-    realms.get(id, 'clients', function(err, client) {
+    console.log('### GET CLIENT DESERIALIZE');
+    
+    //realms.get(id, 'clients', function(err, client) {
+    Clients.get(id, function(err, client) {
       if (err) { return cb(err); }
       
       return cb(null, client);
@@ -30,5 +33,6 @@ exports = module.exports = function(realms) {
 };
 
 exports['@require'] = [
-  'http://schemas.authnomicon.org/js/ds/realms'
+  'http://i.authnomicon.org/oauth2/ClientRepository'
+  //'http://schemas.authnomicon.org/js/ds/realms'
 ];

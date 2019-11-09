@@ -12,13 +12,13 @@
  * the application will inform the user of the error, and must not automatically
  * redirect the user to an invalid redirection URI.
  */
-exports = module.exports = function(clients) {
+exports = module.exports = function(Clients) {
   var oauth2orize = require('oauth2orize')
     , uri = require('url');
   
   return function validateClient(clientID, redirectURI, cb) {
     
-    clients.get(clientID, function(err, client) {
+    Clients.get(clientID, function(err, client) {
       if (err) { return cb(err); }
       if (!client) {
         return cb(new oauth2orize.AuthorizationError('Unknown client', 'unauthorized_client'));
@@ -60,5 +60,5 @@ exports = module.exports = function(clients) {
 };
 
 exports['@require'] = [
-  'http://i.authnomicon.org/oauth2/ClientRepostory'
+  'http://i.authnomicon.org/oauth2/ClientRepository'
 ];
