@@ -1,4 +1,4 @@
-exports = module.exports = function(sts, codes, ds) {
+exports = module.exports = function(sts, codes, ds, Resources) {
   var oauth2orize = require('oauth2orize');
     
     
@@ -24,7 +24,7 @@ exports = module.exports = function(sts, codes, ds) {
     // TODO: Pass self trust store to token verify, using list of issuers like `ca` to Node's http
     // module
     
-    codes.decode(code, { issuer: 'http://sts.local' }, function(err, claims) {
+    codes.decode(code, { issuer: 'sts-local' }, function(err, claims) {
       if (err) { return cb(err); }
       
       var conf, i, len;
@@ -57,7 +57,12 @@ exports = module.exports = function(sts, codes, ds) {
         }
       }
       
-      ds.get(claims.permissions[0].resource.id, 'resources', function(err, resource) {
+      console.log('### DS GET');
+      console.log(claims);
+      console.log(claims.permissions)
+      
+      Resources.get(claims.permissions[0].resource.id, function(err, resource) {
+      //ds.get(claims.permissions[0].resource.id, 'resources', function(err, resource) {
         if (err) { return cb(err); }
         
         var msg = {};
@@ -144,5 +149,6 @@ exports = module.exports = function(sts, codes, ds) {
 exports['@require'] = [
   'http://schemas.authnomicon.org/js/oauth2/sts',
   'http://schemas.authnomicon.org/js/oauth2/tokens/authorization-code',
-  'http://schemas.authnomicon.org/js/ds/realms'
+  'http://schemas.authnomicon.org/js/ds/realms',
+  'http://i.authnomicon.org/oauth2/ResourceRepository'
 ];
