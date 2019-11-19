@@ -23,21 +23,42 @@ describe('transactionstore', function() {
   }); // factory
   
   describe('TransactionStore', function() {
+    function serializeClient(client, cb){
+      return cb(null, client.id);
+    }
+    
     
     describe('#store', function() {
-      var store = factory(function serializeClient(){}, function deserializeClient(){});
+      var store = factory(serializeClient, function deserializeClient(){});
       
       it('should do something', function(done) {
         var req = new Object();
-        req.state = new Object();
-        req.state.complete = function(){};
-        req.state.touch = function(){};
+        req.state = {};
+        //req.state = new Object();
+        //req.state.complete = function(){};
+        //req.state.touch = function(){};
         
-        store.store(req, null, function(err) {
+        var txn = {
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'My Example Client',
+            redirectURIs: [ 'https://client.example.org/callback' ]
+          },
+          redirectURI: 'https://client.example.org/callback',
+        };
+        
+        
+        store.store(req, txn, function(err) {
           console.log('SAVED!');
           console.log(err);
           
           console.log(req.state);
+          
+          expect(req.state).to.deep.equal({
+            client: 's6BhdRkqt3',
+            redirectURI: 'https://client.example.org/callback',
+            req: undefined
+          })
           
           done();
           
