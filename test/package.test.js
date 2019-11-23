@@ -11,12 +11,11 @@ describe('@authnomicon/oauth2', function() {
     it('should have assembly metadata', function() {
       expect(json.assembly.namespace).to.equal('org.authnomicon/oauth2');
       
-      expect(json.assembly.components).to.have.length(24);
+      expect(json.assembly.components).to.have.length(23);
       expect(json.assembly.components).to.include('server');
       expect(json.assembly.components).to.include('http/authorization');
       expect(json.assembly.components).to.include('http/token');
       expect(json.assembly.components).to.include('http/handlers/authorize/processtransaction');
-      expect(json.assembly.components).to.include('http/handlers/authorize/completetransaction');
     });
   });
   

@@ -1,4 +1,4 @@
-exports = module.exports = function(processTransaction, completeTransaction, server, continueHandler) {
+exports = module.exports = function(processTransaction, server, continueHandler) {
 
   function prompt(req, res, next) {
     res.prompt();
@@ -12,8 +12,7 @@ exports = module.exports = function(processTransaction, completeTransaction, ser
         // HTTP handler below where all context is available.
         return cb(null, false);
       },
-      //processTransaction,
-      completeTransaction
+      //processTransaction
     ),
     continueHandler
     //prompt
@@ -22,7 +21,6 @@ exports = module.exports = function(processTransaction, completeTransaction, ser
 
 exports['@require'] = [
   '../../handlers/authorize/processtransaction',
-  '../../handlers/authorize/completetransaction',
   '../../../server',
   '../../handlers/continue',
 ];
