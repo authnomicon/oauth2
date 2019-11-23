@@ -1,4 +1,4 @@
-exports = module.exports = function(resource, aaa, resources) {
+exports = module.exports = function(resource, aaa, Resources) {
   var oauth2orize = require('oauth2orize');
   
   
@@ -8,7 +8,7 @@ exports = module.exports = function(resource, aaa, resources) {
     function inferred(err, resourceID) {
       if (err) { return cb(err); }
     
-      resources.get(resourceID, function(err, resource) {
+      Resources.get(resourceID, function(err, resource) {
         if (err) { return cb(err); }
         
         var options = {
@@ -20,6 +20,11 @@ exports = module.exports = function(resource, aaa, resources) {
         var dreq = aaa.request(options, function(dec) {
       
           function ondecision(result, scope) {
+            console.log('ON DECISION!!!');
+            console.log(result);
+            console.log(scope)
+            
+            
             if (result === true) {
               //if (!locals.consent) {
               //  return cb(null, false, { prompt: 'consent'});
@@ -48,12 +53,19 @@ exports = module.exports = function(resource, aaa, resources) {
           }
       
           function onprompt(name, options) {
+            
+            console.log('ON PROMPTs!!!');
+            console.log(name);
+            console.log(options)
+            
             var opts = options || {};
             opts.prompt = name;
             return cb(null, false, opts);
           }
       
           function onend() {
+            console.log('ON ENDD...');
+            
             dec.removeListener('decision', ondecision);
             dec.removeListener('prompt', onprompt);
           }
@@ -64,6 +76,9 @@ exports = module.exports = function(resource, aaa, resources) {
         }); // aaa.request
     
         dreq.on('error', function(err) {
+          console.log('ERROR');
+          console.log(err);
+          
           // TODO:
         });
     
@@ -166,5 +181,5 @@ exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/http/authoriz
 exports['@require'] = [
   'http://schemas.authnomicon.org/js/oauth2/resources',
   'http://schemas.authnomicon.org/js/aaa',
-  'http://i.authnomicon.org/oauth2/ResourceRepostory'
+  'http://i.authnomicon.org/oauth2/ResourceRepository'
 ];
