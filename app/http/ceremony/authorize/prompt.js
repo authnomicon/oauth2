@@ -3,6 +3,33 @@ exports = module.exports = function() {
 
 
   function prompt(req, res, next) {
+    
+    console.log('CONTINUE OAUTH2 CEREMONY PROMPT??');
+    console.log(req.oauth2)
+    console.log(req.state);
+    //res.prompt('login', { maxAttempts: 3 });
+    
+    //req.state.foo = 'bar'; // TODO: force save
+    
+    //res.redirect('/login/password');
+    
+    //return;
+    
+    
+    /*
+    var areq = req.oauth2.req
+      , prompt = req.oauth2.info.prompt
+      , options = req.oauth2.info
+      , error = 'interaction_required';
+  
+    //res.prompt('login');
+    
+    //res.prompt(prompt, options);
+    //res.redirect('/login/password');
+    
+    return;
+    */
+    
     var areq = req.oauth2.req
       , prompt = req.oauth2.info.prompt
       , options = req.oauth2.info
@@ -30,6 +57,8 @@ exports = module.exports = function() {
       break;
     }
 
+    console.log('PROMPTING HERE 1...');
+    console.log(req.state);
     res.prompt(prompt, options);
   }
 
