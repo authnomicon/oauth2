@@ -1,4 +1,4 @@
-exports = module.exports = function(processTransaction, server, continueHandler) {
+exports = module.exports = function(server, continueHandler) {
 
   function prompt(req, res, next) {
     res.prompt();
@@ -20,7 +20,6 @@ exports = module.exports = function(processTransaction, server, continueHandler)
 };
 
 exports['@require'] = [
-  '../../handlers/authorize/processtransaction',
   '../../../server',
   '../../handlers/continue',
 ];
