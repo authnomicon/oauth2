@@ -37,7 +37,6 @@
       "http/exchange/password/exchange",
       "sts/issue",
       "http/authorization",
-      "http/handlers/authorize/processtransaction",
       "http/handlers/authorize/modes/formpost",
       "http/handlers/authorize/modes/webmessage",
       "http/handlers/authorize/params/responsemode",
