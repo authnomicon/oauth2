@@ -112,7 +112,8 @@ describe('http/handlers/authorize', function() {
       
       it('should set state', function() {
         expect(request.state).to.deep.equal({
-          name: '/oauth2/authorize'
+          name: '/oauth2/authorize',
+          returnTo: '/oauth2/authorize'
         });
         expect(request.state.isComplete()).to.equal(false);
       });
