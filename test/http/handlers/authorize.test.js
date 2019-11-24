@@ -41,6 +41,13 @@ describe('http/handlers/authorize', function() {
     }
     function validateClient() {};
     
+    function continueHandler(req, res, next) {
+      res.redirect('/loginx')
+      //next();
+      
+      //next();
+    };
+    
     function authenticate(schemes) {
       return function(req, res, next) {
         req.authInfo = { schemes: schemes };
@@ -67,7 +74,7 @@ describe('http/handlers/authorize', function() {
       });
       
       before(function(done) {
-        var handler = factory(OAuth2, validateClient, server, authenticate, ceremony);
+        var handler = factory(continueHandler, OAuth2, validateClient, server, authenticate, ceremony);
         
         chai.express.handler(handler)
           .req(function(req) {
