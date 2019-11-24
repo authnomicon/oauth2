@@ -48,7 +48,6 @@
       "http/middleware/errorhandler",
       "http/ceremony/authorize",
       "sts/main",
-      "resources/main",
       "tokens/authorization-code/main"
     ]
   },
