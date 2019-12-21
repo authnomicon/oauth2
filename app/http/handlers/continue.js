@@ -52,6 +52,7 @@ exports = module.exports = function(OAuth2, validateClient, server, authenticate
         switch (name) {
         case 'login':
           return res.redirect('/login/password');
+          //return res.redirect('/login/otp');
         }
       
       

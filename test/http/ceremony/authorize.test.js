@@ -11,8 +11,8 @@ describe('http/ceremony/authorize', function() {
   });
   
   it('should be annotated', function() {
-    expect(factory['@implements']).to.equal('http://i.bixbyjs.org/http/ceremony/Prompt');
-    expect(factory['@name']).to.equal('oauth2/authorize');
+    expect(factory['@implements']).to.equal('http://i.bixbyjs.org/http/ceremony/Prompt2');
+    expect(factory['@name']).to.equal('/oauth2/authorize');
     expect(factory['@singleton']).to.be.undefined;
   });
   
