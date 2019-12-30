@@ -51,8 +51,9 @@ exports = module.exports = function(OAuth2, validateClient, server, authenticate
         // TODO: look up a service to handle the prompt (OIDC for login, etc)
         switch (name) {
         case 'login':
-          return res.redirect('/login/password');
+          //return res.redirect('/login/password');
           //return res.redirect('/login/otp');
+          return res.redirect('/login');
         }
       
       

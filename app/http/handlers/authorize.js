@@ -18,7 +18,7 @@ exports = module.exports = function(continueHandler, OAuth2, validateClient, ser
       }
     ),
     continueHandler,
-  { external: true });
+  { external: true, continue: '/oauth2/continue' });
 };
 
 exports['@require'] = [
