@@ -1,6 +1,4 @@
 exports = module.exports = function(continueHandler, OAuth2, validateClient, server, authenticate, ceremony) {
-  var Request = require('../../../lib/request')
-    , Response = require('../../../lib/response');
   
   
   // TODO: Going to need to pass some "select account" function to passport to
@@ -8,17 +6,20 @@ exports = module.exports = function(continueHandler, OAuth2, validateClient, ser
   
   //return ceremony('/oauth2/authorize',
   return ceremony(
-    authenticate([ 'session', 'anonymous' ]),
-    server.authorization(
-      validateClient,
+    server.resume(
       function(txn, cb) {
         // Immediate mode callback.  Always, false, deferring transaction processing to 
         // HTTP handler below where all context is available.
         return cb(null, false);
       }
     ),
-    continueHandler,
-  { external: true, continue: '/oauth2/authorize/continue' });
+    function(req, res, next) {
+      console.log('OAUTH2 RESUME!!!!');
+      console.log(req.state);
+      next();
+    },
+    continueHandler
+  );
 };
 
 exports['@require'] = [

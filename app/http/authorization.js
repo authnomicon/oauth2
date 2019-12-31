@@ -1,8 +1,9 @@
-exports = module.exports = function(authorizeHandler) {
+exports = module.exports = function(authorizeHandler, continueHandler) {
   var express = require('express');
   var router = new express.Router();
   
   router.get('/', authorizeHandler);
+  router.get('/continue', continueHandler);
   
   return router;
 };
@@ -10,5 +11,6 @@ exports = module.exports = function(authorizeHandler) {
 exports['@implements'] = 'http://i.bixbyjs.org/http/Service';
 exports['@path'] = '/oauth2/authorize';
 exports['@require'] = [
-  './handlers/authorize'
+  './handlers/authorize',
+  './handlers/continue'
 ];
