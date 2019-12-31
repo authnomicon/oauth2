@@ -1,12 +1,5 @@
-exports = module.exports = function(continueHandler, OAuth2, validateClient, server, authenticate, ceremony) {
-  var Request = require('../../../lib/request')
-    , Response = require('../../../lib/response');
+exports = module.exports = function(process, validateClient, server, authenticate, ceremony) {
   
-  
-  // TODO: Going to need to pass some "select account" function to passport to
-  //       select a multi login based on login_hint/id_token/login_ticket
-  
-  //return ceremony('/oauth2/authorize',
   return ceremony(
     authenticate([ 'session', 'anonymous' ]),
     server.authorization(
@@ -17,13 +10,12 @@ exports = module.exports = function(continueHandler, OAuth2, validateClient, ser
         return cb(null, false);
       }
     ),
-    continueHandler,
+    process,
   { external: true, continue: '/oauth2/authorize/continue' });
 };
 
 exports['@require'] = [
   './authorize/process',
-  'http://i.authnomicon.org/oauth2/OAuth2Service',
   './authorize/validateclient',
   '../../server',
   'http://i.bixbyjs.org/http/middleware/authenticate',

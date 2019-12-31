@@ -55,12 +55,6 @@ describe('http/handlers/authorize', function() {
       };
     }
     
-    var OAuth2 = {
-      authorize: function(areq, ares) {
-        ares.prompt('login')
-      }
-    }
-    
     
     describe('default behavior', function() {
       var request, response;
@@ -74,7 +68,7 @@ describe('http/handlers/authorize', function() {
       });
       
       before(function(done) {
-        var handler = factory(continueHandler, OAuth2, validateClient, server, authenticate, ceremony);
+        var handler = factory(continueHandler, validateClient, server, authenticate, ceremony);
         
         chai.express.handler(handler)
           .req(function(req) {
