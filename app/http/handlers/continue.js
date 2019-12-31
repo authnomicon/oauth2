@@ -6,6 +6,7 @@ exports = module.exports = function(continueHandler, OAuth2, validateClient, ser
   
   //return ceremony('/oauth2/authorize',
   return ceremony(
+    authenticate([ 'session' ]),
     server.resume(
       function(txn, cb) {
         // Immediate mode callback.  Always, false, deferring transaction processing to 
