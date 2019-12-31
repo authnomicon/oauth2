@@ -46,7 +46,6 @@
       "http/auth/secret/post",
       "http/auth/none",
       "http/middleware/errorhandler",
-      "http/ceremony/authorize",
       "sts/main",
       "tokens/authorization-code/main"
     ]
