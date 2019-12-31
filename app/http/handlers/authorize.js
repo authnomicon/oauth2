@@ -22,7 +22,7 @@ exports = module.exports = function(continueHandler, OAuth2, validateClient, ser
 };
 
 exports['@require'] = [
-  './continue',
+  './authorize/process',
   'http://i.authnomicon.org/oauth2/OAuth2Service',
   './authorize/validateclient',
   '../../server',

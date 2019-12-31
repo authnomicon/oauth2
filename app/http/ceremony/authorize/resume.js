@@ -21,5 +21,5 @@ exports = module.exports = function(server, continueHandler) {
 
 exports['@require'] = [
   '../../../server',
-  '../../handlers/continue',
+  '../../handlers/authorize/process',
 ];

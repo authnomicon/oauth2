@@ -1,6 +1,6 @@
 exports = module.exports = function(OAuth2, validateClient, server, authenticate, ceremony) {
-  var Request = require('../../../lib/request')
-    , Response = require('../../../lib/response');
+  var Request = require('../../../../lib/request')
+    , Response = require('../../../../lib/response');
   
   
   // TODO: Going to need to pass some "select account" function to passport to
@@ -86,8 +86,8 @@ exports = module.exports = function(OAuth2, validateClient, server, authenticate
 
 exports['@require'] = [
   'http://i.authnomicon.org/oauth2/OAuth2Service',
-  './authorize/validateclient',
-  '../../server',
+  './validateclient',
+  '../../../server',
   'http://i.bixbyjs.org/http/middleware/authenticate',
   //'http://i.bixbyjs.org/http/middleware/ceremony'  // infinite loop, with ceremony dispatcher.  break it
 ];
