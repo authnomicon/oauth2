@@ -1,7 +1,13 @@
 /* global describe, it, expect */
 
 var expect = require('chai').expect;
+var sinon = require('sinon');
 
+/*
+afterEach(function() {
+  sinon.restore();
+});
+*/
 
 describe('@authnomicon/oauth2', function() {
   

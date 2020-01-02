@@ -4,7 +4,7 @@ var chai = require('chai');
 var expect = require('chai').expect;
 var sinon = require('sinon');
 var factory = require('../../../app/http/handlers/authorize');
-var flowstate = require('flowstate');
+var utils = require('../../utils');
 
 
 describe('http/handlers/authorize', function() {
@@ -19,33 +19,46 @@ describe('http/handlers/authorize', function() {
   });
   
   describe('handler', function() {
-    var manager = new flowstate.Manager();
-    manager.use('/oauth2/authorize', {
-      prompt:  [
-        function(req, res, next) {
-          res.xprompt('consent');
-        }
-      ]
-    })
-    
-    function ceremony(name) {
-      return manager.flow.apply(manager, arguments);
+    function ceremony(stack) {
+      var stack = Array.prototype.slice.call(arguments, 0), options;
+      if (typeof stack[stack.length - 1] == 'object' && !Array.isArray(stack[stack.length - 1])) {
+        options = stack.pop();
+      }
+      options = options || {};
+      
+      return function(req, res, next) {
+        utils.dispatch(stack)(null, req, res, next);
+      };
     }
     
     var server = {
-      authorization: function(){
+      authorization: function(validate, immediate) {
         return function(req, res, next) {
-          next();
+          
+          validate('1', function(err, client) {
+            if (err) { return next(err); }
+            req.client = client;
+            
+            immediate({}, function(err, allow) {
+              if (err) { return next(err); }
+              if (allow !== false) {
+                return next(new Error('should not allow transaction'));
+              }
+              return next();
+            })
+          })
         };
       }
-    }
-    function validateClient() {};
+    };
     
-    function continueHandler(req, res, next) {
-      res.redirect('/loginx')
-      //next();
-      
-      //next();
+    function processRequest(req, res, next) {
+      res.redirect('/consent')
+    };
+    
+    function validateClient(clientID, cb) {
+      process.nextTick(function() {
+        cb(null, { id: clientID });
+      });
     };
     
     function authenticate(schemes) {
@@ -56,69 +69,43 @@ describe('http/handlers/authorize', function() {
     }
     
     
-    describe('default behavior', function() {
+    describe('processing request', function() {
       var request, response;
       
-      before(function() {
-        sinon.spy(server, 'authorization');
-      });
-      
-      after(function() {
-        server.authorization.restore();
-      });
-      
       before(function(done) {
-        var handler = factory(continueHandler, validateClient, server, authenticate, ceremony);
+        var handler = factory(processRequest, validateClient, server, authenticate, ceremony);
         
         chai.express.handler(handler)
           .req(function(req) {
             request = req;
-            req.url = '/oauth2/authorize';
-            
-            
-            req.oauth2 = {
-              client: { id: 1}
-            }
             req.session = {};
           })
           .res(function(res) {
             response = res;
-            res.xprompt = function(prompt) {
-              this.end();
-            }
           })
-          .end(function(res) {
-            done();
+          .end(function() {
+            done()
           })
           .dispatch();
       });
       
-      it('should add authorization middleware to stack', function() {
-        expect(server.authorization.callCount).to.equal(1);
-        //expect(server.authorization).to.be.calledWithExactly(validateClient);
-      });
-      
-      it('should set authentication info', function() {
+      it('should authenticate', function() {
         expect(request.authInfo).to.deep.equal({
           schemes: ['session', 'anonymous']
         });
       });
       
-      it('should set state', function() {
-        expect(request.state).to.deep.equal({
-          name: '/oauth2/authorize',
-          returnTo: '/oauth2/authorize/continue'
+      it('should validate client', function() {
+        expect(request.client).to.deep.equal({
+          id: '1'
         });
-        expect(request.state.isComplete()).to.equal(false);
       });
       
-      it('should end', function() {
+      it('should respond', function() {
         expect(response.statusCode).to.equal(302);
-        // TODO: test case for location header and session data
-        
-        //expect(response.headers['location']).to.equal('foo');
+        expect(response.getHeader('Location')).to.equal('/consent');
       });
-    }); // default behavior
+    }); // processing request
     
   }); // handler
   

@@ -1,4 +1,4 @@
-exports = module.exports = function(process, validateClient, server, authenticate, ceremony) {
+exports = module.exports = function(processRequest, validateClient, server, authenticate, ceremony) {
   
   return ceremony(
     authenticate([ 'session', 'anonymous' ]),
@@ -10,7 +10,7 @@ exports = module.exports = function(process, validateClient, server, authenticat
         return cb(null, false);
       }
     ),
-    process,
+    processRequest,
   { external: true, continue: '/oauth2/authorize/continue' });
 };
 
