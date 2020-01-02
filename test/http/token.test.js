@@ -16,4 +16,13 @@ describe('http/token', function() {
     expect(factory['@singleton']).to.be.undefined;
   });
   
+  it('should construct service', function() {
+    function tokenHandler() {};
+  
+    var service = factory(tokenHandler);
+    
+    expect(service).to.be.a('function');
+    expect(service.length).to.equal(3);
+  });
+  
 });

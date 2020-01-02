@@ -16,4 +16,14 @@ describe('http/authorization', function() {
     expect(factory['@singleton']).to.be.undefined;
   });
   
+  it('should construct service', function() {
+    function authorizeHandler() {};
+    function continueHandler() {};
+  
+    var service = factory(authorizeHandler, continueHandler);
+    
+    expect(service).to.be.a('function');
+    expect(service.length).to.equal(3);
+  });
+  
 });
