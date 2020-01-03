@@ -36,6 +36,7 @@
       "http/response/code/issue",
       "http/response/token/response",
       "http/response/token/issue",
+      "http/response/modes/cookie",
       "http/response/modes/formpost",
       "http/response/modes/webmessage",
       "http/exchange/code/exchange",
