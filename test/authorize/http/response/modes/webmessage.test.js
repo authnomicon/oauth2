@@ -5,7 +5,7 @@ var expect = require('chai').expect;
 var factory = require('../../../../../app/authorize/http/response/modes/webmessage');
 
 
-describe('http/handlers/authorize/modes/webmessage', function() {
+describe('authorize/http/response/modes/webmessage', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');

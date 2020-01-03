@@ -3,7 +3,7 @@
 var $require = require('proxyquire');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../../app/http/response/code/response');
+var factory = require('../../../../app/authorize/http/response/code');
 
 
 describe('http/response/code/response', function() {
@@ -39,7 +39,7 @@ describe('http/response/code/response', function() {
       
       var grant;
       before(function(done) {
-        var factory = $require('../../../../app/http/response/code/response',
+        var factory = $require('../../../../app/authorize/http/response/code',
           { 'oauth2orize': { grant: { code: codeSpy } } });
         
         var promise = factory(container, issue);

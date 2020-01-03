@@ -23,6 +23,6 @@ exports['@implements'] = 'http://i.authnomicon.org/oauth2/http/Response';
 exports['@type'] = 'code';
 exports['@require'] = [
   '!container',
-  './issue',
+  './code/issue',
   'http://i.bixbyjs.org/Logger'
 ];

@@ -5,7 +5,7 @@ var expect = require('chai').expect;
 var factory = require('../../../../../app/authorize/http/response/modes/cookie');
 
 
-describe('http/response/modes/cookie', function() {
+describe('authorize/http/response/modes/cookie', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
