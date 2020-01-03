@@ -30,7 +30,7 @@
     "components": [
       "http/exchange/code/exchange",
       "http/grant/code/grant",
-      "http/grant/code/issue/code",
+      "http/grant/code/issue",
       "http/grant/token/grant",
       "http/grant/token/issue",
       "http/exchange/password/exchange",

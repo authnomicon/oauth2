@@ -49,5 +49,5 @@ exports = module.exports = function(services, Schemes, Tokens, rsg) {
   };
 };
 
-exports['@implements'] = 'http://schemas.authnomicon.org/js/aaa/oauth2/issueTokenFunc';
+exports['@implements'] = 'http://i.authnomicon.org/oauth2/http/response/token/issueFunc';
 exports['@require'] = [];
