@@ -28,6 +28,9 @@
   "assembly": {
     "namespace": "org.authnomicon/oauth2",
     "components": [
+      "authorize/http/response/modes/cookie",
+      "authorize/http/response/modes/formpost",
+      "authorize/http/response/modes/webmessage",
       "http/authorization",
       "http/token",
       "http/request/responsemode",
@@ -36,9 +39,6 @@
       "http/response/code/issue",
       "http/response/token/response",
       "http/response/token/issue",
-      "http/response/modes/cookie",
-      "http/response/modes/formpost",
-      "http/response/modes/webmessage",
       "http/exchange/code/exchange",
       "http/exchange/password/exchange",
       "sts/issue",
