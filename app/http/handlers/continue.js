@@ -1,4 +1,4 @@
-exports = module.exports = function(process, validateClient, server, authenticate, ceremony) {
+exports = module.exports = function(processRequest, server, authenticate, ceremony) {
   
   return ceremony(
     authenticate([ 'session' ]),
@@ -9,13 +9,12 @@ exports = module.exports = function(process, validateClient, server, authenticat
         return cb(null, false);
       }
     ),
-    process
+    processRequest
   );
 };
 
 exports['@require'] = [
   './authorize/process',
-  './authorize/validateclient',
   '../../server',
   'http://i.bixbyjs.org/http/middleware/authenticate',
   'http://i.bixbyjs.org/http/middleware/ceremony'
