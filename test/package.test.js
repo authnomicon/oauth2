@@ -18,7 +18,7 @@ describe('@authnomicon/oauth2', function() {
       expect(json.assembly.namespace).to.equal('org.authnomicon/oauth2');
       
       expect(json.assembly.components).to.have.length(20);
-      expect(json.assembly.components).to.include('http/authorization');
+      expect(json.assembly.components).to.include('authorize/http/service');
       expect(json.assembly.components).to.include('http/token');
     });
   });

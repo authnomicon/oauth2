@@ -3,11 +3,11 @@
 var chai = require('chai');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../app/http/handlers/continue');
-var utils = require('../../utils');
+var factory = require('../../../../app/authorize/http/handlers/authorize');
+var utils = require('../../../utils');
 
 
-describe('http/handlers/continue', function() {
+describe('authorize/http/handlers/authorize', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
@@ -32,14 +32,19 @@ describe('http/handlers/continue', function() {
     }
     
     var server = {
-      resume: function(immediate) {
+      authorization: function(validate, immediate) {
         return function(req, res, next) {
-          immediate({}, function(err, allow) {
+          validate('1', function(err, client) {
             if (err) { return next(err); }
-            if (allow !== false) {
-              return next(new Error('should not allow transaction'));
-            }
-            return next();
+            req.client = client;
+            
+            immediate({}, function(err, allow) {
+              if (err) { return next(err); }
+              if (allow !== false) {
+                return next(new Error('should not allow transaction'));
+              }
+              return next();
+            })
           })
         };
       }
@@ -47,6 +52,12 @@ describe('http/handlers/continue', function() {
     
     function processRequest(req, res, next) {
       res.redirect('/consent')
+    };
+    
+    function validateClient(clientID, cb) {
+      process.nextTick(function() {
+        cb(null, { id: clientID });
+      });
     };
     
     function authenticate(schemes) {
@@ -61,7 +72,7 @@ describe('http/handlers/continue', function() {
       var request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, server, authenticate, ceremony);
+        var handler = factory(processRequest, validateClient, server, authenticate, ceremony);
         
         chai.express.handler(handler)
           .req(function(req) {
@@ -79,7 +90,13 @@ describe('http/handlers/continue', function() {
       
       it('should authenticate', function() {
         expect(request.authInfo).to.deep.equal({
-          schemes: ['session']
+          schemes: ['session', 'anonymous']
+        });
+      });
+      
+      it('should validate client', function() {
+        expect(request.client).to.deep.equal({
+          id: '1'
         });
       });
       

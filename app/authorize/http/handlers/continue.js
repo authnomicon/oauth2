@@ -15,7 +15,7 @@ exports = module.exports = function(processRequest, server, authenticate, ceremo
 
 exports['@require'] = [
   './authorize/process',
-  '../server',
+  '../../../http/server',
   'http://i.bixbyjs.org/http/middleware/authenticate',
   'http://i.bixbyjs.org/http/middleware/ceremony'
 ];
