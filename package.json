@@ -29,9 +29,9 @@
     "namespace": "org.authnomicon/oauth2",
     "components": [
       "http/exchange/code/exchange",
-      "http/response/code/grant",
+      "http/response/code/response",
       "http/response/code/issue",
-      "http/response/token/grant",
+      "http/response/token/response",
       "http/response/token/issue",
       "http/exchange/password/exchange",
       "sts/issue",
