@@ -2,7 +2,7 @@
 
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../../app/http/grant/token/issue');
+var factory = require('../../../../app/http/response/token/issue');
 
 
 describe('token/issue', function() {

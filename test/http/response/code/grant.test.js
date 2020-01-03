@@ -3,10 +3,10 @@
 var $require = require('proxyquire');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../../app/http/grant/token/grant');
+var factory = require('../../../../app/http/response/code/grant');
 
 
-describe('http/grant/token/grant', function() {
+describe('http/response/code/grant', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
@@ -14,7 +14,7 @@ describe('http/grant/token/grant', function() {
   
   it('should be annotated', function() {
     expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/http/Response');
-    expect(factory['@type']).to.equal('token');
+    expect(factory['@type']).to.equal('code');
     expect(factory['@singleton']).to.be.undefined;
   });
   
@@ -35,12 +35,12 @@ describe('http/grant/token/grant', function() {
         container.components.restore();
       });
       
-      var tokenSpy = sinon.stub();
+      var codeSpy = sinon.stub();
       
       var grant;
       before(function(done) {
-        var factory = $require('../../../../app/http/grant/token/grant',
-          { 'oauth2orize': { grant: { token: tokenSpy } } });
+        var factory = $require('../../../../app/http/response/code/grant',
+          { 'oauth2orize': { grant: { code: codeSpy } } });
         
         var promise = factory(container, issue);
         promise.then(function(g) {
@@ -50,9 +50,9 @@ describe('http/grant/token/grant', function() {
       });
       
       it('should create grant', function() {
-        expect(tokenSpy.callCount).to.equal(1);
-        expect(tokenSpy.args[0][0]).to.deep.equal({ modes: {} });
-        expect(tokenSpy.args[0][1]).to.equal(issue);
+        expect(codeSpy.callCount).to.equal(1);
+        expect(codeSpy.args[0][0]).to.deep.equal({ modes: {} });
+        expect(codeSpy.args[0][1]).to.equal(issue);
       });
     }); // without additional response modes
     
