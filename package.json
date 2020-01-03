@@ -30,6 +30,8 @@
     "components": [
       "authorize/http/response/code",
       "authorize/http/response/code/issue",
+      "authorize/http/response/token/response",
+      "authorize/http/response/token/issue",
       "authorize/http/response/modes/cookie",
       "authorize/http/response/modes/formpost",
       "authorize/http/response/modes/webmessage",
@@ -37,8 +39,6 @@
       "http/token",
       "http/request/responsemode",
       "http/request/webmessage",
-      "http/response/token/response",
-      "http/response/token/issue",
       "http/exchange/code/exchange",
       "http/exchange/password/exchange",
       "sts/issue",

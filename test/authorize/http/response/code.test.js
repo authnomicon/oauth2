@@ -6,7 +6,7 @@ var sinon = require('sinon');
 var factory = require('../../../../app/authorize/http/response/code');
 
 
-describe('http/response/code/response', function() {
+describe('authorize/http/response/code', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
