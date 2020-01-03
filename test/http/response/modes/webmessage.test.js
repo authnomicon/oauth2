@@ -2,7 +2,6 @@
 
 var $require = require('proxyquire');
 var expect = require('chai').expect;
-var sinon = require('sinon');
 var factory = require('../../../../app/http/response/modes/webmessage');
 
 
@@ -16,6 +15,11 @@ describe('http/handlers/authorize/modes/webmessage', function() {
     expect(factory['@implements']).to.equal('http://schemas.authnomicon.org/js/http/oauth2/ResponseMode');
     expect(factory['@mode']).to.equal('web_message');
     expect(factory['@singleton']).to.be.undefined;
+  });
+  
+  it('should construct mode', function() {
+    var mode = factory();
+    expect(mode).to.be.a('function');
   });
   
 });
