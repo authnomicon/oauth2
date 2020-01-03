@@ -34,7 +34,7 @@ describe('authorize/http/handlers/authorize', function() {
     var server = {
       authorization: function(validate, immediate) {
         return function(req, res, next) {
-          validate('1', function(err, client) {
+          validate('s6BhdRkqt3', function(err, client) {
             if (err) { return next(err); }
             req.client = client;
             
@@ -96,7 +96,7 @@ describe('authorize/http/handlers/authorize', function() {
       
       it('should validate client', function() {
         expect(request.client).to.deep.equal({
-          id: '1'
+          id: 's6BhdRkqt3'
         });
       });
       

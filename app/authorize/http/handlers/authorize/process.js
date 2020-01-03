@@ -1,4 +1,4 @@
-exports = module.exports = function(OAuth2, validateClient, server, authenticate, ceremony) {
+exports = module.exports = function(authorizationHandler, server) {
   var Request = require('../../../../../lib/request')
     , Response = require('../../../../../lib/response');
   
@@ -8,20 +8,11 @@ exports = module.exports = function(OAuth2, validateClient, server, authenticate
   
   
     function process(req, res, next) {
-      console.log('OAUTH2 CONTINUE!!!!');
-      console.log(req.oauth2)
-      //return
-    
       var o2req = new Request(req.oauth2.client, req.oauth2.user)
         , o2res = new Response();
     
     
       function ondecision(result, scope) {
-        console.log('ON DECISION!!!');
-        console.log(result);
-        console.log(scope)
-        console.log(req.oauth2)
-        
         req.state.complete();
       
         if (result === true) {
@@ -73,7 +64,7 @@ exports = module.exports = function(OAuth2, validateClient, server, authenticate
       o2res.once('_prompt', onprompt);
       o2res.once('end', onend);
     
-      OAuth2.authorize(o2req, o2res);
+      authorizationHandler(o2req, o2res);
     
     
       //return next();
@@ -85,10 +76,6 @@ exports = module.exports = function(OAuth2, validateClient, server, authenticate
 };
 
 exports['@require'] = [
-  'http://i.authnomicon.org/oauth2/OAuth2Service',
-  './validateclient',
-  '../../../../http/server',
-  'http://i.bixbyjs.org/http/middleware/authenticate',
-  //'http://i.bixbyjs.org/http/middleware/ceremony'  // infinite loop, with ceremony dispatcher.  break it
+  'http://i.authnomicon.org/oauth2/authorizationHandler',
+  '../../../../http/server'
 ];
-
