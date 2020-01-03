@@ -28,7 +28,7 @@
   "assembly": {
     "namespace": "org.authnomicon/oauth2",
     "components": [
-      "http/grant/code/exchange",
+      "http/exchange/code/exchange",
       "http/grant/code/grant",
       "http/grant/code/issue/code",
       "http/grant/token/grant",

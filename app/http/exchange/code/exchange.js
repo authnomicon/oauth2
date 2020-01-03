@@ -6,4 +6,4 @@ exports = module.exports = function(issue) {
 
 exports['@implements'] = 'http://schemas.authnomicon.org/js/http/oauth2/Exchange';
 exports['@type'] = 'authorization_code';
-exports['@require'] = [ './issue/token' ];
+exports['@require'] = [ './issue' ];
