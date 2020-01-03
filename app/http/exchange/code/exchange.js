@@ -4,6 +4,6 @@ exports = module.exports = function(issue) {
   return oauth2orize.exchange.code(issue);
 }
 
-exports['@implements'] = 'http://schemas.authnomicon.org/js/http/oauth2/Exchange';
+exports['@implements'] = 'http://i.authnomicon.org/oauth2/http/Exchange';
 exports['@type'] = 'authorization_code';
 exports['@require'] = [ './issue' ];

@@ -13,7 +13,7 @@ describe('http/grant/code/exchange', function() {
   });
   
   it('should be annotated', function() {
-    expect(factory['@implements']).to.equal('http://schemas.authnomicon.org/js/http/oauth2/Exchange');
+    expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/http/Exchange');
     expect(factory['@type']).to.equal('authorization_code');
     expect(factory['@singleton']).to.be.undefined;
   });

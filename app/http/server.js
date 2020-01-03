@@ -39,7 +39,7 @@ exports = module.exports = function(container, store, logger) {
     })
     .then(function(server) {
       // Register grant types with the OAuth 2.0 server.
-      var typeComps = container.components('http://schemas.authnomicon.org/js/http/oauth2/Exchange')
+      var typeComps = container.components('http://i.authnomicon.org/oauth2/http/Exchange')
     
       return Promise.all(typeComps.map(function(spec) { return container.create(spec.id); } ))
         .then(function(plugins) {
