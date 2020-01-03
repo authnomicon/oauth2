@@ -9,13 +9,13 @@ exports = module.exports = function(container, store, logger) {
   return Promise.resolve(server)
     .then(function(server) {
       // Register request parameter extensions with the OAuth 2.0 server.
-      var paramDecls = container.components('http://schemas.authnomicon.org/js/http/oauth2/RequestParameters');
+      var paramDecls = container.components('http://i.authnomicon.org/oauth2/http/request/Parameters');
     
       return Promise.all(paramDecls.map(function(spec) { return container.create(spec.id); } ))
         .then(function(plugins) {
           plugins.forEach(function(plugin, i) {
             server.grant(plugin);
-            logger.info('Loaded OAuth 2.0 request parameters: ' + paramDecls[i].a['@name']);
+            logger.info('Loaded OAuth 2.0 request parameters: ' + paramDecls[i].id);
           });
         })
         .then(function() {

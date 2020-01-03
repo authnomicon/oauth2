@@ -13,8 +13,7 @@ describe('http/request/webmessage', function() {
   });
   
   it('should be annotated', function() {
-    expect(factory['@implements']).to.equal('http://schemas.authnomicon.org/js/http/oauth2/RequestParameters');
-    expect(factory['@name']).to.equal('web_message_uri');
+    expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/http/request/Parameters');
     expect(factory['@singleton']).to.be.undefined;
   });
   
