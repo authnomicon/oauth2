@@ -87,7 +87,7 @@ exports = module.exports = function(OAuth2, validateClient, server, authenticate
 exports['@require'] = [
   'http://i.authnomicon.org/oauth2/OAuth2Service',
   './validateclient',
-  '../../../server',
+  '../../server',
   'http://i.bixbyjs.org/http/middleware/authenticate',
   //'http://i.bixbyjs.org/http/middleware/ceremony'  // infinite loop, with ceremony dispatcher.  break it
 ];

@@ -29,7 +29,7 @@ exports = module.exports = function(IoC, server, parse, authenticate, errorLoggi
 
 exports['@require'] = [
   '!container',
-  '../../server',
+  '../server',
   'http://i.bixbyjs.org/http/middleware/parse',
   'http://i.bixbyjs.org/http/middleware/authenticate',
   'http://i.bixbyjs.org/http/middleware/errorLogging',

@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
-var factory = require('../app/transactionstore');
-var TransactionStore = require('../lib/transactionstore');
+var factory = require('../../app/http/transactionstore');
+var TransactionStore = require('../../lib/transactionstore');
 
 
 describe('transactionstore', function() {
