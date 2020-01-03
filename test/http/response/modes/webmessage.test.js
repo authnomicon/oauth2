@@ -3,7 +3,7 @@
 var $require = require('proxyquire');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../../../app/http/handlers/authorize/modes/webmessage');
+var factory = require('../../../../app/http/response/modes/webmessage');
 
 
 describe('http/handlers/authorize/modes/webmessage', function() {
