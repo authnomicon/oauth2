@@ -3,10 +3,10 @@
 var $require = require('proxyquire');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../../../app/authorize/http/response/token/response');
+var factory = require('../../../../app/authorize/http/response/token');
 
 
-describe('http/response/token/response', function() {
+describe('authorize/http/response/token', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
@@ -39,7 +39,7 @@ describe('http/response/token/response', function() {
       
       var grant;
       before(function(done) {
-        var factory = $require('../../../../../app/authorize/http/response/token/response',
+        var factory = $require('../../../../app/authorize/http/response/token',
           { 'oauth2orize': { grant: { token: tokenSpy } } });
         
         var promise = factory(container, issue);
