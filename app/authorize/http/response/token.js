@@ -36,6 +36,6 @@ exports['@implements'] = 'http://i.authnomicon.org/oauth2/http/Response';
 exports['@type'] = 'token';
 exports['@require'] = [
   '!container',
-  './issue',
+  './token/issue',
   'http://i.bixbyjs.org/Logger'
 ];
