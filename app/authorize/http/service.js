@@ -9,6 +9,7 @@ exports = module.exports = function(authorizeHandler, continueHandler) {
 };
 
 exports['@implements'] = 'http://i.bixbyjs.org/http/Service';
+exports['@type'] = 'oauth2-authorize';
 exports['@path'] = '/oauth2/authorize';
 exports['@require'] = [
   './handlers/authorize',
