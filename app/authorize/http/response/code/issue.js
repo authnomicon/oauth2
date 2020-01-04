@@ -2,23 +2,20 @@ exports = module.exports = function(codes) {
   
   return function issueCode(client, redirectURI, user, ares, areq, locals, cb) {
     var ctx = {};
-    ctx.user = user;
     ctx.client = client;
-    ctx.permissions = ares.permissions;
     ctx.redirectURI = redirectURI;
-    //ctx.audience = [ {
-    //  id: 'http://localhost/authorization_code',
-    //  secret: 'some-secret-shared-with-oauth-authorization-server'
-    //} ];
-    // TODO: Add PKCE challenge here (if any)
+    ctx.user = user;
+    
+    if (ares.scope) {
+      scope = ares.scope;
+    }
+    // TODO: (multiple) resource-specific permissions
+    //ctx.permissions = ares.permissions;
     
     var opt = {};
     //opt.type = 'application/fe26.2';
     //opt.type = 'application/x-fernet-json';
     opt.dialect = 'http://schemas.authnomicon.org/tokens/jwt/authorization-code';
-    // TODO: Make this confidential
-    opt.confidential = false;
-    //opt.audience = ctx.audience;
     opt.audience = [ {
       id: 'AS1AC',
       identifier: 'http://localhost/authorization_code',
@@ -26,9 +23,6 @@ exports = module.exports = function(codes) {
     } ];
     
     // TODO: Ensure that code has a TTL of 10 minutes
-    console.log('CIPHER THE CODE');
-    console.log(ctx);
-    console.log(opt);
 
     var opts = {}
     opts.confidential = false;

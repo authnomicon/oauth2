@@ -30,7 +30,7 @@ describe('authorize/http/response/code/issue', function() {
       displayName: 'Jane Doe'
     };
     
-    describe('issuing an authorization code', function() {
+    describe('an authorization code', function() {
       var code;
       
       before(function() {
@@ -44,14 +44,7 @@ describe('authorize/http/response/code/issue', function() {
       before(function(done) {
         var ares = {
           allow: true,
-          permissions: [ {
-            resource: {
-              id: '112210f47de98100',
-              identifier: 'https://api.example.com/',
-              name: 'Example API'
-            },
-            scope: [ 'read:foo', 'write:foo', 'read:bar' ]
-          } ]
+          scope: undefined
         }
         
         var issue = factory(codes);
@@ -66,23 +59,15 @@ describe('authorize/http/response/code/issue', function() {
         expect(codes.encode.callCount).to.equal(1);
         expect(codes.encode.args[0][0]).to.equal('urn:ietf:params:oauth:token-type:jwt');
         expect(codes.encode.args[0][1]).to.deep.equal({
-          user: {
-            id: '248289761001',
-            displayName: 'Jane Doe'
-          },
           client: {
             id: 's6BhdRkqt3',
             name: 'Example Client'
           },
-          permissions: [ {
-            resource: {
-              id: '112210f47de98100',
-              identifier: 'https://api.example.com/',
-              name: 'Example API'
-            },
-            scope: [ 'read:foo', 'write:foo', 'read:bar' ]
-          } ],
-          redirectURI: 'https://client.example.com/cb'
+          redirectURI: 'https://client.example.com/cb',
+          user: {
+            id: '248289761001',
+            displayName: 'Jane Doe'
+          }
         });
         expect(codes.encode.args[0][2]).to.deep.equal([{
           id: 'AS1AC',
