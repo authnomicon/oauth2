@@ -1,10 +1,10 @@
 /* global describe, it */
 
 var expect = require('chai').expect;
-var factory = require('../../app/http/token');
+var factory = require('../../../app/token/http/service');
 
 
-describe('http/token', function() {
+describe('token/http/service', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');

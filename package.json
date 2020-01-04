@@ -36,7 +36,7 @@
       "authorize/http/response/modes/cookie",
       "authorize/http/response/modes/formpost",
       "authorize/http/response/modes/webmessage",
-      "http/token",
+      "token/http/service",
       "http/request/responsemode",
       "http/request/webmessage",
       "http/exchange/code/exchange",
