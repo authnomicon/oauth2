@@ -14,13 +14,15 @@ exports = module.exports = function() {
     
     // TODO: Add `azp` claim if client is confidential and expected to authenticate??
     
-    claims.permissions = [];
-    for (i = 0, len = msg.permissions.length; i < len; ++i) {
-      perm = msg.permissions[i];
-      claims.permissions.push({
-        resource_id: perm.resource.id,
-        scope: perm.scope.join(' ')
-      });
+    if (msg.permissions) {
+      claims.permissions = [];
+      for (i = 0, len = msg.permissions.length; i < len; ++i) {
+        perm = msg.permissions[i];
+        claims.permissions.push({
+          resource_id: perm.resource.id,
+          scope: perm.scope.join(' ')
+        });
+      }
     }
     
     if (msg.redirectURI) {
