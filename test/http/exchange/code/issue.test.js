@@ -83,7 +83,8 @@ describe('http/grant/code/issue/token', function() {
       
       it('should get resource from directory services', function() {
         expect(ds.get.callCount).to.equal(1);
-        expect(ds.get.args[0][0]).to.equal('112210f47de98100');
+        expect(ds.get.args[0][0]).to.equal('userinfo');
+        //expect(ds.get.args[0][0]).to.equal('112210f47de98100');
         //expect(ds.get.args[0][1]).to.equal();
       });
       
@@ -98,6 +99,7 @@ describe('http/grant/code/issue/token', function() {
             id: 's6BhdRkqt3',
             name: 'Example Client'
           },
+          /*
           permissions: [ {
             resource: {
               id: '112210f47de98100',
@@ -106,6 +108,7 @@ describe('http/grant/code/issue/token', function() {
             },
             scope: [ 'read:foo', 'write:foo', 'read:bar' ]
           } ]
+          */
         });
         expect(sts.issue.args[0][1]).to.deep.equal([
           { id: '112210f47de98100',

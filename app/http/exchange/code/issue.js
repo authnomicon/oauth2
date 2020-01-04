@@ -61,16 +61,19 @@ exports = module.exports = function(sts, codes, ds, Resources) {
       console.log(claims);
       console.log(claims.permissions)
       
-      Resources.get(claims.permissions[0].resource.id, function(err, resource) {
+      Resources.get('userinfo', function(err, resource) {
+      //Resources.get(claims.permissions[0].resource.id, function(err, resource) {
       //ds.get(claims.permissions[0].resource.id, 'resources', function(err, resource) {
         if (err) { return cb(err); }
         
         var msg = {};
         msg.user = claims.user;
         msg.client = client;
+        /*
         msg.permissions = [
           { resource: resource, scope: claims.permissions[0].scope }
         ];
+        */
         var audience = [ resource ];
         
         sts.issue(msg, audience, client, function(err, token, attrs) {
