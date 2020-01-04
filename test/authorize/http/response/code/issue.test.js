@@ -12,7 +12,7 @@ describe('authorize/http/response/code/issue', function() {
   });
   
   it('should be annotated', function() {
-    //expect(factory['@implements']).to.equal('http://schema.modulate.io/js/aaa/oauth2/issueCodeFunc');
+    //expect(factory['@implements']).to.be.undefined;
     expect(factory['@singleton']).to.be.undefined;
   });
   
@@ -26,10 +26,9 @@ describe('authorize/http/response/code/issue', function() {
       name: 'Example Client'
     };
     var user = {
-      id: '1',
-      displayName: 'John Doe'
+      id: '248289761001',
+      displayName: 'Jane Doe'
     };
-    
     
     describe('issuing an authorization code', function() {
       var code;
@@ -68,8 +67,8 @@ describe('authorize/http/response/code/issue', function() {
         expect(codes.encode.args[0][0]).to.equal('urn:ietf:params:oauth:token-type:jwt');
         expect(codes.encode.args[0][1]).to.deep.equal({
           user: {
-            id: '1',
-            displayName: 'John Doe'
+            id: '248289761001',
+            displayName: 'Jane Doe'
           },
           client: {
             id: 's6BhdRkqt3',

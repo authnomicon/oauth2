@@ -41,6 +41,7 @@ exports = module.exports = function(codes) {
   };
 };
 
+// TODO: Make this component protected, so it can be shared from same namespace with OIDC
 exports['@implements'] = 'http://i.authnomicon.org/oauth2/http/response/code/issueFunc';
 exports['@require'] = [
   'http://schemas.authnomicon.org/js/oauth2/tokens/authorization-code'

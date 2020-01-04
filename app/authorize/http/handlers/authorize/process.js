@@ -15,16 +15,15 @@ exports = module.exports = function(authorizationHandler, server) {
       req.state.complete();
     
       if (result === true) {
-        // FIXME: Normalize this better
-        req.oauth2.res = { permissions: [ { resource: { id: 'userinfo' }, scope: scope } ]};
+        // TODO: Introduce support for multiple resource servers, scoped individually (UMA, etc)
+        //req.oauth2.res = { permissions: [ { resource: { id: 'userinfo' }, scope: scope } ]};
+        req.oauth2.res = { scope: scope };
         req.oauth2.res.allow = true;
       
         server._respond(req.oauth2, res, function(err) {
           if (err) { return next(err); }
           return next(new AuthorizationError('Unsupported response type: ' + req.oauth2.req.type, 'unsupported_response_type'));
         });
-        
-        //return cb(null, true, { permissions: [ { resource: resource, scope: scope } ]});
       } else {
         
         // TODO: Handle the false case, which should never occur

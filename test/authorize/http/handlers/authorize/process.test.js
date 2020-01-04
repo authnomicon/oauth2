@@ -94,7 +94,7 @@ describe('authorize/http/handlers/authorize/process', function() {
           },
           res: {
             allow: true,
-            permissions: [{ resource: { id: "userinfo" }, scope: undefined }]
+            scope: undefined
           },
         }, response);
         
