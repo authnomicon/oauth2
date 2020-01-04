@@ -3,7 +3,7 @@
 var $require = require('proxyquire');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../../app/http/exchange/password/exchange');
+var factory = require('../../../../../app/token/http/grant/password/exchange');
 
 
 describe('http/exchange/password/exchange', function() {
@@ -22,7 +22,7 @@ describe('http/exchange/password/exchange', function() {
     var passwordSpy = sinon.stub();
     var issue = function(){};
     
-    var factory = $require('../../../../app/http/exchange/password/exchange',
+    var factory = $require('../../../../../app/token/http/grant/password/exchange',
       { 'oauth2orize': { exchange: { password: passwordSpy } } });
     var exchange = factory(issue);
     
