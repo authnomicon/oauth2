@@ -7,7 +7,7 @@ exports = module.exports = function(codes) {
     ctx.user = user;
     
     if (ares.scope) {
-      scope = ares.scope;
+      ctx.scope = ares.scope;
     }
     // TODO: (multiple) resource-specific permissions
     //ctx.permissions = ares.permissions;

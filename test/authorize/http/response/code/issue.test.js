@@ -81,6 +81,58 @@ describe('authorize/http/response/code/issue', function() {
       });
     }); // issuing an authorization code
     
+    describe('an authorization code with scope', function() {
+      var code;
+      
+      before(function() {
+        sinon.stub(codes, 'encode').yields(null, 'SplxlOBeZQQYbYS6WxSbIA');
+      });
+      
+      after(function() {
+        codes.encode.restore();
+      });
+      
+      before(function(done) {
+        var ares = {
+          allow: true,
+          scope: [ 'profile', 'email' ]
+        }
+        
+        var issue = factory(codes);
+        issue(client, 'https://client.example.com/cb', user, ares, {}, {}, function(err, c) {
+          if (err) { return done(err); }
+          code = c;
+          done();
+        });
+      });
+      
+      it('should encode authorization code', function() {
+        expect(codes.encode.callCount).to.equal(1);
+        expect(codes.encode.args[0][0]).to.equal('urn:ietf:params:oauth:token-type:jwt');
+        expect(codes.encode.args[0][1]).to.deep.equal({
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'Example Client'
+          },
+          redirectURI: 'https://client.example.com/cb',
+          user: {
+            id: '248289761001',
+            displayName: 'Jane Doe'
+          },
+          scope: [ 'profile', 'email' ]
+        });
+        expect(codes.encode.args[0][2]).to.deep.equal([{
+          id: 'AS1AC',
+          identifier: 'http://localhost/authorization_code',
+          secret: 'some-secret-shared-with-oauth-authorization-server'
+        }]);
+      });
+      
+      it('should yield authorization code', function() {
+        expect(code).to.equal('SplxlOBeZQQYbYS6WxSbIA');
+      });
+    }); // issuing an authorization code with scope
+    
   }); // issue
   
 });
