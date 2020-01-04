@@ -102,6 +102,62 @@ describe('authorize/http/handlers/authorize/process', function() {
       });
     }); // permitting access
     
+    describe('prompting for login', function() {
+      var request, response
+        , azrequest;
+      
+      before(function() {
+        sinon.spy(server, '_respond');
+      });
+      
+      after(function() {
+        server._respond.restore();
+      });
+      
+      before(function(done) {
+        function authorizationHandler(req, res) {
+          azrequest = req;
+          res.prompt('login');
+        }
+        
+        var handler = factory(authorizationHandler, server);
+        
+        chai.express.handler(handler)
+          .req(function(req) {
+            request = req;
+            req.state = {};
+            req.state.complete = sinon.spy();
+            req.oauth2 = {};
+            req.oauth2.client = {
+              id: 's6BhdRkqt3'
+            };
+          })
+          .res(function(res) {
+            response = res;
+          })
+          .end(function() {
+            done();
+          })
+          .dispatch();
+      });
+      
+      it('should initialize authorization request', function() {
+        expect(azrequest.client).to.deep.equal({
+          id: 's6BhdRkqt3'
+        });
+        expect(azrequest.user).to.be.undefined;
+      });
+      
+      it('should not complete state', function() {
+        expect(request.state.complete).to.not.have.been.called;
+      });
+      
+      it('should redirect', function() {
+        expect(response.statusCode).to.equal(302);
+        expect(response.getHeader('Location')).to.equal('/login');
+      });
+    }); // prompting for login
+    
   });
   
 });
