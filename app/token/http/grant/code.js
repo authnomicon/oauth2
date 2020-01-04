@@ -6,4 +6,4 @@ exports = module.exports = function(issue) {
 
 exports['@implements'] = 'http://i.authnomicon.org/oauth2/http/Exchange';
 exports['@type'] = 'authorization_code';
-exports['@require'] = [ './issue' ];
+exports['@require'] = [ './code/issue' ];
