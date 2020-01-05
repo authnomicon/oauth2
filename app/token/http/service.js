@@ -8,6 +8,7 @@ exports = module.exports = function(tokenHandler) {
 };
 
 exports['@implements'] = 'http://i.bixbyjs.org/http/Service';
+exports['@type'] = 'oauth2-token';
 exports['@path'] = '/oauth2/token';
 exports['@require'] = [
   './handlers/token'

@@ -12,6 +12,7 @@ describe('token/http/service', function() {
   
   it('should be annotated', function() {
     expect(factory['@implements']).to.equal('http://i.bixbyjs.org/http/Service');
+    expect(factory['@type']).to.equal('oauth2-token');
     expect(factory['@path']).to.equal('/oauth2/token');
     expect(factory['@singleton']).to.be.undefined;
   });
