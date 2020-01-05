@@ -33,6 +33,6 @@ exports = module.exports = function(Clients) {
 };
 
 exports['@require'] = [
-  'http://i.authnomicon.org/oauth2/ClientRepository'
+  'http://i.authnomicon.org/oauth2/ClientDirectory'
   //'http://schemas.authnomicon.org/js/ds/realms'
 ];

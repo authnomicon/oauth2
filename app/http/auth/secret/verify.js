@@ -23,6 +23,6 @@ exports = module.exports = function(Secrets, Clients) {
 
 exports['@require'] = [
   'http://i.authnomicon.org/oauth2/credentials/ClientSecretService',
-  'http://i.authnomicon.org/oauth2/ClientRepository'
+  'http://i.authnomicon.org/oauth2/ClientDirectory'
   //'http://schemas.authnomicon.org/js/cs/password'
 ];

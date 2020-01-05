@@ -153,5 +153,5 @@ exports['@require'] = [
   'http://schemas.authnomicon.org/js/oauth2/sts',
   'http://schemas.authnomicon.org/js/oauth2/tokens/authorization-code',
   'http://schemas.authnomicon.org/js/ds/realms',
-  'http://i.authnomicon.org/oauth2/ResourceRepository'
+  'http://i.authnomicon.org/oauth2/ResourceDirectory'
 ];
