@@ -1,4 +1,4 @@
-exports = module.exports = function(sts, codes, ds, Resources) {
+exports = module.exports = function(sts, codes, Resources) {
   var oauth2orize = require('oauth2orize');
     
     
@@ -152,6 +152,5 @@ exports = module.exports = function(sts, codes, ds, Resources) {
 exports['@require'] = [
   'http://schemas.authnomicon.org/js/oauth2/sts',
   'http://schemas.authnomicon.org/js/oauth2/tokens/authorization-code',
-  'http://schemas.authnomicon.org/js/ds/realms',
   'http://i.authnomicon.org/oauth2/ResourceDirectory'
 ];

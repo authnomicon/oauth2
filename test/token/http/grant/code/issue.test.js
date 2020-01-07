@@ -33,28 +33,20 @@ describe('token/http/grant/code/issue', function() {
     };
     
     
-    describe('issuing an access token', function() {
+    describe('an access token', function() {
       var token, attrs;
       
       before(function() {
         sinon.stub(codes, 'decode').yields(null, {
-          user: {
-            id: '1',
-            displayName: 'John Doe'
-          },
           client: {
             id: 's6BhdRkqt3',
             name: 'Example Client'
           },
-          permissions: [ {
-            resource: {
-              id: '112210f47de98100',
-              identifier: 'https://api.example.com/',
-              name: 'Example API'
-            },
-            scope: [ 'read:foo', 'write:foo', 'read:bar' ]
-          } ],
-          redirectURI: 'https://client.example.com/cb'
+          redirectURI: 'https://client.example.com/cb',
+          user: {
+            id: '1',
+            displayName: 'John Doe'
+          }
         });
         sinon.stub(ds, 'get').yields(null, { id: '112210f47de98100', identifier: 'https://api.example.com/', name: 'Example API' });
         sinon.stub(sts, 'issue').yields(null, '2YotnFZFEjr1zCsicMWpAA', { token_type: 'Bearer' });
@@ -67,7 +59,7 @@ describe('token/http/grant/code/issue', function() {
       });
       
       before(function(done) {
-        var issue = factory(sts, codes, null, ds);
+        var issue = factory(sts, codes, ds);
         issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(err, t, r, a) {
           if (err) { return done(err); }
           token = t;
@@ -88,7 +80,7 @@ describe('token/http/grant/code/issue', function() {
         //expect(ds.get.args[0][1]).to.equal();
       });
       
-      it('should issue access token', function() {
+      it('should encode access token', function() {
         expect(sts.issue.callCount).to.equal(1);
         expect(sts.issue.args[0][0]).to.deep.equal({
           user: {
@@ -98,17 +90,7 @@ describe('token/http/grant/code/issue', function() {
           client: {
             id: 's6BhdRkqt3',
             name: 'Example Client'
-          },
-          /*
-          permissions: [ {
-            resource: {
-              id: '112210f47de98100',
-              identifier: 'https://api.example.com/',
-              name: 'Example API'
-            },
-            scope: [ 'read:foo', 'write:foo', 'read:bar' ]
-          } ]
-          */
+          }
         });
         expect(sts.issue.args[0][1]).to.deep.equal([
           { id: '112210f47de98100',

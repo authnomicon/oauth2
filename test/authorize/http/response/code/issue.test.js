@@ -55,7 +55,7 @@ describe('authorize/http/response/code/issue', function() {
         });
       });
       
-      it('should encode authorization code', function() {
+      it('should encode context', function() {
         expect(codes.encode.callCount).to.equal(1);
         expect(codes.encode.args[0][0]).to.equal('urn:ietf:params:oauth:token-type:jwt');
         expect(codes.encode.args[0][1]).to.deep.equal({
@@ -79,7 +79,7 @@ describe('authorize/http/response/code/issue', function() {
       it('should yield authorization code', function() {
         expect(code).to.equal('SplxlOBeZQQYbYS6WxSbIA');
       });
-    }); // issuing an authorization code
+    }); // an authorization code
     
     describe('an authorization code with scope', function() {
       var code;
@@ -131,7 +131,7 @@ describe('authorize/http/response/code/issue', function() {
       it('should yield authorization code', function() {
         expect(code).to.equal('SplxlOBeZQQYbYS6WxSbIA');
       });
-    }); // issuing an authorization code with scope
+    }); // an authorization code with scope
     
   }); // issue
   
