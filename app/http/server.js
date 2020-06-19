@@ -39,18 +39,38 @@ exports = module.exports = function(container, store, logger) {
     })
     .then(function(server) {
       // Register grant types with the OAuth 2.0 server.
-      var typeComps = container.components('http://i.authnomicon.org/oauth2/http/Exchange')
-    
-      return Promise.all(typeComps.map(function(spec) { return container.create(spec.id); } ))
-        .then(function(plugins) {
-          plugins.forEach(function(plugin, i) {
-            server.exchange(typeComps[i].a['@type'] || plugin.name, plugin);
-            logger.info('Loaded OAuth 2.0 grant type: ' + (typeComps[i].a['@type'] || plugin.name));
-          });
-        })
-        .then(function() {
-          return server;
-        });
+      
+      return new Promise(function(resolve, reject) {
+        var components = container.components('http://i.authnomicon.org/oauth2/http/Exchange');
+        
+        (function iter(i) {
+          var component = components[i]
+            , type;
+          if (!component) {
+            return resolve(server);
+          }
+          
+          type = component.a['@type'];
+          
+          component.create()
+            .then(function(exchange) {
+              logger.info('Loaded OAuth 2.0 grant exchange: ' + (type || exchange.name));
+              server.exchange(type || exchange.name, exchange);
+              iter(i + 1);
+            }, function(err) {
+              // TODO: Print the package name in the error, so it can be found
+              // TODO: Make the error have the stack of dependencies.
+              if (err.code == 'IMPLEMENTATION_NOT_FOUND') {
+                // TODO: Mount debugging middleware here
+                
+                logger.notice(err.message + ' while loading component ' + component.id);
+                return iter(i + 1);
+              }
+              
+              reject(err);
+            })
+        })(0);
+      });
     })
     .then(function(server) {
       return server;
