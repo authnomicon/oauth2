@@ -1,4 +1,4 @@
-exports = module.exports = function(authorizationHandler, server) {
+exports = module.exports = function(service, server) {
   var Request = require('../../../../../lib/request')
     , Response = require('../../../../../lib/response');
   
@@ -48,11 +48,11 @@ exports = module.exports = function(authorizationHandler, server) {
     ares.once('_prompt', onprompt);
     ares.once('end', onend);
   
-    authorizationHandler(areq, ares);
+    service(areq, ares);
   };
 };
 
 exports['@require'] = [
-  'http://i.authnomicon.org/oauth2/authorizationHandler',
+  'http://i.authnomicon.org/oauth2/Service',
   '../../../../http/server'
 ];
