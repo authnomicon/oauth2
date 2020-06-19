@@ -19,7 +19,13 @@
  * initiated by the client.  Transactions are stateful, with each subsequent
  * prompt returning the state necessary to resume authorization processing.
  *
+ * This service is annotated with a type of `oauth2-authorize`, which is the
+ * [proposed][2] [link relation][3] for the authorization endpoint.  This value
+ * is suitable for registering the service in a service registry.
+ *
  * [1]: https://tools.ietf.org/html/rfc6749#section-3.1
+ * [2]: https://tools.ietf.org/html/draft-wmills-oauth-lrdd-07#section-3.1
+ * [3]: https://tools.ietf.org/html/rfc5988#section-4
  */
 exports = module.exports = function(authorizeHandler, continueHandler) {
   var express = require('express');
