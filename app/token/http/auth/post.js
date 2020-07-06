@@ -1,6 +1,3 @@
-var internals = require('../../../../lib/auth/internals');
-
-
 exports = module.exports = function(secrets, clients) {
   var Strategy = require('passport-oauth2-client-password').Strategy;
   
