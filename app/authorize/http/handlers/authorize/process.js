@@ -11,6 +11,11 @@ exports = module.exports = function(service, server) {
     var areq = new Request(req.oauth2.client, req.oauth2.user)
       , ares = new Response();
     
+    if (req.session) {
+      areq.session = {};
+      areq.session.authInfo = req.session.authInfo;
+    }
+    
     function ondecision(result, scope) {
       req.state.complete();
     
@@ -36,6 +41,10 @@ exports = module.exports = function(service, server) {
       switch (name) {
       case 'login':
         return res.redirect('/login');
+      case 'otp-2f':
+        return res.redirect('/login/otp-2f');
+      default:
+        return next(new Error('Unsupported login challenge: ' + type));
       }
     }
   
@@ -45,6 +54,7 @@ exports = module.exports = function(service, server) {
     }
   
     ares.once('decision', ondecision);
+    // lres.once('__challenge__', onchallenge);
     ares.once('_prompt', onprompt);
     ares.once('end', onend);
   
