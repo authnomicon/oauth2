@@ -1,9 +1,9 @@
-exports = module.exports = function(directory) {
-
-  return function(clientID, cb) {
-    console.log('FIXME: http/auth/none/verify in oauth2');
+exports = module.exports = function(clients) {
+  var Strategy = require('passport-oauth2-client-public').Strategy;
+  
+  return new Strategy(function(clientID, cb) {
     
-    directory.query(clientID, function(err, client) {
+    clients.find(clientID, function(err, client) {
       if (err) { return cb(err); }
       // TODO: Handle ENOTFOUND or somesuch as a undefined client
       if (!client) {
@@ -17,9 +17,11 @@ exports = module.exports = function(directory) {
       
       return cb(null, client);
     });
-  };
+  });
 };
 
+exports['@implements'] = 'http://i.bixbyjs.org/http/auth/Scheme';
+exports['@scheme'] = 'none';
 exports['@require'] = [
-  //'http://schemas.modulate.io/js/aaa/clients/Directory'
+  'http://i.authnomicon.org/oauth2/ClientDirectory'
 ];
