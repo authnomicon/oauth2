@@ -390,6 +390,63 @@ describe('authorize/http/handlers/authorize', function() {
       });
     }); // processing an invalid authorization request sent by client with empty array of redirect URIs
     
+    describe('processing an invalid authorization request using unregistered redirect URI', function() {
+      var clients = new Object();
+      clients.find = sinon.stub().yieldsAsync(null, {
+        id: 's6BhdRkqt3',
+        name: 'Example Client',
+        redirectURIs: [
+          'https://client.example.com/cb',
+          'https://client.example.com/cb2'
+        ]
+      });
+      
+      
+      var error, request, response;
+      
+      before(function(done) {
+        var handler = factory(processRequest, clients, { authorization: authorization }, authenticate, ceremony);
+        
+        chai.express.handler(handler)
+          .req(function(req) {
+            request = req;
+            req.query = {
+              client_id: 's6BhdRkqt3',
+              redirect_uri: 'https://client.example.org/cb'
+            };
+          })
+          .res(function(res) {
+            response = res;
+          })
+          .next(function(err) {
+            error = err;
+            done();
+          })
+          .dispatch();
+      });
+      
+      it('should authenticate', function() {
+        expect(request.authInfo).to.deep.equal({
+          mechanisms: ['session', 'anonymous']
+        });
+      });
+      
+      it('should query directory', function() {
+        expect(clients.find).to.have.been.calledOnceWith('s6BhdRkqt3');
+      });
+      
+      it('should not initialize transaction', function() {
+        expect(request.oauth2).to.be.undefined;
+      });
+      
+      it('should error', function() {
+        expect(error).to.be.an.instanceOf(Error);
+        expect(error.message).to.equal('Client not permitted to use redirect URI');
+        expect(error.code).to.equal('unauthorized_client');
+        expect(error.status).to.equal(403);
+      });
+    }); // processing an invalid authorization request using unregistered redirect URI
+    
   }); // handler
   
 });
