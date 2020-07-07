@@ -31,27 +31,24 @@ describe('authorize/http/handlers/continue', function() {
       };
     }
     
-    var server = {
-      resume: function(immediate) {
-        return function(req, res, next) {
-          immediate({}, function(err, allow) {
-            if (err) { return next(err); }
-            if (allow !== false) {
-              return next(new Error('should not allow transaction'));
-            }
-            return next();
-          })
-        };
-      }
-    };
+    function resume(immediate) {
+      
+      return function(req, res, next) {
+        immediate(req.oauth2, function(err, allow) {
+          if (err) { return next(err); }
+          if (allow) { return res.redirect(req.oauth2.redirectURI); }
+          return next();
+        })
+      };
+    }
     
     function processRequest(req, res, next) {
       res.redirect('/consent')
     };
     
-    function authenticate(schemes) {
+    function authenticate(mechanisms) {
       return function(req, res, next) {
-        req.authInfo = { schemes: schemes };
+        req.authInfo = { mechanisms: mechanisms };
         next();
       };
     }
@@ -61,12 +58,11 @@ describe('authorize/http/handlers/continue', function() {
       var request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, server, authenticate, ceremony);
+        var handler = factory(processRequest, { resume: resume }, authenticate, ceremony);
         
         chai.express.handler(handler)
           .req(function(req) {
             request = req;
-            req.session = {};
           })
           .res(function(res) {
             response = res;
@@ -79,7 +75,7 @@ describe('authorize/http/handlers/continue', function() {
       
       it('should authenticate', function() {
         expect(request.authInfo).to.deep.equal({
-          schemes: ['session']
+          mechanisms: ['session']
         });
       });
       
