@@ -34,11 +34,12 @@ describe('authorize/http/handlers/authorize', function() {
     function authorization(validate, immediate) {
       
       return function(req, res, next) {
-        validate(req.query.client_id, req.query.redirect_uri, function(err, client, redirectURI) {
+        validate(req.query.client_id, req.query.redirect_uri, function(err, client, redirectURI, webOrigin) {
           if (err) { return next(err); }
           req.oauth2 = {
             client: client,
-            redirectURI: redirectURI
+            redirectURI: redirectURI,
+            webOrigin: webOrigin
           };
           
           immediate(req.oauth2, function(err, allow) {
@@ -62,7 +63,7 @@ describe('authorize/http/handlers/authorize', function() {
     }
     
     
-    describe('processing request', function() {
+    describe('processing a valid authorization request', function() {
       var clients = new Object();
       clients.find = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -110,13 +111,127 @@ describe('authorize/http/handlers/authorize', function() {
           redirectURIs: [ 'https://client.example.com/cb' ]
         });
         expect(request.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb');
+        expect(request.oauth2.webOrigin).to.be.undefined;
       });
       
       it('should redirect', function() {
         expect(response.statusCode).to.equal(302);
         expect(response.getHeader('Location')).to.equal('/consent');
       });
-    }); // processing request
+    }); // processing a valid authorization request
+    
+    describe('processing a valid authorization request where multiple redirect URIs are registered', function() {
+      var clients = new Object();
+      clients.find = sinon.stub().yieldsAsync(null, {
+        id: 's6BhdRkqt3',
+        name: 'Example Client',
+        redirectURIs: [ 'https://client.example.com/cb', 'https://client.example.com/cb2' ]
+      });
+      
+      
+      var request, response;
+      
+      before(function(done) {
+        var handler = factory(processRequest, clients, { authorization: authorization }, authenticate, ceremony);
+        
+        chai.express.handler(handler)
+          .req(function(req) {
+            request = req;
+            req.query = {
+              client_id: 's6BhdRkqt3',
+              redirect_uri: 'https://client.example.com/cb2'
+            };
+          })
+          .res(function(res) {
+            response = res;
+          })
+          .end(function() {
+            done()
+          })
+          .dispatch();
+      });
+      
+      it('should authenticate', function() {
+        expect(request.authInfo).to.deep.equal({
+          mechanisms: ['session', 'anonymous']
+        });
+      });
+      
+      it('should query directory', function() {
+        expect(clients.find).to.have.been.calledOnceWith('s6BhdRkqt3');
+      });
+      
+      it('should initialize transaction', function() {
+        expect(request.oauth2.client).to.deep.equal({
+          id: 's6BhdRkqt3',
+          name: 'Example Client',
+          redirectURIs: [ 'https://client.example.com/cb', 'https://client.example.com/cb2' ]
+        });
+        expect(request.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb2');
+        expect(request.oauth2.webOrigin).to.be.undefined;
+      });
+      
+      it('should redirect', function() {
+        expect(response.statusCode).to.equal(302);
+        expect(response.getHeader('Location')).to.equal('/consent');
+      });
+    }); // processing a valid authorization request where multiple redirect URIs are registered
+    
+    describe('processing a valid authorization request where redirect URI is ommitted and only one is registered', function() {
+      var clients = new Object();
+      clients.find = sinon.stub().yieldsAsync(null, {
+        id: 's6BhdRkqt3',
+        name: 'Example Client',
+        redirectURIs: [ 'https://client.example.com/cb' ]
+      });
+      
+      
+      var request, response;
+      
+      before(function(done) {
+        var handler = factory(processRequest, clients, { authorization: authorization }, authenticate, ceremony);
+        
+        chai.express.handler(handler)
+          .req(function(req) {
+            request = req;
+            req.query = {
+              client_id: 's6BhdRkqt3'
+            };
+          })
+          .res(function(res) {
+            response = res;
+          })
+          .end(function() {
+            done()
+          })
+          .dispatch();
+      });
+      
+      it('should authenticate', function() {
+        expect(request.authInfo).to.deep.equal({
+          mechanisms: ['session', 'anonymous']
+        });
+      });
+      
+      it('should query directory', function() {
+        expect(clients.find).to.have.been.calledOnceWith('s6BhdRkqt3');
+      });
+      
+      it('should initialize transaction', function() {
+        expect(request.oauth2.client).to.deep.equal({
+          id: 's6BhdRkqt3',
+          name: 'Example Client',
+          redirectURIs: [ 'https://client.example.com/cb' ]
+        });
+        expect(request.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb');
+        expect(request.oauth2.webOrigin).to.be.undefined;
+      });
+      
+      it('should redirect', function() {
+        expect(response.statusCode).to.equal(302);
+        expect(response.getHeader('Location')).to.equal('/consent');
+      });
+    }); // processing a valid authorization request where redirect URI is ommitted and only one is registered
     
   }); // handler
   

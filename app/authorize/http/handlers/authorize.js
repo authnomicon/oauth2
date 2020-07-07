@@ -44,7 +44,7 @@ exports = module.exports = function(processRequest, Clients, server, authenticat
             return cb(new oauth2orize.AuthorizationError('Client not permitted to use redirect URI', 'unauthorized_client'));
           }
     
-          return cb(null, client, redirectURI || client.redirectURIs[0], 'http://localhost:3001');
+          return cb(null, client, redirectURI || client.redirectURIs[0]);
         }); // ds.get
       },
       function(txn, cb) {
