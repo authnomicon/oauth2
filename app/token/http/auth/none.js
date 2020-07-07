@@ -5,7 +5,6 @@ exports = module.exports = function(clients) {
     
     clients.find(clientID, function(err, client) {
       if (err) { return cb(err); }
-      // TODO: Handle ENOTFOUND or somesuch as a undefined client
       if (!client) {
         return cb(null, false);
       }
