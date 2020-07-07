@@ -31,53 +31,58 @@ describe('authorize/http/handlers/authorize', function() {
       };
     }
     
-    var server = {
-      authorization: function(validate, immediate) {
-        return function(req, res, next) {
-          validate('s6BhdRkqt3', function(err, client) {
+    function authorization(validate, immediate) {
+      
+      return function(req, res, next) {
+        validate(req.query.client_id, req.query.redirect_uri, function(err, client, redirectURI) {
+          if (err) { return next(err); }
+          req.oauth2 = {
+            client: client,
+            redirectURI: redirectURI
+          };
+          
+          immediate(req.oauth2, function(err, allow) {
             if (err) { return next(err); }
-            req.client = client;
-            
-            immediate({}, function(err, allow) {
-              if (err) { return next(err); }
-              if (allow !== false) {
-                return next(new Error('should not allow transaction'));
-              }
-              return next();
-            })
+            if (allow) { return res.redirect(req.oauth2.redirectURI); }
+            return next();
           })
-        };
-      }
-    };
+        })
+      };
+    }
     
     function processRequest(req, res, next) {
       res.redirect('/consent')
     };
     
-    function validateClient(clientID, cb) {
-      process.nextTick(function() {
-        cb(null, { id: clientID });
-      });
-    };
-    
-    function authenticate(schemes) {
+    function authenticate(mechanisms) {
       return function(req, res, next) {
-        req.authInfo = { schemes: schemes };
+        req.authInfo = { mechanisms: mechanisms };
         next();
       };
     }
     
     
     describe('processing request', function() {
+      var clients = new Object();
+      clients.find = sinon.stub().yieldsAsync(null, {
+        id: 's6BhdRkqt3',
+        name: 'Example Client',
+        redirectURIs: [ 'https://client.example.com/cb' ]
+      });
+      
+      
       var request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, validateClient, server, authenticate, ceremony);
+        var handler = factory(processRequest, clients, { authorization: authorization }, authenticate, ceremony);
         
         chai.express.handler(handler)
           .req(function(req) {
             request = req;
-            req.session = {};
+            req.query = {
+              client_id: 's6BhdRkqt3',
+              redirect_uri: 'https://client.example.com/cb'
+            };
           })
           .res(function(res) {
             response = res;
@@ -90,17 +95,24 @@ describe('authorize/http/handlers/authorize', function() {
       
       it('should authenticate', function() {
         expect(request.authInfo).to.deep.equal({
-          schemes: ['session', 'anonymous']
+          mechanisms: ['session', 'anonymous']
         });
       });
       
-      it('should validate client', function() {
-        expect(request.client).to.deep.equal({
-          id: 's6BhdRkqt3'
-        });
+      it('should query directory', function() {
+        expect(clients.find).to.have.been.calledOnceWith('s6BhdRkqt3');
       });
       
-      it('should respond', function() {
+      it('should initialize transaction', function() {
+        expect(request.oauth2.client).to.deep.equal({
+          id: 's6BhdRkqt3',
+          name: 'Example Client',
+          redirectURIs: [ 'https://client.example.com/cb' ]
+        });
+        expect(request.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb');
+      });
+      
+      it('should redirect', function() {
         expect(response.statusCode).to.equal(302);
         expect(response.getHeader('Location')).to.equal('/consent');
       });
