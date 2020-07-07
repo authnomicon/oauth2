@@ -1,4 +1,4 @@
-exports = module.exports = function(processRequest, Clients, server, authenticate, ceremony) {
+exports = module.exports = function(processRequest, clients, server, authenticate, ceremony) {
   var oauth2orize = require('oauth2orize')
     , uri = require('url');
   
@@ -8,7 +8,7 @@ exports = module.exports = function(processRequest, Clients, server, authenticat
     server.authorization(
       function validateClient(clientID, redirectURI, cb) {
     
-        Clients.find(clientID, function(err, client) {
+        clients.find(clientID, function(err, client) {
           if (err) { return cb(err); }
           if (!client) {
             return cb(new oauth2orize.AuthorizationError('Unauthorized client', 'unauthorized_client'));
@@ -29,6 +29,7 @@ exports = module.exports = function(processRequest, Clients, server, authenticat
             return cb(new oauth2orize.AuthorizationError('Missing required parameter: redirect_uri', 'invalid_request'));
           }
 
+          /*
           // http://lists.openid.net/pipermail/openid-specs-ab/Week-of-Mon-20151116/005865.html
           if (redirectURI) {
             var url = uri.parse(redirectURI);
@@ -38,6 +39,7 @@ exports = module.exports = function(processRequest, Clients, server, authenticat
               return cb(null, client, redirectURI, 'http://localhost:3001');
             }
           }
+          */
 
 
           if (redirectURI && client.redirectURIs.indexOf(redirectURI) == -1) {
