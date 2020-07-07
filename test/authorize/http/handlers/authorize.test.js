@@ -233,6 +233,163 @@ describe('authorize/http/handlers/authorize', function() {
       });
     }); // processing a valid authorization request where redirect URI is ommitted and only one is registered
     
+    describe('processing an invalid authorization request sent by unknown client', function() {
+      var clients = new Object();
+      clients.find = sinon.stub().yieldsAsync(null);
+      
+      
+      var error, request, response;
+      
+      before(function(done) {
+        var handler = factory(processRequest, clients, { authorization: authorization }, authenticate, ceremony);
+        
+        chai.express.handler(handler)
+          .req(function(req) {
+            request = req;
+            req.query = {
+              client_id: 's6BhdRkqt3',
+              redirect_uri: 'https://client.example.com/cb'
+            };
+          })
+          .res(function(res) {
+            response = res;
+          })
+          .next(function(err) {
+            error = err;
+            done();
+          })
+          .dispatch();
+      });
+      
+      it('should authenticate', function() {
+        expect(request.authInfo).to.deep.equal({
+          mechanisms: ['session', 'anonymous']
+        });
+      });
+      
+      it('should query directory', function() {
+        expect(clients.find).to.have.been.calledOnceWith('s6BhdRkqt3');
+      });
+      
+      it('should not initialize transaction', function() {
+        expect(request.oauth2).to.be.undefined;
+      });
+      
+      it('should error', function() {
+        expect(error).to.be.an.instanceOf(Error);
+        expect(error.message).to.equal('Unauthorized client');
+        expect(error.code).to.equal('unauthorized_client');
+        expect(error.status).to.equal(403);
+      });
+    }); // processing an invalid authorization request sent by unknown client
+    
+    describe('processing an invalid authorization request sent by client with no registered redirect URIs', function() {
+      var clients = new Object();
+      clients.find = sinon.stub().yieldsAsync(null, {
+        id: 's6BhdRkqt3',
+        name: 'Example Client'
+      });
+      
+      
+      var error, request, response;
+      
+      before(function(done) {
+        var handler = factory(processRequest, clients, { authorization: authorization }, authenticate, ceremony);
+        
+        chai.express.handler(handler)
+          .req(function(req) {
+            request = req;
+            req.query = {
+              client_id: 's6BhdRkqt3',
+              redirect_uri: 'https://client.example.com/cb'
+            };
+          })
+          .res(function(res) {
+            response = res;
+          })
+          .next(function(err) {
+            error = err;
+            done();
+          })
+          .dispatch();
+      });
+      
+      it('should authenticate', function() {
+        expect(request.authInfo).to.deep.equal({
+          mechanisms: ['session', 'anonymous']
+        });
+      });
+      
+      it('should query directory', function() {
+        expect(clients.find).to.have.been.calledOnceWith('s6BhdRkqt3');
+      });
+      
+      it('should not initialize transaction', function() {
+        expect(request.oauth2).to.be.undefined;
+      });
+      
+      it('should error', function() {
+        expect(error).to.be.an.instanceOf(Error);
+        expect(error.message).to.equal('Client has no registered redirect URIs');
+        expect(error.code).to.equal('unauthorized_client');
+        expect(error.status).to.equal(403);
+      });
+    }); // processing an invalid authorization request sent by client with no registered redirect URIs
+    
+    describe('processing an invalid authorization request sent by client with empty array of redirect URIs', function() {
+      var clients = new Object();
+      clients.find = sinon.stub().yieldsAsync(null, {
+        id: 's6BhdRkqt3',
+        name: 'Example Client',
+        redirectURIs: []
+      });
+      
+      
+      var error, request, response;
+      
+      before(function(done) {
+        var handler = factory(processRequest, clients, { authorization: authorization }, authenticate, ceremony);
+        
+        chai.express.handler(handler)
+          .req(function(req) {
+            request = req;
+            req.query = {
+              client_id: 's6BhdRkqt3',
+              redirect_uri: 'https://client.example.com/cb'
+            };
+          })
+          .res(function(res) {
+            response = res;
+          })
+          .next(function(err) {
+            error = err;
+            done();
+          })
+          .dispatch();
+      });
+      
+      it('should authenticate', function() {
+        expect(request.authInfo).to.deep.equal({
+          mechanisms: ['session', 'anonymous']
+        });
+      });
+      
+      it('should query directory', function() {
+        expect(clients.find).to.have.been.calledOnceWith('s6BhdRkqt3');
+      });
+      
+      it('should not initialize transaction', function() {
+        expect(request.oauth2).to.be.undefined;
+      });
+      
+      it('should error', function() {
+        expect(error).to.be.an.instanceOf(Error);
+        expect(error.message).to.equal('Client has no registered redirect URIs');
+        expect(error.code).to.equal('unauthorized_client');
+        expect(error.status).to.equal(403);
+      });
+    }); // processing an invalid authorization request sent by client with empty array of redirect URIs
+    
   }); // handler
   
 });

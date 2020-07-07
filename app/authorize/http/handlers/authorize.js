@@ -11,7 +11,7 @@ exports = module.exports = function(processRequest, Clients, server, authenticat
         Clients.find(clientID, function(err, client) {
           if (err) { return cb(err); }
           if (!client) {
-            return cb(new oauth2orize.AuthorizationError('Unknown client', 'unauthorized_client'));
+            return cb(new oauth2orize.AuthorizationError('Unauthorized client', 'unauthorized_client'));
           }
           if (!client.redirectURIs || !client.redirectURIs.length) {
             // The client has not registered any redirection endpoints.  Such
@@ -29,7 +29,7 @@ exports = module.exports = function(processRequest, Clients, server, authenticat
             return cb(new oauth2orize.AuthorizationError('Missing required parameter: redirect_uri', 'invalid_request'));
           }
 
-
+          // http://lists.openid.net/pipermail/openid-specs-ab/Week-of-Mon-20151116/005865.html
           if (redirectURI) {
             var url = uri.parse(redirectURI);
             //console.log(url);
