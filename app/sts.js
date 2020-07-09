@@ -17,15 +17,10 @@ exports = module.exports = function(tokens) {
     }
     options = options || {};
     
-    console.log('#####');
-    console.log(options);
     
     var typed = TYPE_2_TYPE_DIALECT[options.type]
       , dialect = typed ? typed[1] : options.dialect
       , sz;
-    
-    console.log(typed);
-    console.log(dialect);
     
     try {
       sz = tokens.createSerializer(dialect);
@@ -33,15 +28,7 @@ exports = module.exports = function(tokens) {
       return cb(ex);
     }
     
-    
     sz.serialize(msg, function(err, claims) {
-      console.log('SERIALIZED!');
-      console.log(err);
-      console.log(claims);
-      
-      //if (err) { return cb(err); }
-      //return cb(null, out);
-      
       var type = typed ? typed[0] : (options.type || 'application/jwt')
         , sl;
       try {
@@ -57,15 +44,9 @@ exports = module.exports = function(tokens) {
           } ];
       
       sl.seal(claims, recipients, { confidential: false }, function(err, token) {
-        console.log('SEALED IT!');
-        console.log(err)
-        console.log(token)
-        
         if (err) { return cb(err); }
         return cb(null, token);
       });
-      
-      
     });
   }
   
