@@ -1,0 +1,79 @@
+var TYPE_2_TYPE_DIALECT = {
+  access_token: [ 'application/jwt', 'application/at+jwt' ],
+  refresh_token: [ 'application/jwt', 'application/vnd.authnomicon.rt+jwt' ],
+  authorization_code: [ 'application/jwt', 'application/vnd.authnomicon.ac+jwt' ],
+};
+
+
+exports = module.exports = function(tokens) {
+  var svc = {};
+  
+  svc.issue = function(msg, options, cb) {
+    if (typeof options == 'function') {
+      cb = options;
+      options == undefined;
+    } else if (typeof options == 'string') {
+      options = { type: options };
+    }
+    options = options || {};
+    
+    console.log('#####');
+    console.log(options);
+    
+    var typed = TYPE_2_TYPE_DIALECT[options.type]
+      , dialect = typed ? typed[1] : options.dialect
+      , sz;
+    
+    console.log(typed);
+    console.log(dialect);
+    
+    try {
+      sz = tokens.createSerializer(dialect);
+    } catch (ex) {
+      return cb(ex);
+    }
+    
+    
+    sz.serialize(msg, function(err, claims) {
+      console.log('SERIALIZED!');
+      console.log(err);
+      console.log(claims);
+      
+      //if (err) { return cb(err); }
+      //return cb(null, out);
+      
+      var type = typed ? typed[0] : (options.type || 'application/jwt')
+        , sl;
+      try {
+        sl = tokens.createSealer(type);
+      } catch (ex) {
+        return cb(ex);
+      }
+      
+      var recipients = [ {
+            id: 'AS1AC',
+            identifier: 'http://localhost/authorization_code',
+            secret: 'some-secret-shared-with-oauth-authorization-server'
+          } ];
+      
+      sl.seal(claims, recipients, { confidential: false }, function(err, token) {
+        console.log('SEALED IT!');
+        console.log(err)
+        console.log(token)
+        
+        if (err) { return cb(err); }
+        return cb(null, token);
+      });
+      
+      
+    });
+  }
+  
+  return svc;
+};
+
+exports['@implements'] = 'http://i.authnomicon.org/oauth2/SecurityTokenService';
+exports['@singleton'] = true;
+exports['@require'] = [
+  'http://i.bixbyjs.org/tokens'
+];

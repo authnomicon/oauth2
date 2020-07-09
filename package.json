@@ -44,10 +44,12 @@
       "token/http/grant/password",
       "http/request/responsemode",
       "http/request/webmessage",
+      "sts",
       "sts/issue",
       "http/middleware/errorhandler",
       "sts/main",
-      "tokens/authorization-code/main"
+      "tokens/authorization-code/main",
+      "tokens/authorization-code/jwt/schema"
     ]
   },
   "dependencies": {

@@ -1,4 +1,4 @@
-exports = module.exports = function(codes) {
+exports = module.exports = function(codes, sts) {
   
   return function issueCode(client, redirectURI, user, ares, areq, locals, cb) {
     var ctx = {};
@@ -27,9 +27,37 @@ exports = module.exports = function(codes) {
     var opts = {}
     opts.confidential = false;
     
+    console.log('SEAL THIS MESSAGE');
+    console.log(ctx);
+    console.log(opts);
+    
+    sts.issue(ctx, 'authorization_code', function(err, code) {
+      console.log('ISSUED AUTHORIZATION CODE');
+      console.log(err);
+      console.log(code);
+      
+      if (err) { return cb(err); }
+      return cb(null, code);
+    });
+    
+    
+    /*
+    var seal = tokens.createSeal('authorization_code');
+    seal.seal(msg, function(err, token) {
+      
+    });
+    */
+    return;
+    
+    
+    
     //tokens.encode('urn:ietf:params:oauth:token-type:authorization_code', ctx, opt, function(err, code) {
     codes.encode('urn:ietf:params:oauth:token-type:jwt', ctx, opt.audience, opts, function(err, code) {
       if (err) { return cb(err); }
+      
+      console.log('ISSUED AUTHORIZATION CODE!!!');
+      console.log(code);
+      
       return cb(null, code);
     });
   };
@@ -38,5 +66,6 @@ exports = module.exports = function(codes) {
 // TODO: Make this component protected, so it can be shared from same namespace with OIDC
 exports['@implements'] = 'http://i.authnomicon.org/oauth2/http/response/code/issueFunc';
 exports['@require'] = [
-  'http://schemas.authnomicon.org/js/oauth2/tokens/authorization-code'
+  'http://schemas.authnomicon.org/js/oauth2/tokens/authorization-code',
+  'http://i.authnomicon.org/oauth2/SecurityTokenService'
 ];
