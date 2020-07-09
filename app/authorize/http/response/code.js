@@ -20,28 +20,8 @@ exports = module.exports = function(container, sts, logger) {
         ctx.client = client;
         ctx.redirectURI = redirectURI;
         ctx.user = user;
-    
-        if (ares.scope) {
-          ctx.scope = ares.scope;
-        }
-        // TODO: (multiple) resource-specific permissions
-        //ctx.permissions = ares.permissions;
-    
-        var opt = {};
-        //opt.type = 'application/fe26.2';
-        //opt.type = 'application/x-fernet-json';
-        opt.dialect = 'http://schemas.authnomicon.org/tokens/jwt/authorization-code';
-        opt.audience = [ {
-          id: 'AS1AC',
-          identifier: 'http://localhost/authorization_code',
-          secret: 'some-secret-shared-with-oauth-authorization-server'
-        } ];
-    
-        // TODO: Ensure that code has a TTL of 10 minutes
-
-        var opts = {}
-        opts.confidential = false;
-    
+        ctx.grant = ares;
+        
         sts.issue(ctx, 'authorization_code', function(err, code) {
           if (err) { return cb(err); }
           return cb(null, code);

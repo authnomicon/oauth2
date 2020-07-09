@@ -90,7 +90,10 @@ describe('authorize/http/response/code', function() {
             id: '248289761001',
             displayName: 'Jane Doe'
           },
-          scope: [ 'profile', 'email' ]
+          grant: {
+            allow: true,
+            scope: [ 'profile', 'email' ]
+          }
         });
         expect(sts.issue.args[0][1]).to.equal('authorization_code');
       });
