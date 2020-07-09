@@ -47,6 +47,40 @@ describe('authorize/http/response/code', function() {
       expect(codeSpy.args[0][1]).to.be.a('function');
     });
     
+    describe('issue', function() {
+      var code;
+      
+      before(function(done) {
+        
+        var issue = codeSpy.args[0][1];
+        
+        var ares = {
+          allow: true,
+          scope: undefined
+        }
+        
+        var client = {
+          id: 's6BhdRkqt3',
+          name: 'Example Client'
+        };
+        var user = {
+          id: '248289761001',
+          displayName: 'Jane Doe'
+        };
+        
+        issue(client, 'https://client.example.com/cb', user, ares, {}, {}, function(err, c) {
+          if (err) { return done(err); }
+          code = c;
+          done();
+        });
+      });
+      
+      it('should yield authorization code', function() {
+        expect(code).to.equal('SplxlOBeZQQYbYS6WxSbIA');
+      });
+      
+    });
+    
   }); // creating grant
   
   // TODO: createing grant with response modes

@@ -42,40 +42,11 @@ exports = module.exports = function(container, sts, logger) {
         var opts = {}
         opts.confidential = false;
     
-        console.log('SEAL THIS MESSAGE');
-        console.log(ctx);
-        console.log(opts);
-    
         sts.issue(ctx, 'authorization_code', function(err, code) {
-          console.log('ISSUED AUTHORIZATION CODE');
-          console.log(err);
-          console.log(code);
-      
           if (err) { return cb(err); }
           return cb(null, code);
         });
-    
-    
-        /*
-        var seal = tokens.createSeal('authorization_code');
-        seal.seal(msg, function(err, token) {
-      
-        });
-        */
-        return;
-    
-    
-    
-        //tokens.encode('urn:ietf:params:oauth:token-type:authorization_code', ctx, opt, function(err, code) {
-        codes.encode('urn:ietf:params:oauth:token-type:jwt', ctx, opt.audience, opts, function(err, code) {
-          if (err) { return cb(err); }
-      
-          console.log('ISSUED AUTHORIZATION CODE!!!');
-          console.log(code);
-      
-          return cb(null, code);
-        });
-      })
+      });
     });
 };
 
