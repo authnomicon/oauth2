@@ -19,21 +19,19 @@ describe('authorize/http/response/code', function() {
   });
   
   describe('creating grant', function() {
-    
     var container = new Object();
     container.components = sinon.stub()
     container.components.withArgs('http://i.authnomicon.org/oauth2/authorize/http/ResponseMode').returns([]);
     var sts = new Object();
     sts.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
     
-    
     var codeSpy = sinon.stub();
+    
+    var factory = $require('../../../../app/authorize/http/response/code',
+      { 'oauth2orize': { grant: { code: codeSpy } } });
     
     var grant;
     before(function(done) {
-      var factory = $require('../../../../app/authorize/http/response/code',
-        { 'oauth2orize': { grant: { code: codeSpy } } });
-      
       var promise = factory(container, sts);
       promise.then(function(g) {
         grant = g;
@@ -51,34 +49,55 @@ describe('authorize/http/response/code', function() {
       var code;
       
       before(function(done) {
-        
-        var issue = codeSpy.args[0][1];
-        
-        var ares = {
-          allow: true,
-          scope: undefined
-        }
-        
         var client = {
           id: 's6BhdRkqt3',
-          name: 'Example Client'
+          name: 'Example Client',
+          redirectURIs: [ 'https://client.example.com/cb' ]
         };
         var user = {
           id: '248289761001',
           displayName: 'Jane Doe'
         };
+        var ares = {
+          allow: true,
+          scope: [ 'profile', 'email' ]
+        }
+        var areq = {
+          type: 'code',
+          clientID: 's6BhdRkqt3',
+          redirectURI: 'https://client.example.com/cb',
+          state: 'xyz'
+        }
         
-        issue(client, 'https://client.example.com/cb', user, ares, {}, {}, function(err, c) {
+        var issue = codeSpy.args[0][1];
+        issue(client, 'https://client.example.com/cb', user, ares, areq, {}, function(err, c) {
           if (err) { return done(err); }
           code = c;
           done();
         });
       });
       
+      it('should issue authorization code', function() {
+        expect(sts.issue.callCount).to.equal(1);
+        expect(sts.issue.args[0][0]).to.deep.equal({
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'Example Client',
+            redirectURIs: [ 'https://client.example.com/cb' ]
+          },
+          redirectURI: 'https://client.example.com/cb',
+          user: {
+            id: '248289761001',
+            displayName: 'Jane Doe'
+          },
+          scope: [ 'profile', 'email' ]
+        });
+        expect(sts.issue.args[0][1]).to.equal('authorization_code');
+      });
+      
       it('should yield authorization code', function() {
         expect(code).to.equal('SplxlOBeZQQYbYS6WxSbIA');
       });
-      
     });
     
   }); // creating grant
