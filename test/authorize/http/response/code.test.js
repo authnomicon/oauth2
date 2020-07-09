@@ -19,43 +19,36 @@ describe('authorize/http/response/code', function() {
   });
   
   describe('creating grant', function() {
-    var container = {
-      components: function(){},
-      create: function(){}
-    }
-    var issue = function(){};
+    
+    var container = new Object();
+    container.components = sinon.stub()
+    container.components.withArgs('http://i.authnomicon.org/oauth2/authorize/http/ResponseMode').returns([]);
+    var sts = new Object();
+    sts.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
     
     
-    describe('without additional response modes', function() {
-      before(function() {
-        sinon.stub(container, 'components').returns([]);
-      });
+    var codeSpy = sinon.stub();
+    
+    var grant;
+    before(function(done) {
+      var factory = $require('../../../../app/authorize/http/response/code',
+        { 'oauth2orize': { grant: { code: codeSpy } } });
       
-      after(function() {
-        container.components.restore();
+      var promise = factory(container, sts);
+      promise.then(function(g) {
+        grant = g;
+        done();
       });
-      
-      var codeSpy = sinon.stub();
-      
-      var grant;
-      before(function(done) {
-        var factory = $require('../../../../app/authorize/http/response/code',
-          { 'oauth2orize': { grant: { code: codeSpy } } });
-        
-        var promise = factory(container, issue);
-        promise.then(function(g) {
-          grant = g;
-          done();
-        });
-      });
-      
-      it('should create grant', function() {
-        expect(codeSpy.callCount).to.equal(1);
-        expect(codeSpy.args[0][0]).to.deep.equal({ modes: {} });
-        expect(codeSpy.args[0][1]).to.equal(issue);
-      });
-    }); // without additional response modes
+    });
+    
+    it('should create grant', function() {
+      expect(codeSpy.callCount).to.equal(1);
+      expect(codeSpy.args[0][0]).to.deep.equal({ modes: {} });
+      expect(codeSpy.args[0][1]).to.be.a('function');
+    });
     
   }); // creating grant
+  
+  // TODO: createing grant with response modes
   
 });
