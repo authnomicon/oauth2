@@ -1,4 +1,4 @@
-exports = module.exports = function(codes, sts) {
+exports = module.exports = function(sts) {
   
   return function issueCode(client, redirectURI, user, ares, areq, locals, cb) {
     var ctx = {};
@@ -66,6 +66,5 @@ exports = module.exports = function(codes, sts) {
 // TODO: Make this component protected, so it can be shared from same namespace with OIDC
 exports['@implements'] = 'http://i.authnomicon.org/oauth2/http/response/code/issueFunc';
 exports['@require'] = [
-  'http://schemas.authnomicon.org/js/oauth2/tokens/authorization-code',
   'http://i.authnomicon.org/oauth2/SecurityTokenService'
 ];

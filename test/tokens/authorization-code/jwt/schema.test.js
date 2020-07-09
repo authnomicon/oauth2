@@ -11,7 +11,8 @@ describe('tokens/authorization-code/jwt/schema', function() {
   });
   
   it('should be annotated', function() {
-    expect(factory['@implements']).to.be.undefined;
+    expect(factory['@implements']).to.equal('http://i.bixbyjs.org/tokens/Dialect');
+    expect(factory['@type']).to.equal('application/vnd.authnomicon.ac+jwt');
     expect(factory['@singleton']).to.be.undefined;
   });
   
