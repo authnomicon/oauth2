@@ -54,6 +54,39 @@ exports = module.exports = function(tokens) {
     });
   }
   
+  svc.verify = function(token, options, cb) {
+    if (typeof options == 'function') {
+      cb = options;
+      options == undefined;
+    } else if (typeof options == 'string') {
+      options = { type: options };
+    }
+    options = options || {};
+    
+    
+    var unsealer;
+    try {
+      unsealer = tokens.createUnsealer();
+    } catch (ex) {
+      return cb(ex);
+    }
+    
+    unsealer.unseal(token, options, function(err, claims, conditions, issuer) {
+      var dialect;
+      try {
+        dialect = tokens.createDeserializer();
+      } catch (ex) {
+        return cb(ex);
+      }
+      
+      dialect.deserialize(claims, function(err, msg) {
+        if (err) { return cb(err); }
+        return cb(null, msg);
+      });
+    });
+    
+  }
+  
   return svc;
 };
 

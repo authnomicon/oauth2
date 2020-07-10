@@ -19,17 +19,74 @@ describe('token/http/grant/code', function() {
   });
 
   describe('creating exchange', function() {
+    var sts = new Object();
+    sts.verify = sinon.stub().yieldsAsync(null, {
+      client: {
+        id: 's6BhdRkqt3',
+        name: 'Example Client'
+      },
+      redirectURI: 'https://client.example.com/cb',
+      user: {
+        id: '248289761001',
+        displayName: 'Jane Doe'
+      },
+      grant: {
+        allow: true,
+        scope: [ 'profile', 'email' ]
+      }
+    });
+    sts.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
     
     var codeSpy = sinon.stub();
     var issue = function(){};
     
     var factory = $require('../../../../app/token/http/grant/code',
       { 'oauth2orize': { exchange: { code: codeSpy } } });
-    var exchange = factory(issue);
+    var exchange = factory(sts);
     
     it('should create exchange', function() {
       expect(codeSpy.callCount).to.equal(1);
       expect(codeSpy.args[0][0]).to.be.a('function');
+    });
+    
+    describe('issue', function() {
+      var token;
+      
+      before(function(done) {
+        var client = {
+          id: 's6BhdRkqt3',
+          name: 'Example Client',
+          redirectURIs: [ 'https://client.example.com/cb' ]
+        };
+        /*
+        var user = {
+          id: '248289761001',
+          displayName: 'Jane Doe'
+        };
+        var ares = {
+          allow: true,
+          scope: [ 'profile', 'email' ]
+        }
+        var areq = {
+          type: 'code',
+          clientID: 's6BhdRkqt3',
+          redirectURI: 'https://client.example.com/cb',
+          state: 'xyz'
+        }
+        */
+        
+        var issue = codeSpy.args[0][0];
+        issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(err, t) {
+          if (err) { return done(err); }
+          token = t;
+          done();
+        });
+      });
+      
+      it('should yield access token', function() {
+        expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
+      });
+      
     });
   });
   

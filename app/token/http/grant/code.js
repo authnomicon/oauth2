@@ -1,14 +1,25 @@
-exports = module.exports = function(sts, codes, Resources) {
+exports = module.exports = function(sts) {
   var oauth2orize = require('oauth2orize');
   
-  return oauth2orize.exchange.code(function issueToken(client, code, redirectURI, body, authInfo, cb) {
-    
+  return oauth2orize.exchange.code(function(client, code, redirectURI, body, authInfo, cb) {
+    console.log('EXCHANGE!');
+    console.log(client);
+    console.log(code);
+    console.log(redirectURI);
+    console.log(body);
+    console.log(authInfo);
     
     // TODO: Pass self trust store to token verify, using list of issuers like `ca` to Node's http
     // module
     
     //codes.decode(code, { issuer: 'sts-local' }, function(err, claims) {
-    codes.decode(code, {}, function(err, claims) {
+    //sts2.decode(code, {}, function(err, claims) {
+    sts.verify(code, 'authorization_code', function(err, claims) {
+      console.log('DECODED CODE!');
+      console.log(err);
+      console.log(claims);
+      //return;
+      
       if (err) { return cb(err); }
       
       var conf, i, len;
@@ -45,7 +56,7 @@ exports = module.exports = function(sts, codes, Resources) {
       console.log(claims);
       console.log(claims.permissions)
       
-      Resources.get('userinfo', function(err, resource) {
+      //Resources.get('userinfo', function(err, resource) {
       //Resources.get(claims.permissions[0].resource.id, function(err, resource) {
       //ds.get(claims.permissions[0].resource.id, 'resources', function(err, resource) {
         if (err) { return cb(err); }
@@ -58,14 +69,26 @@ exports = module.exports = function(sts, codes, Resources) {
           { resource: resource, scope: claims.permissions[0].scope }
         ];
         */
-        var audience = [ resource ];
+        //var audience = [ resource ];
+        var audience = [];
         
+        sts.issue(msg, 'access_token', function(err, token) {
+          console.log('ISSUED ACCESS TOKEN');
+          console.log(err);
+          console.log(token);
+          
+          if (err) { return cb(err); }
+          return cb(null, token);
+        });
+        
+        /*
         sts.issue(msg, audience, client, function(err, token, attrs) {
           // TODO: add expires_in and scope to attrs, as needed
           if (err) { return cb(err); }
           return cb(null, token, null, attrs);
         });
-      }); // ds.get
+        */
+      //}); // ds.get
       
     
       // FIXME: Put the rest of this back
@@ -76,7 +99,5 @@ exports = module.exports = function(sts, codes, Resources) {
 exports['@implements'] = 'http://i.authnomicon.org/oauth2/http/Exchange';
 exports['@type'] = 'authorization_code';
 exports['@require'] = [
-  'http://schemas.authnomicon.org/js/oauth2/sts',
-  'http://schemas.authnomicon.org/js/oauth2/tokens/authorization-code',
-  'http://i.authnomicon.org/oauth2/ResourceDirectory'
+  'http://i.authnomicon.org/oauth2/SecurityTokenService',
 ];
