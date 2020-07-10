@@ -19,6 +19,7 @@ describe('token/http/grant/code', function() {
   });
 
   describe('creating exchange', function() {
+    
     var codeSpy = sinon.stub();
     var issue = function(){};
     
@@ -27,8 +28,8 @@ describe('token/http/grant/code', function() {
     var exchange = factory(issue);
     
     it('should create exchange', function() {
-      expect(codeSpy).to.have.been.calledOnce;
-      expect(codeSpy).to.have.been.calledWithExactly(issue);
+      expect(codeSpy.callCount).to.equal(1);
+      expect(codeSpy.args[0][0]).to.be.a('function');
     });
   });
   
