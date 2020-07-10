@@ -37,11 +37,15 @@ exports = module.exports = function(tokens) {
         return cb(ex);
       }
       
+      /*
       var recipients = [ {
             id: 'AS1AC',
             identifier: 'http://localhost/authorization_code',
             secret: 'some-secret-shared-with-oauth-authorization-server'
           } ];
+      */
+      
+      var recipients = undefined;
       
       sl.seal(claims, recipients, { confidential: false }, function(err, token) {
         if (err) { return cb(err); }
