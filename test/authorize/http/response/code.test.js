@@ -101,7 +101,7 @@ describe('authorize/http/response/code', function() {
       it('should yield authorization code', function() {
         expect(code).to.equal('SplxlOBeZQQYbYS6WxSbIA');
       });
-    });
+    }); // issue
     
   }); // creating grant
   

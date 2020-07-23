@@ -15,11 +15,6 @@ exports = module.exports = function(sts) {
     //codes.decode(code, { issuer: 'sts-local' }, function(err, claims) {
     //sts2.decode(code, {}, function(err, claims) {
     sts.verify(code, 'authorization_code', function(err, claims) {
-      console.log('DECODED CODE!');
-      console.log(err);
-      console.log(claims);
-      //return;
-      
       if (err) { return cb(err); }
       
       var conf, i, len;
@@ -52,46 +47,29 @@ exports = module.exports = function(sts) {
         }
       }
       
-      console.log('### DS GET');
-      console.log(claims);
-      console.log(claims.permissions)
+      if (err) { return cb(err); }
       
-      //Resources.get('userinfo', function(err, resource) {
-      //Resources.get(claims.permissions[0].resource.id, function(err, resource) {
-      //ds.get(claims.permissions[0].resource.id, 'resources', function(err, resource) {
+      var msg = {};
+      msg.user = claims.user;
+      msg.client = client;
+      /*
+      msg.permissions = [
+        { resource: resource, scope: claims.permissions[0].scope }
+      ];
+      */
+      //var audience = [ resource ];
+      var audience = [];
+      
+      console.log(msg);
+      
+      sts.issue(msg, 'access_token', function(err, token) {
+        console.log('ISSUED ACCESS TOKEN');
+        console.log(err);
+        console.log(token);
+        
         if (err) { return cb(err); }
-        
-        var msg = {};
-        msg.user = claims.user;
-        msg.client = client;
-        /*
-        msg.permissions = [
-          { resource: resource, scope: claims.permissions[0].scope }
-        ];
-        */
-        //var audience = [ resource ];
-        var audience = [];
-        
-        sts.issue(msg, 'access_token', function(err, token) {
-          console.log('ISSUED ACCESS TOKEN');
-          console.log(err);
-          console.log(token);
-          
-          if (err) { return cb(err); }
-          return cb(null, token);
-        });
-        
-        /*
-        sts.issue(msg, audience, client, function(err, token, attrs) {
-          // TODO: add expires_in and scope to attrs, as needed
-          if (err) { return cb(err); }
-          return cb(null, token, null, attrs);
-        });
-        */
-      //}); // ds.get
-      
-    
-      // FIXME: Put the rest of this back
+        return cb(null, token);
+      });
     });
   });
 }

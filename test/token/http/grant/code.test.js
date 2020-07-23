@@ -58,22 +58,6 @@ describe('token/http/grant/code', function() {
           name: 'Example Client',
           redirectURIs: [ 'https://client.example.com/cb' ]
         };
-        /*
-        var user = {
-          id: '248289761001',
-          displayName: 'Jane Doe'
-        };
-        var ares = {
-          allow: true,
-          scope: [ 'profile', 'email' ]
-        }
-        var areq = {
-          type: 'code',
-          clientID: 's6BhdRkqt3',
-          redirectURI: 'https://client.example.com/cb',
-          state: 'xyz'
-        }
-        */
         
         var issue = codeSpy.args[0][0];
         issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(err, t) {
@@ -83,11 +67,33 @@ describe('token/http/grant/code', function() {
         });
       });
       
+      it('should verify authorization code', function() {
+        expect(sts.verify.callCount).to.equal(1);
+        expect(sts.verify.args[0][0]).to.equal('SplxlOBeZQQYbYS6WxSbIA');
+        expect(sts.verify.args[0][1]).to.equal('authorization_code');
+      });
+      
+      it('should issue access token', function() {
+        expect(sts.issue.callCount).to.equal(1);
+        expect(sts.issue.args[0][0]).to.deep.equal({
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'Example Client',
+            redirectURIs: [ 'https://client.example.com/cb' ]
+          },
+          user: {
+            id: '248289761001',
+            displayName: 'Jane Doe'
+          }
+        });
+        expect(sts.issue.args[0][1]).to.equal('access_token');
+      });
+      
       it('should yield access token', function() {
         expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
       });
-      
-    });
-  });
+    }); // issue
+    
+  }); // creating exchange
   
 });
