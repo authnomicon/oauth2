@@ -43,8 +43,10 @@ exports = module.exports = function(service, server) {
         return res.redirect('/login');
       case 'otp-2f':
         return res.redirect('/login/otp-2f');
+      case 'publickey':
+        return res.redirect('/login/publickey');
       default:
-        return next(new Error('Unsupported login challenge: ' + type));
+        return next(new Error('Unsupported login challenge: ' + name));
       }
     }
   

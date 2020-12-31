@@ -14,12 +14,13 @@
  * redirect the user to an invalid redirection URI.
  */
 
-exports = module.exports = function(processRequest, clients, server, authenticate, ceremony) {
+exports = module.exports = function(processRequest, clients, server, authenticate, state) {
   var oauth2orize = require('oauth2orize')
     , uri = require('url');
   
   
-  return ceremony(
+  return [
+    state({ external: true, continue: '/oauth2/authorize/continue' }),
     authenticate([ 'session', 'anonymous' ]),
     server.authorization(
       function validateClient(clientID, redirectURI, cb) {
@@ -72,7 +73,7 @@ exports = module.exports = function(processRequest, clients, server, authenticat
       }
     ),
     processRequest,
-  { external: true, continue: '/oauth2/authorize/continue' });
+  ];
 };
 
 exports['@require'] = [
@@ -80,5 +81,5 @@ exports['@require'] = [
   'http://i.authnomicon.org/oauth2/ClientDirectory',
   '../../../http/server',
   'http://i.bixbyjs.org/http/middleware/authenticate',
-  'http://i.bixbyjs.org/http/middleware/ceremony'
+  'http://i.bixbyjs.org/http/middleware/state'
 ];
