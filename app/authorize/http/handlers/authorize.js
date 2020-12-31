@@ -25,7 +25,7 @@ exports = module.exports = function(processRequest, clients, server, authenticat
     server.authorization(
       function validateClient(clientID, redirectURI, cb) {
     
-        clients.find(clientID, function(err, client) {
+        clients.read(clientID, function(err, client) {
           if (err) { return cb(err); }
           if (!client) {
             return cb(new oauth2orize.AuthorizationError('Unauthorized client', 'unauthorized_client'));

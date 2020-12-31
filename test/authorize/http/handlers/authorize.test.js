@@ -65,7 +65,7 @@ describe('authorize/http/handlers/authorize', function() {
     
     describe('processing a valid authorization request', function() {
       var clients = new Object();
-      clients.find = sinon.stub().yieldsAsync(null, {
+      clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
         name: 'Example Client',
         redirectURIs: [ 'https://client.example.com/cb' ]
@@ -117,7 +117,7 @@ describe('authorize/http/handlers/authorize', function() {
       });
       
       it('should query directory', function() {
-        expect(clients.find).to.have.been.calledOnceWith('s6BhdRkqt3');
+        expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
       });
       
       it('should initialize transaction', function() {
@@ -138,7 +138,7 @@ describe('authorize/http/handlers/authorize', function() {
     
     describe('processing a valid authorization request where multiple redirect URIs are registered', function() {
       var clients = new Object();
-      clients.find = sinon.stub().yieldsAsync(null, {
+      clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
         name: 'Example Client',
         redirectURIs: [ 'https://client.example.com/cb', 'https://client.example.com/cb2' ]
@@ -174,7 +174,7 @@ describe('authorize/http/handlers/authorize', function() {
       });
       
       it('should query directory', function() {
-        expect(clients.find).to.have.been.calledOnceWith('s6BhdRkqt3');
+        expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
       });
       
       it('should initialize transaction', function() {
@@ -195,7 +195,7 @@ describe('authorize/http/handlers/authorize', function() {
     
     describe('processing a valid authorization request where redirect URI is ommitted and only one is registered', function() {
       var clients = new Object();
-      clients.find = sinon.stub().yieldsAsync(null, {
+      clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
         name: 'Example Client',
         redirectURIs: [ 'https://client.example.com/cb' ]
@@ -230,7 +230,7 @@ describe('authorize/http/handlers/authorize', function() {
       });
       
       it('should query directory', function() {
-        expect(clients.find).to.have.been.calledOnceWith('s6BhdRkqt3');
+        expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
       });
       
       it('should initialize transaction', function() {
@@ -251,7 +251,7 @@ describe('authorize/http/handlers/authorize', function() {
     
     describe('processing an invalid authorization request sent by unknown client', function() {
       var clients = new Object();
-      clients.find = sinon.stub().yieldsAsync(null);
+      clients.read = sinon.stub().yieldsAsync(null);
       
       
       var error, request, response;
@@ -284,7 +284,7 @@ describe('authorize/http/handlers/authorize', function() {
       });
       
       it('should query directory', function() {
-        expect(clients.find).to.have.been.calledOnceWith('s6BhdRkqt3');
+        expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
       });
       
       it('should not initialize transaction', function() {
@@ -301,7 +301,7 @@ describe('authorize/http/handlers/authorize', function() {
     
     describe('processing an invalid authorization request sent by client with no registered redirect URIs', function() {
       var clients = new Object();
-      clients.find = sinon.stub().yieldsAsync(null, {
+      clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
         name: 'Example Client'
       });
@@ -337,7 +337,7 @@ describe('authorize/http/handlers/authorize', function() {
       });
       
       it('should query directory', function() {
-        expect(clients.find).to.have.been.calledOnceWith('s6BhdRkqt3');
+        expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
       });
       
       it('should not initialize transaction', function() {
@@ -354,7 +354,7 @@ describe('authorize/http/handlers/authorize', function() {
     
     describe('processing an invalid authorization request sent by client with empty array of redirect URIs', function() {
       var clients = new Object();
-      clients.find = sinon.stub().yieldsAsync(null, {
+      clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
         name: 'Example Client',
         redirectURIs: []
@@ -391,7 +391,7 @@ describe('authorize/http/handlers/authorize', function() {
       });
       
       it('should query directory', function() {
-        expect(clients.find).to.have.been.calledOnceWith('s6BhdRkqt3');
+        expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
       });
       
       it('should not initialize transaction', function() {
@@ -408,7 +408,7 @@ describe('authorize/http/handlers/authorize', function() {
     
     describe('processing an invalid authorization request using unregistered redirect URI', function() {
       var clients = new Object();
-      clients.find = sinon.stub().yieldsAsync(null, {
+      clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
         name: 'Example Client',
         redirectURIs: [
@@ -448,7 +448,7 @@ describe('authorize/http/handlers/authorize', function() {
       });
       
       it('should query directory', function() {
-        expect(clients.find).to.have.been.calledOnceWith('s6BhdRkqt3');
+        expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
       });
       
       it('should not initialize transaction', function() {
@@ -465,7 +465,7 @@ describe('authorize/http/handlers/authorize', function() {
     
     describe('processing an invalid authorization request omitting redirect URI', function() {
       var clients = new Object();
-      clients.find = sinon.stub().yieldsAsync(null, {
+      clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
         name: 'Example Client',
         redirectURIs: [
@@ -504,7 +504,7 @@ describe('authorize/http/handlers/authorize', function() {
       });
       
       it('should query directory', function() {
-        expect(clients.find).to.have.been.calledOnceWith('s6BhdRkqt3');
+        expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
       });
       
       it('should not initialize transaction', function() {
@@ -521,7 +521,7 @@ describe('authorize/http/handlers/authorize', function() {
     
     describe('encountering error while querying directory', function() {
       var clients = new Object();
-      clients.find = sinon.stub().yieldsAsync(new Error('something went wrong'));
+      clients.read = sinon.stub().yieldsAsync(new Error('something went wrong'));
       
       
       var error, request, response;
@@ -553,7 +553,7 @@ describe('authorize/http/handlers/authorize', function() {
       });
       
       it('should query directory', function() {
-        expect(clients.find).to.have.been.calledOnceWith('s6BhdRkqt3');
+        expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
       });
       
       it('should not initialize transaction', function() {
