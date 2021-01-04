@@ -1,6 +1,7 @@
-exports = module.exports = function(processRequest, server, authenticate, ceremony) {
+exports = module.exports = function(processRequest, server, authenticate, state) {
   
-  return ceremony(
+  return [
+    state(),
     authenticate([ 'session' ]),
     server.resume(
       function(txn, cb) {
@@ -10,12 +11,12 @@ exports = module.exports = function(processRequest, server, authenticate, ceremo
       }
     ),
     processRequest
-  );
+  ];
 };
 
 exports['@require'] = [
   './authorize/process',
   '../../../http/server',
   'http://i.bixbyjs.org/http/middleware/authenticate',
-  'http://i.bixbyjs.org/http/middleware/ceremony'
+  'http://i.bixbyjs.org/http/middleware/state'
 ];
