@@ -2,10 +2,10 @@
 
 var $require = require('proxyquire');
 var expect = require('chai').expect;
-var factory = require('../../../../../app/authorize/http/response/modes/cookie');
+var factory = require('../../../../../app/http/authorize/response/modes/cookie');
 
 
-describe('authorize/http/response/modes/cookie', function() {
+describe('http/authorize/response/modes/cookie', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');

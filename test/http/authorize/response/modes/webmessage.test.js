@@ -2,10 +2,10 @@
 
 var $require = require('proxyquire');
 var expect = require('chai').expect;
-var factory = require('../../../../../app/authorize/http/response/modes/formpost');
+var factory = require('../../../../../app/http/authorize/response/modes/webmessage');
 
 
-describe('authorize/http/response/modes/formpost', function() {
+describe('http/authorize/response/modes/webmessage', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
@@ -13,7 +13,7 @@ describe('authorize/http/response/modes/formpost', function() {
   
   it('should be annotated', function() {
     expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/authorize/http/ResponseMode');
-    expect(factory['@mode']).to.equal('form_post');
+    expect(factory['@mode']).to.equal('web_message');
     expect(factory['@singleton']).to.be.undefined;
   });
   

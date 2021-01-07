@@ -3,11 +3,11 @@
 var chai = require('chai');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../../app/authorize/http/handlers/continue');
+var factory = require('../../../../app/http/authorize/handlers/continue');
 var utils = require('../../../utils');
 
 
-describe('authorize/http/handlers/continue', function() {
+describe('http/authorize/handlers/continue', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');

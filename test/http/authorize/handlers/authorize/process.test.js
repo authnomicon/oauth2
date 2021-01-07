@@ -3,10 +3,10 @@
 var chai = require('chai');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../../../app/authorize/http/handlers/authorize/process');
+var factory = require('../../../../../app/http/authorize/handlers/authorize/process');
 
 
-describe('authorize/http/handlers/authorize/process', function() {
+describe('http/authorize/handlers/authorize/process', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
