@@ -87,6 +87,7 @@ describe('authorize/http/handlers/authorize', function() {
       var authenticateSpy = sinon.spy(authenticate);
       var stateSpy = sinon.spy(state);
       
+      
       var request, response;
       
       before(function(done) {
@@ -157,6 +158,7 @@ describe('authorize/http/handlers/authorize', function() {
       
       var authenticateSpy = sinon.spy(authenticate);
       var stateSpy = sinon.spy(state);
+      
       
       var request, response;
       
@@ -229,6 +231,7 @@ describe('authorize/http/handlers/authorize', function() {
       var authenticateSpy = sinon.spy(authenticate);
       var stateSpy = sinon.spy(state);
       
+      
       var request, response;
       
       before(function(done) {
@@ -295,6 +298,7 @@ describe('authorize/http/handlers/authorize', function() {
       var authenticateSpy = sinon.spy(authenticate);
       var stateSpy = sinon.spy(state);
       
+      
       var error, request, response;
       
       before(function(done) {
@@ -346,11 +350,27 @@ describe('authorize/http/handlers/authorize', function() {
         name: 'Example Client'
       });
       
+      function authenticate(idp, options) {
+        return function(req, res, next) {
+          req.user = { id: '248289761001', displayName: 'Jane Doe' };
+          next();
+        };
+      }
+      
+      function state() {
+        return function(req, res, next) {
+          next();
+        };
+      }
+      
+      var authenticateSpy = sinon.spy(authenticate);
+      var stateSpy = sinon.spy(state);
+      
       
       var error, request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, clients, { authorization: authorization }, authenticate, ceremony);
+        var handler = factory(processRequest, clients, { authorization: authorization }, authenticateSpy, stateSpy);
         
         chai.express.handler(handler)
           .req(function(req) {
@@ -370,10 +390,9 @@ describe('authorize/http/handlers/authorize', function() {
           .dispatch();
       });
       
-      it('should authenticate', function() {
-        expect(request.authInfo).to.deep.equal({
-          mechanisms: ['session', 'anonymous']
-        });
+      it('should setup middleware', function() {
+        expect(stateSpy).to.be.calledOnceWith({ external: true, continue: '/oauth2/authorize/continue' });
+        expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
       });
       
       it('should query directory', function() {
