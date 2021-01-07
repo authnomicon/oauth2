@@ -4,7 +4,6 @@ var chai = require('chai');
 var expect = require('chai').expect;
 var sinon = require('sinon');
 var factory = require('../../../../app/authorize/http/handlers/authorize');
-var utils = require('../../../utils');
 
 
 describe('authorize/http/handlers/authorize', function() {
@@ -19,17 +18,6 @@ describe('authorize/http/handlers/authorize', function() {
   });
   
   describe('handler', function() {
-    function ceremony(stack) {
-      var stack = Array.prototype.slice.call(arguments, 0), options;
-      if (typeof stack[stack.length - 1] == 'object' && !Array.isArray(stack[stack.length - 1])) {
-        options = stack.pop();
-      }
-      options = options || {};
-      
-      return function(req, res, next) {
-        utils.dispatch(stack)(null, req, res, next);
-      };
-    }
     
     function authorization(validate, immediate) {
       
@@ -54,13 +42,6 @@ describe('authorize/http/handlers/authorize', function() {
     function processRequest(req, res, next) {
       res.redirect('/consent')
     };
-    
-    function authenticate(mechanisms) {
-      return function(req, res, next) {
-        req.authInfo = { mechanisms: mechanisms };
-        next();
-      };
-    }
     
     
     describe('processing a valid authorization request', function() {
