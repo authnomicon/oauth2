@@ -1,4 +1,6 @@
+var $require = require('proxyquire');
 var expect = require('chai').expect;
+var sinon = require('sinon');
 var factory = require('../../app/http/transactionstore');
 var TransactionStore = require('../../lib/transactionstore');
 
@@ -13,14 +15,22 @@ describe('transactionstore', function() {
     expect(factory['@singleton']).to.equal(true);
   });
   
-  describe('factory', function() {
+  describe('creating with defaults', function() {
+    var TransactionStoreSpy = sinon.spy(TransactionStore);
+    var factory = $require('../../app/http/transactionstore',
+      { '../../lib/transactionstore': TransactionStoreSpy });
   
-    it('should construct TransactionStore', function() {
-      var store = factory(function serializeClient(){}, function deserializeClient(){});
+    var store = factory();
+  
+    it('should construct store', function() {
+      expect(TransactionStoreSpy).to.have.been.calledOnce;
+      expect(TransactionStoreSpy).to.have.been.calledWithNew;
+    });
+  
+    it('should return store', function() {
       expect(store).to.be.an.instanceOf(TransactionStore);
     });
-    
-  }); // factory
+  }); // creating with defaults
   
   describe('TransactionStore', function() {
     function serializeClient(client, cb){
