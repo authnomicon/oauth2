@@ -65,6 +65,6 @@ exports = module.exports = function(service, server) {
 };
 
 exports['@require'] = [
-  'http://i.authnomicon.org/oauth2/Service',
+  'http://i.authnomicon.org/oauth2/Listener',
   '../../../../http/server'
 ];
