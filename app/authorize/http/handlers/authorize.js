@@ -73,6 +73,7 @@ exports = module.exports = function(processRequest, clients, server, authenticat
       }
     ),
     processRequest,
+    // TODO: Add error handling middleware here
   ];
 };
 
