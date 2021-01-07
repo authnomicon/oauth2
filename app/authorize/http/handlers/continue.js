@@ -11,6 +11,7 @@ exports = module.exports = function(processRequest, server, authenticate, state)
       }
     ),
     processRequest
+    // TODO: Add error handling middleware here
   ];
 };
 
