@@ -64,7 +64,7 @@ exports = module.exports = function(processRequest, clients, server, authenticat
           }
     
           return cb(null, client, redirectURI || client.redirectURIs[0]);
-        }); // ds.get
+        }); // clients.read
       },
       function(txn, cb) {
         // Immediate mode callback.  Always, false, deferring transaction processing to 

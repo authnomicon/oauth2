@@ -71,8 +71,6 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: [ 'https://client.example.com/cb' ]
       });
       
-      
-      
       function authenticate(idp, options) {
         return function(req, res, next) {
           req.user = { id: '248289761001', displayName: 'Jane Doe' };
@@ -112,8 +110,8 @@ describe('authorize/http/handlers/authorize', function() {
       });
       
       it('should setup middleware', function() {
-        expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
         expect(stateSpy).to.be.calledOnceWith({ external: true, continue: '/oauth2/authorize/continue' });
+        expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
       });
       
       it('should query directory', function() {
@@ -130,7 +128,7 @@ describe('authorize/http/handlers/authorize', function() {
         expect(request.oauth2.webOrigin).to.be.undefined;
       });
       
-      it('should redirect', function() {
+      it('should prompt for consent', function() {
         expect(response.statusCode).to.equal(302);
         expect(response.getHeader('Location')).to.equal('/consent');
       });
