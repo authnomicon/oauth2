@@ -19,46 +19,47 @@ describe('authorize/http/handlers/continue', function() {
   });
   
   describe('handler', function() {
-    function ceremony(stack) {
-      var stack = Array.prototype.slice.call(arguments, 0), options;
-      if (typeof stack[stack.length - 1] == 'object' && !Array.isArray(stack[stack.length - 1])) {
-        options = stack.pop();
-      }
-      options = options || {};
-      
-      return function(req, res, next) {
-        utils.dispatch(stack)(null, req, res, next);
-      };
-    }
     
-    function resume(immediate) {
+    var server = {
+      resume: function(immediate) {
       
-      return function(req, res, next) {
-        immediate(req.oauth2, function(err, allow) {
-          if (err) { return next(err); }
-          if (allow) { return res.redirect(req.oauth2.redirectURI); }
-          return next();
-        })
-      };
-    }
+        return function(req, res, next) {
+          immediate(req.oauth2, function(err, allow) {
+            if (err) { return next(err); }
+            if (allow) { return res.redirect(req.oauth2.redirectURI); }
+            return next();
+          })
+        };
+      }
+    };
     
     function processRequest(req, res, next) {
       res.redirect('/consent')
     };
     
-    function authenticate(mechanisms) {
-      return function(req, res, next) {
-        req.authInfo = { mechanisms: mechanisms };
-        next();
-      };
-    }
-    
     
     describe('processing request', function() {
+      function authenticate(idp, options) {
+        return function(req, res, next) {
+          req.user = { id: '248289761001', displayName: 'Jane Doe' };
+          next();
+        };
+      }
+      
+      function state() {
+        return function(req, res, next) {
+          next();
+        };
+      }
+      
+      var authenticateSpy = sinon.spy(authenticate);
+      var stateSpy = sinon.spy(state);
+      
+      
       var request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, { resume: resume }, authenticate, ceremony);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy);
         
         chai.express.handler(handler)
           .req(function(req) {
@@ -73,13 +74,12 @@ describe('authorize/http/handlers/continue', function() {
           .dispatch();
       });
       
-      it('should authenticate', function() {
-        expect(request.authInfo).to.deep.equal({
-          mechanisms: ['session']
-        });
+      it('should setup middleware', function() {
+        expect(stateSpy).to.be.calledOnceWith();
+        expect(authenticateSpy).to.be.calledOnceWith([ 'session' ]);
       });
       
-      it('should respond', function() {
+      it('should prompt for consent', function() {
         expect(response.statusCode).to.equal(302);
         expect(response.getHeader('Location')).to.equal('/consent');
       });
