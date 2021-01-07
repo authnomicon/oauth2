@@ -1,13 +1,8 @@
-exports = module.exports = function(serializeClient, deserializeClient) {
+exports = module.exports = function() {
   var TransactionStore = require('../../lib/transactionstore');
   
-  var store = new TransactionStore();
-  store.deserializeClient(deserializeClient);
-  
-  return store;
+  return new TransactionStore();
 };
 
 exports['@singleton'] = true;
-exports['@require'] = [
-  '../txn/deserializeclient'
-];
+exports['@require'] = [];

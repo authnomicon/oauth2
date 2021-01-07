@@ -55,7 +55,9 @@ describe('transactionstore', function() {
           console.log(req.state);
           
           expect(req.state).to.deep.equal({
-            client: 's6BhdRkqt3',
+            client: {
+              id: 's6BhdRkqt3'
+            },
             redirectURI: 'https://client.example.org/callback',
             req: undefined
           })
