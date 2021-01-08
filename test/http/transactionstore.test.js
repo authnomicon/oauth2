@@ -32,52 +32,55 @@ describe('transactionstore', function() {
     });
   }); // creating with defaults
   
+  
   describe('TransactionStore', function() {
-    function serializeClient(client, cb){
-      return cb(null, client.id);
-    }
+    var store = new TransactionStore();
     
     
     describe('#store', function() {
-      var store = factory(serializeClient, function deserializeClient(){});
       
-      it('should do something', function(done) {
+      describe('storing transaction', function(done) {
         var req = new Object();
-        req.state = {};
-        //req.state = new Object();
-        //req.state.complete = function(){};
-        //req.state.touch = function(){};
+        req.state = new Object();
         
-        var txn = {
-          client: {
-            id: 's6BhdRkqt3',
-            name: 'My Example Client',
-            redirectURIs: [ 'https://client.example.org/callback' ]
-          },
-          redirectURI: 'https://client.example.org/callback',
-        };
-        
-        
-        store.store(req, txn, function(err) {
-          console.log('SAVED!');
-          console.log(err);
-          
-          console.log(req.state);
-          
-          expect(req.state).to.deep.equal({
+        before(function(done) {
+          var txn = {
             client: {
-              id: 's6BhdRkqt3'
+              id: 's6BhdRkqt3',
+              name: 'My Example Client',
+              redirectURIs: [ 'https://client.example.com/cb' ]
             },
-            redirectURI: 'https://client.example.org/callback',
-            req: undefined
-          })
+            redirectURI: 'https://client.example.com/cb',
+            req: {
+              type: 'code',
+              clientID: 's6BhdRkqt3',
+              redirectURI: 'https://client.example.com/cb',
+              scope: undefined,
+              state: 'xyz'
+            },
+          };
           
-          done();
-          
-          //if (err) done(err);
-          //else done();
+          store.store(req, txn, function(err) {
+            if (err) { return done(err); }
+            done();
+          });
         });
-      });
+        
+        it('should set state', function() {
+          expect(req.state).to.deep.equal({
+            responseType: 'code',
+            client: {
+              id: 's6BhdRkqt3',
+              name: 'My Example Client'
+            },
+            redirectURI: 'https://client.example.com/cb',
+            scope: undefined,
+            state: 'xyz'
+          })
+        });
+        
+      }); // storing transaction
+      
     }); // #store
     
   }); // TransactionStore
