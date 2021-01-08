@@ -36,6 +36,52 @@ describe('transactionstore', function() {
   describe('TransactionStore', function() {
     var store = new TransactionStore();
     
+    describe('#load', function() {
+      
+      describe('loading transaction', function(done) {
+        var req = new Object();
+        req.state = {
+          responseType: 'code',
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'My Example Client'
+          },
+          redirectURI: 'https://client.example.com/cb',
+          scope: undefined,
+          state: 'xyz'
+        };
+        req.state.handle = 'XXXXXXXX';
+        
+        var txn;
+        
+        before(function(done) {
+          store.load(req, function(err, t) {
+            if (err) { return done(err); }
+            txn = t;
+            done();
+          });
+        });
+        
+        it('should load transaction', function() {
+          expect(txn).to.deep.equal({
+            transactionID: 'XXXXXXXX',
+            client: {
+              id: 's6BhdRkqt3',
+              name: 'My Example Client'
+            },
+            redirectURI: 'https://client.example.com/cb',
+            req: {
+              type: 'code',
+              scope: undefined,
+              state: 'xyz'
+            }
+          });
+        });
+        
+      }); // loading transaction
+      
+    }); // #load
+    
     
     describe('#store', function() {
       
@@ -76,7 +122,7 @@ describe('transactionstore', function() {
             redirectURI: 'https://client.example.com/cb',
             scope: undefined,
             state: 'xyz'
-          })
+          });
         });
         
       }); // storing transaction
@@ -120,7 +166,7 @@ describe('transactionstore', function() {
             webOrigin: 'https://client.example.com',
             scope: undefined,
             state: 'xyz'
-          })
+          });
         });
         
       }); // storing transaction with web origin
