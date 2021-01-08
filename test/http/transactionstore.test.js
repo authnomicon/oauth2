@@ -81,6 +81,50 @@ describe('transactionstore', function() {
         
       }); // storing transaction
       
+      describe('storing transaction with web origin', function(done) {
+        var req = new Object();
+        req.state = new Object();
+        
+        before(function(done) {
+          var txn = {
+            client: {
+              id: 's6BhdRkqt3',
+              name: 'My Example Client',
+              redirectURIs: [ 'https://client.example.com/cb' ]
+            },
+            redirectURI: 'https://client.example.com/cb',
+            webOrigin: 'https://client.example.com',
+            req: {
+              type: 'code',
+              clientID: 's6BhdRkqt3',
+              redirectURI: 'https://client.example.com/cb',
+              scope: undefined,
+              state: 'xyz'
+            },
+          };
+          
+          store.store(req, txn, function(err) {
+            if (err) { return done(err); }
+            done();
+          });
+        });
+        
+        it('should set state', function() {
+          expect(req.state).to.deep.equal({
+            responseType: 'code',
+            client: {
+              id: 's6BhdRkqt3',
+              name: 'My Example Client'
+            },
+            redirectURI: 'https://client.example.com/cb',
+            webOrigin: 'https://client.example.com',
+            scope: undefined,
+            state: 'xyz'
+          })
+        });
+        
+      }); // storing transaction with web origin
+      
     }); // #store
     
   }); // TransactionStore
