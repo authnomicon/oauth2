@@ -64,7 +64,6 @@ describe('transactionstore', function() {
         
         it('should load transaction', function() {
           expect(txn).to.deep.equal({
-            transactionID: 'XXXXXXXX',
             client: {
               id: 's6BhdRkqt3',
               name: 'My Example Client'
@@ -77,7 +76,6 @@ describe('transactionstore', function() {
             }
           });
         });
-        
       }); // loading transaction
       
     }); // #load
@@ -124,7 +122,6 @@ describe('transactionstore', function() {
             state: 'xyz'
           });
         });
-        
       }); // storing transaction
       
       describe('storing transaction with web origin', function(done) {
@@ -168,10 +165,54 @@ describe('transactionstore', function() {
             state: 'xyz'
           });
         });
-        
       }); // storing transaction with web origin
       
     }); // #store
+    
+    describe('#update', function() {
+      
+      describe('updating transaction', function(done) {
+        var req = new Object();
+        req.state = new Object();
+        
+        before(function(done) {
+          var txn = {
+            client: {
+              id: 's6BhdRkqt3',
+              name: 'My Example Client',
+              redirectURIs: [ 'https://client.example.com/cb' ]
+            },
+            redirectURI: 'https://client.example.com/cb',
+            req: {
+              type: 'code',
+              clientID: 's6BhdRkqt3',
+              redirectURI: 'https://client.example.com/cb',
+              scope: undefined,
+              state: 'xyz'
+            },
+          };
+          
+          store.update(req, 'XXXXXXXX', txn, function(err) {
+            if (err) { return done(err); }
+            done();
+          });
+        });
+        
+        it('should set state', function() {
+          expect(req.state).to.deep.equal({
+            responseType: 'code',
+            client: {
+              id: 's6BhdRkqt3',
+              name: 'My Example Client'
+            },
+            redirectURI: 'https://client.example.com/cb',
+            scope: undefined,
+            state: 'xyz'
+          });
+        });
+      }); // storing transaction
+      
+    }); // #update
     
   }); // TransactionStore
   
