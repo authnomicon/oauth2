@@ -1,4 +1,4 @@
-exports = module.exports = function(processRequest, server, authenticate, state) {
+exports = module.exports = function(evaluate, server, authenticate, state) {
   
   return [
     state(),
@@ -10,14 +10,14 @@ exports = module.exports = function(processRequest, server, authenticate, state)
         return cb(null, false);
       }
     ),
-    processRequest
+    evaluate
     // TODO: Add error handling middleware here
   ];
 };
 
 exports['@require'] = [
-  './authorize/process',
-  '../../../http/server',
+  '../middleware/evaluate',
+  '../../server',
   'http://i.bixbyjs.org/http/middleware/authenticate',
   'http://i.bixbyjs.org/http/middleware/state'
 ];

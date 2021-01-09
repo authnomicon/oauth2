@@ -1,6 +1,6 @@
 exports = module.exports = function(service, server) {
-  var Request = require('../../../../../lib/request')
-    , Response = require('../../../../../lib/response');
+  var Request = require('../../../../lib/request')
+    , Response = require('../../../../lib/response');
   
   
   // TODO: Going to need to pass some "select account" function to passport to
@@ -66,5 +66,5 @@ exports = module.exports = function(service, server) {
 
 exports['@require'] = [
   'http://i.authnomicon.org/oauth2/Listener',
-  '../../../../http/server'
+  '../../server'
 ];

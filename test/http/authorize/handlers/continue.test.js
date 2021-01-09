@@ -4,7 +4,6 @@ var chai = require('chai');
 var expect = require('chai').expect;
 var sinon = require('sinon');
 var factory = require('../../../../app/http/authorize/handlers/continue');
-var utils = require('../../../utils');
 
 
 describe('http/authorize/handlers/continue', function() {
