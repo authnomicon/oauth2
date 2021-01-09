@@ -74,7 +74,7 @@ describe('http/authorize/handlers/authorize', function() {
       var request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, clients, server, authenticateSpy, stateSpy);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, clients);
         
         chai.express.handler(handler)
           .req(function(req) {
@@ -146,7 +146,7 @@ describe('http/authorize/handlers/authorize', function() {
       var request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, clients, server, authenticateSpy, stateSpy);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, clients);
         
         chai.express.handler(handler)
           .req(function(req) {
@@ -218,7 +218,7 @@ describe('http/authorize/handlers/authorize', function() {
       var request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, clients, server, authenticateSpy, stateSpy);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, clients);
         
         chai.express.handler(handler)
           .req(function(req) {
@@ -285,7 +285,7 @@ describe('http/authorize/handlers/authorize', function() {
       var error, request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, clients, server, authenticateSpy, stateSpy);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, clients);
         
         chai.express.handler(handler)
           .req(function(req) {
@@ -353,7 +353,7 @@ describe('http/authorize/handlers/authorize', function() {
       var error, request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, clients, server, authenticateSpy, stateSpy);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, clients);
         
         chai.express.handler(handler)
           .req(function(req) {
@@ -422,7 +422,7 @@ describe('http/authorize/handlers/authorize', function() {
       var error, request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, clients, server, authenticateSpy, stateSpy);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, clients);
         
         chai.express.handler(handler)
           .req(function(req) {
@@ -494,7 +494,7 @@ describe('http/authorize/handlers/authorize', function() {
       var error, request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, clients, server, authenticateSpy, stateSpy);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, clients);
         
         chai.express.handler(handler)
           .req(function(req) {
@@ -566,7 +566,7 @@ describe('http/authorize/handlers/authorize', function() {
       var error, request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, clients, server, authenticateSpy, stateSpy);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, clients);
         
         chai.express.handler(handler)
           .req(function(req) {
@@ -630,7 +630,7 @@ describe('http/authorize/handlers/authorize', function() {
       var error, request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, clients, server, authenticateSpy, stateSpy);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, clients);
         
         chai.express.handler(handler)
           .req(function(req) {
