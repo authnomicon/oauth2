@@ -38,12 +38,7 @@ exports = module.exports = function(prompts, service, server) {
     }
   
     function onprompt(name, options) {
-      console.log('PROMPT!');
-      console.log(name);
-      console.log(options);
-      
       var prompt;
-      
       try {
         prompt = prompts.get(name);
       } catch (ex) {
@@ -53,9 +48,6 @@ exports = module.exports = function(prompts, service, server) {
       // FIXME: Merge rather than overwrite
       res.locals = options || {};
       prompt(req, res, next);
-      
-      
-      return;
     }
   
     function onend() {
