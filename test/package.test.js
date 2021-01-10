@@ -19,7 +19,7 @@ describe('@authnomicon/oauth2', function() {
       
       expect(json.assembly.components).to.have.length(22);
       expect(json.assembly.components).to.include('http/authorize/service');
-      expect(json.assembly.components).to.include('token/http/service');
+      expect(json.assembly.components).to.include('http/token/service');
     });
   });
   
