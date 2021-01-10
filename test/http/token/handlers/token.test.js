@@ -3,10 +3,10 @@
 var chai = require('chai');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../../app/token/http/handlers/token');
+var factory = require('../../../../app/http/token/handlers/token');
 
 
-describe('token/http/handlers/token', function() {
+describe('http/token/handlers/token', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');

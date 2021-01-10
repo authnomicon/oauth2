@@ -3,11 +3,11 @@
 var $require = require('proxyquire');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../../app/token/http/auth/none');
+var factory = require('../../../../app/http/token/auth/none');
 var Strategy = require('passport-oauth2-client-public').Strategy;
 
 
-describe('token/http/auth/none', function() {
+describe('http/token/auth/none', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
@@ -25,7 +25,7 @@ describe('token/http/auth/none', function() {
     
     var StrategySpy = sinon.spy(Strategy);
     
-    var factory = $require('../../../../app/token/http/auth/none',
+    var factory = $require('../../../../app/http/token/auth/none',
       { 'passport-oauth2-client-public': { Strategy: StrategySpy } });
     var strategy = factory(clients);
     
@@ -70,7 +70,7 @@ describe('token/http/auth/none', function() {
     
     var StrategySpy = sinon.spy(Strategy);
     
-    var factory = $require('../../../../app/token/http/auth/none',
+    var factory = $require('../../../../app/http/token/auth/none',
       { 'passport-oauth2-client-public': { Strategy: StrategySpy } });
     var strategy = factory(clients);
     
@@ -111,7 +111,7 @@ describe('token/http/auth/none', function() {
     
     var StrategySpy = sinon.spy(Strategy);
     
-    var factory = $require('../../../../app/token/http/auth/none',
+    var factory = $require('../../../../app/http/token/auth/none',
       { 'passport-oauth2-client-public': { Strategy: StrategySpy } });
     var strategy = factory(clients);
     
@@ -152,7 +152,7 @@ describe('token/http/auth/none', function() {
     
     var StrategySpy = sinon.spy(Strategy);
     
-    var factory = $require('../../../../app/token/http/auth/none',
+    var factory = $require('../../../../app/http/token/auth/none',
       { 'passport-oauth2-client-public': { Strategy: StrategySpy } });
     var strategy = factory(clients);
     
