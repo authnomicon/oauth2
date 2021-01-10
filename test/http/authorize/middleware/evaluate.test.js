@@ -108,9 +108,12 @@ describe('http/authorize/middleware/evaluate', function() {
       });
     }); // permitting access
     
-    describe.skip('permitting access with scope', function() {
-      var request, response
-        , azrequest;
+    describe('permitting access with scope', function() {
+      var listener = sinon.spy(function(req, res) {
+        res.permit([ 'profile', 'email' ]);
+      });
+      
+      var request, response;
       
       before(function() {
         sinon.spy(server, '_respond');
@@ -121,12 +124,9 @@ describe('http/authorize/middleware/evaluate', function() {
       });
       
       before(function(done) {
-        function authorizationHandler(req, res) {
-          azrequest = req;
-          res.permit([ 'profile', 'email' ]);
-        }
+        var prompts = new Object();
         
-        var handler = factory(authorizationHandler, server);
+        var handler = factory(prompts, listener, server);
         
         chai.express.handler(handler)
           .req(function(req) {
@@ -135,7 +135,8 @@ describe('http/authorize/middleware/evaluate', function() {
             req.state.complete = sinon.spy();
             req.oauth2 = {};
             req.oauth2.client = {
-              id: 's6BhdRkqt3'
+              id: 's6BhdRkqt3',
+              name: 'Example Client'
             };
             req.oauth2.user = {
               id: '248289761001',
@@ -151,14 +152,18 @@ describe('http/authorize/middleware/evaluate', function() {
           .dispatch();
       });
       
-      it('should initialize authorization request', function() {
-        expect(azrequest.client).to.deep.equal({
-          id: 's6BhdRkqt3'
+      it('should call listener', function() {
+        expect(listener).to.have.been.calledOnce;
+        expect(listener.firstCall.args[0]).to.be.an.instanceOf(Request);
+        expect(listener.firstCall.args[0].client).to.deep.equal({
+          id: 's6BhdRkqt3',
+          name: 'Example Client'
         });
-        expect(azrequest.user).to.deep.equal({
+        expect(listener.firstCall.args[0].user).to.deep.equal({
           id: '248289761001',
           displayName: 'Jane Doe'
         });
+        expect(listener.firstCall.args[1]).to.be.an.instanceOf(Response);
       });
       
       it('should complete state', function() {
@@ -169,7 +174,8 @@ describe('http/authorize/middleware/evaluate', function() {
         expect(server._respond).to.have.been.calledOnce;
         expect(server._respond).to.have.been.calledWith({
           client: {
-            id: 's6BhdRkqt3'
+            id: 's6BhdRkqt3',
+            name: 'Example Client'
           },
           user: {
             id: '248289761001',
@@ -180,8 +186,6 @@ describe('http/authorize/middleware/evaluate', function() {
             scope: [ 'profile', 'email' ]
           },
         }, response);
-        
-        expect(response.statusCode).to.equal(200);
       });
     }); // permitting access with scope
     
