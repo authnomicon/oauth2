@@ -1,4 +1,4 @@
-exports = module.exports = function(service, server) {
+exports = module.exports = function(prompts, service, server) {
   var Request = require('../../../../lib/request')
     , Response = require('../../../../lib/response');
   
@@ -10,6 +10,11 @@ exports = module.exports = function(service, server) {
   return function(req, res, next) {
     var areq = new Request(req.oauth2.client, req.oauth2.user)
       , ares = new Response();
+    
+    console.log('### EVAL');
+    console.log(req.state);
+    console.log(res.locals);
+    console.log(req.oauth2);
     
     if (req.session) {
       areq.session = {};
@@ -37,6 +42,25 @@ exports = module.exports = function(service, server) {
     }
   
     function onprompt(name, options) {
+      console.log('PROMPT!');
+      console.log(name);
+      console.log(options);
+      
+      var prompt;
+      
+      try {
+        prompt = prompts.get(name);
+      } catch (ex) {
+        return next(ex);
+      }
+      
+      // FIXME: Merge rather than overwrite
+      res.locals = options || {};
+      prompt(req, res, next);
+      
+      
+      return;
+      
       // TODO: look up a service to handle the prompt (OIDC for login, etc)
       switch (name) {
       case 'login':
@@ -65,6 +89,7 @@ exports = module.exports = function(service, server) {
 };
 
 exports['@require'] = [
+  'http://i.authnomicon.org/http/prompt/Registry',
   'http://i.authnomicon.org/oauth2/Listener',
   '../../server'
 ];
