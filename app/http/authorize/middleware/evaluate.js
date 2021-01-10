@@ -8,17 +8,13 @@ exports = module.exports = function(prompts, service, server) {
   
   
   return function(req, res, next) {
-    var areq = new Request(req.oauth2.client, req.oauth2.user)
-      , ares = new Response();
+    var azreq = new Request(req.oauth2.client, req.oauth2.user)
+      , azres = new Response();
     
-    console.log('### EVAL');
-    console.log(req.state);
-    console.log(res.locals);
-    console.log(req.oauth2);
-    
+    // FIXME: Normalize this data structure correctly
     if (req.session) {
-      areq.session = {};
-      areq.session.authInfo = req.session.authInfo;
+      azreq.session = {};
+      azreq.session.authInfo = req.session.authInfo;
     }
     
     function ondecision(result, scope) {
@@ -60,31 +56,19 @@ exports = module.exports = function(prompts, service, server) {
       
       
       return;
-      
-      // TODO: look up a service to handle the prompt (OIDC for login, etc)
-      switch (name) {
-      case 'login':
-        return res.redirect('/login');
-      case 'otp-2f':
-        return res.redirect('/login/otp-2f');
-      case 'publickey':
-        return res.redirect('/login/publickey');
-      default:
-        return next(new Error('Unsupported login challenge: ' + name));
-      }
     }
   
     function onend() {
-      ares.removeListener('decision', ondecision);
-      ares.removeListener('_prompt', onprompt);
+      azres.removeListener('decision', ondecision);
+      azres.removeListener('_prompt', onprompt);
     }
   
-    ares.once('decision', ondecision);
+    azres.once('decision', ondecision);
     // lres.once('__challenge__', onchallenge);
-    ares.once('_prompt', onprompt);
-    ares.once('end', onend);
+    azres.once('_prompt', onprompt);
+    azres.once('end', onend);
   
-    service(areq, ares);
+    service(azreq, azres);
   };
 };
 
