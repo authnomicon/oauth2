@@ -189,9 +189,19 @@ describe('http/authorize/middleware/evaluate', function() {
       });
     }); // permitting access with scope
     
-    describe.skip('prompting for login', function() {
-      var request, response
-        , azrequest;
+    describe('prompting for login', function() {
+      var listener = sinon.spy(function(req, res) {
+        res.prompt('login');
+      });
+      
+      var prompt = sinon.spy(function(req, res) {
+        res.redirect('/login');
+      });
+      
+      var prompts = new Object();
+      prompts.get = sinon.stub().returns(prompt);
+      
+      var request, response;
       
       before(function() {
         sinon.spy(server, '_respond');
@@ -202,12 +212,7 @@ describe('http/authorize/middleware/evaluate', function() {
       });
       
       before(function(done) {
-        function authorizationHandler(req, res) {
-          azrequest = req;
-          res.prompt('login');
-        }
-        
-        var handler = factory(authorizationHandler, server);
+        var handler = factory(prompts, listener, server);
         
         chai.express.handler(handler)
           .req(function(req) {
@@ -216,7 +221,8 @@ describe('http/authorize/middleware/evaluate', function() {
             req.state.complete = sinon.spy();
             req.oauth2 = {};
             req.oauth2.client = {
-              id: 's6BhdRkqt3'
+              id: 's6BhdRkqt3',
+              name: 'Example Client'
             };
           })
           .res(function(res) {
@@ -228,15 +234,24 @@ describe('http/authorize/middleware/evaluate', function() {
           .dispatch();
       });
       
-      it('should initialize authorization request', function() {
-        expect(azrequest.client).to.deep.equal({
-          id: 's6BhdRkqt3'
+      it('should call listener', function() {
+        expect(listener).to.have.been.calledOnce;
+        expect(listener.firstCall.args[0]).to.be.an.instanceOf(Request);
+        expect(listener.firstCall.args[0].client).to.deep.equal({
+          id: 's6BhdRkqt3',
+          name: 'Example Client'
         });
-        expect(azrequest.user).to.be.undefined;
+        expect(listener.firstCall.args[0].user).to.be.undefined;
+        expect(listener.firstCall.args[1]).to.be.an.instanceOf(Response);
       });
       
       it('should not complete state', function() {
         expect(request.state.complete).to.not.have.been.called;
+      });
+      
+      it('should dispatch to prompt', function() {
+        expect(prompts.get).to.have.been.calledOnceWith('login');
+        expect(prompt).to.have.been.calledOnceWith(request, response);
       });
       
       it('should redirect', function() {
