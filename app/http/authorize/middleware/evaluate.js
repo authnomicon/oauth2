@@ -52,12 +52,11 @@ exports = module.exports = function(prompts, service, server) {
   
     function onend() {
       azres.removeListener('decision', ondecision);
-      azres.removeListener('_prompt', onprompt);
+      azres.removeListener('__prompt__', onprompt);
     }
   
     azres.once('decision', ondecision);
-    // lres.once('__challenge__', onchallenge);
-    azres.once('_prompt', onprompt);
+    azres.once('__prompt__', onprompt);
     azres.once('end', onend);
   
     service(azreq, azres);
