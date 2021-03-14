@@ -22,8 +22,8 @@ describe('http/authorize/response/code', function() {
     var container = new Object();
     container.components = sinon.stub()
     container.components.withArgs('http://i.authnomicon.org/oauth2/authorize/http/ResponseMode').returns([]);
-    var sts = new Object();
-    sts.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
+    var acs = new Object();
+    acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
     
     var codeSpy = sinon.stub();
     
@@ -32,7 +32,7 @@ describe('http/authorize/response/code', function() {
     
     var grant;
     before(function(done) {
-      var promise = factory(container, sts);
+      var promise = factory(container, acs);
       promise.then(function(g) {
         grant = g;
         done();
@@ -78,8 +78,8 @@ describe('http/authorize/response/code', function() {
       });
       
       it('should issue authorization code', function() {
-        expect(sts.issue.callCount).to.equal(1);
-        expect(sts.issue.args[0][0]).to.deep.equal({
+        expect(acs.issue.callCount).to.equal(1);
+        expect(acs.issue.args[0][0]).to.deep.equal({
           client: {
             id: 's6BhdRkqt3',
             name: 'Example Client',
@@ -95,7 +95,6 @@ describe('http/authorize/response/code', function() {
             scope: [ 'profile', 'email' ]
           }
         });
-        expect(sts.issue.args[0][1]).to.equal('authorization_code');
       });
       
       it('should yield authorization code', function() {

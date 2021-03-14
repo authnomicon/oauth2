@@ -1,4 +1,4 @@
-exports = module.exports = function(container, sts, logger) {
+exports = module.exports = function(container, acs, logger) {
   var oauth2orize = require('oauth2orize');
   
   
@@ -22,7 +22,7 @@ exports = module.exports = function(container, sts, logger) {
         ctx.user = user;
         ctx.grant = ares;
         
-        sts.issue(ctx, 'authorization_code', function(err, code) {
+        acs.issue(ctx, function(err, code) {
           if (err) { return cb(err); }
           return cb(null, code);
         });
@@ -34,6 +34,6 @@ exports['@implements'] = 'http://i.authnomicon.org/oauth2/http/Response';
 exports['@type'] = 'code';
 exports['@require'] = [
   '!container',
-  'http://i.authnomicon.org/oauth2/SecurityTokenService',
+  'http://i.authnomicon.org/oauth2/tokens/authorization-code',
   'http://i.bixbyjs.org/Logger'
 ];
