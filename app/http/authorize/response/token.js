@@ -32,7 +32,7 @@ exports = module.exports = function(container, issue, logger) {
     });
 };
 
-exports['@implements'] = 'http://i.authnomicon.org/oauth2/http/Response';
+exports['@implements'] = 'http://i.authnomicon.org/oauth2/authorization/http/ResponseType';
 exports['@type'] = 'token';
 exports['@require'] = [
   '!container',

@@ -13,7 +13,7 @@ describe('http/authorize/response/code', function() {
   });
   
   it('should be annotated', function() {
-    expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/http/Response');
+    expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/authorization/http/ResponseType');
     expect(factory['@type']).to.equal('code');
     expect(factory['@singleton']).to.be.undefined;
   });

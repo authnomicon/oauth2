@@ -24,18 +24,36 @@ exports = module.exports = function(container, store, logger) {
     })
     .then(function(server) {
       // Register response types with the OAuth 2.0 server.
-      var typeComps = container.components('http://i.authnomicon.org/oauth2/http/Response')
-    
-      return Promise.all(typeComps.map(function(spec) { return container.create(spec.id); } ))
-        .then(function(plugins) {
-          plugins.forEach(function(plugin, i) {
-            server.grant(typeComps[i].a['@type'] || plugin.name, plugin);
-            logger.info('Loaded OAuth 2.0 response type: ' + (typeComps[i].a['@type'] || plugin.name));
-          });
-        })
-        .then(function() {
-          return server;
-        });
+      return new Promise(function(resolve, reject) {
+        var components = container.components('http://i.authnomicon.org/oauth2/authorization/http/ResponseType');
+        
+        (function iter(i) {
+          var component = components[i]
+            , type;
+          if (!component) {
+            return resolve(server);
+          }
+          
+          type = component.a['@type'];
+          
+          component.create()
+            .then(function(responseType) {
+              logger.info('Loaded OAuth 2.0 response type: ' + (type || responseType.name));
+              server.grant(type || responseType.name, responseType);
+              iter(i + 1);
+            }, function(err) {
+              // TODO: Print the package name in the error, so it can be found
+              // TODO: Make the error have the stack of dependencies.
+              if (err.code == 'IMPLEMENTATION_NOT_FOUND') {
+                logger.notice(err.message + ' while loading component ZZZZ ' + component.id);
+                // TODO: Mount an implementation not found indicator in development
+                return iter(i + 1);
+              }
+              
+              reject(err);
+            });
+        })(0);
+      });
     })
     .then(function(server) {
       // Register grant types with the OAuth 2.0 server.
