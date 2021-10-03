@@ -34,6 +34,6 @@ exports['@implements'] = 'http://i.authnomicon.org/oauth2/authorization/http/Res
 exports['@type'] = 'code';
 exports['@require'] = [
   '!container',
-  'http://i.authnomicon.org/oauth2/tokens/authorization-code',
+  'http://i.authnomicon.org/oauth2/AuthorizationCodeService',
   'http://i.bixbyjs.org/Logger'
 ];

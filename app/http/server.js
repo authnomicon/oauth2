@@ -45,7 +45,7 @@ exports = module.exports = function(container, store, logger) {
               // TODO: Print the package name in the error, so it can be found
               // TODO: Make the error have the stack of dependencies.
               if (err.code == 'IMPLEMENTATION_NOT_FOUND') {
-                logger.notice(err.message + ' while loading component ZZZZ ' + component.id);
+                logger.notice(err.message + ' while loading component ' + component.id);
                 // TODO: Mount an implementation not found indicator in development
                 return iter(i + 1);
               }
