@@ -72,9 +72,8 @@ exports = module.exports = function(container, store, logger) {
     })
     .then(function(server) {
       // Register grant types with the OAuth 2.0 server.
-      
       return new Promise(function(resolve, reject) {
-        var components = container.components('http://i.authnomicon.org/oauth2/http/Exchange');
+        var components = container.components('http://i.authnomicon.org/oauth2/token/http/AuthorizationGrantExchange');
         
         (function iter(i) {
           var component = components[i]
@@ -87,7 +86,7 @@ exports = module.exports = function(container, store, logger) {
           
           component.create()
             .then(function(exchange) {
-              logger.info('Loaded OAuth 2.0 grant exchange: ' + (type || exchange.name));
+              logger.info('Loaded OAuth 2.0 authorization grant exchange: ' + (type || exchange.name));
               server.exchange(type || exchange.name, exchange);
               iter(i + 1);
             }, function(err) {

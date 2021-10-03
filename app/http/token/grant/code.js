@@ -74,7 +74,7 @@ exports = module.exports = function(sts) {
   });
 }
 
-exports['@implements'] = 'http://i.authnomicon.org/oauth2/http/Exchange';
+exports['@implements'] = 'http://i.authnomicon.org/oauth2/token/http/AuthorizationGrantExchange';
 exports['@type'] = 'authorization_code';
 exports['@require'] = [
   'http://i.authnomicon.org/oauth2/SecurityTokenService',
