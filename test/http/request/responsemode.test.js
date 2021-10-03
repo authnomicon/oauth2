@@ -13,7 +13,7 @@ describe('http/request/responsemode', function() {
   });
   
   it('should be annotated', function() {
-    expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/http/request/Parameters');
+    expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/authorization/http/RequestParameters');
     expect(factory['@singleton']).to.be.undefined;
   });
   
