@@ -98,7 +98,11 @@ describe('http/token/handlers/token', function() {
       
       it('should authenticate', function() {
         expect(request.authInfo).to.deep.equal({
-          schemes: ['client_secret_basic', 'client_secret_post', 'none']
+          schemes: [
+            'oauth2-client-authentication/client_secret_basic',
+            'oauth2-client-authentication/client_secret_post',
+            'oauth2-client-authentication/none'
+          ]
         });
       });
       
