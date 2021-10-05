@@ -5,7 +5,7 @@ exports = module.exports = function(IoC, server, parse, authenticate, errorLoggi
   
   var stack = [
     parse('application/x-www-form-urlencoded'),
-    authenticate(['client_secret_basic', 'client_secret_post', 'none']),
+    authenticate(['oauth2-client-authentication/client_secret_basic', 'oauth2-client-authentication/client_secret_post', 'oauth2-client-authentication/none']),
     server.token()
   ];
   
