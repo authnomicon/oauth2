@@ -15,7 +15,7 @@ describe('http/token/auth/basic', function() {
   
   it('should be annotated', function() {
     expect(factory['@implements']).to.equal('http://i.bixbyjs.org/http/auth/Scheme');
-    expect(factory['@scheme']).to.equal('client_secret_basic');
+    expect(factory['@scheme']).to.equal('oauth2-client-authentication/client_secret_basic');
     expect(factory['@singleton']).to.be.undefined;
   });
   

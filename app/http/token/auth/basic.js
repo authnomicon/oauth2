@@ -20,8 +20,8 @@ exports = module.exports = function(secrets, clients) {
 };
 
 exports['@implements'] = 'http://i.bixbyjs.org/http/auth/Scheme';
-exports['@scheme'] = 'client_secret_basic';
+exports['@scheme'] = 'oauth2-client-authentication/client_secret_basic';
 exports['@require'] = [
-  'http://i.authnomicon.org/oauth2/credentials/ClientSecretService',
+  'http://i.authnomicon.org/oauth2/ClientSecretService',
   'http://i.authnomicon.org/oauth2/ClientDirectory'
 ];

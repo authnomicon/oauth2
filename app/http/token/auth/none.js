@@ -20,7 +20,7 @@ exports = module.exports = function(clients) {
 };
 
 exports['@implements'] = 'http://i.bixbyjs.org/http/auth/Scheme';
-exports['@scheme'] = 'none';
+exports['@scheme'] = 'oauth2-client-authentication/none';
 exports['@require'] = [
   'http://i.authnomicon.org/oauth2/ClientDirectory'
 ];
