@@ -1,8 +1,9 @@
-exports = module.exports = function(evaluate, server, authenticate, state) {
+exports = module.exports = function(evaluate, server, authenticate, state, session) {
   
   return [
+    session(),
     state(),
-    authenticate([ 'session' ]),
+    authenticate([ 'session' ], { multi: true }),
     server.resume(
       function(txn, cb) {
         // Immediate mode callback.  Always, false, deferring transaction processing to 
@@ -19,5 +20,6 @@ exports['@require'] = [
   '../middleware/evaluate',
   '../../server',
   'http://i.bixbyjs.org/http/middleware/authenticate',
-  'http://i.bixbyjs.org/http/middleware/state'
+  'http://i.bixbyjs.org/http/middleware/state',
+  'http://i.bixbyjs.org/http/middleware/session'
 ];
