@@ -19,8 +19,8 @@ describe('http/token/grant/code', function() {
   });
 
   describe('creating exchange', function() {
-    var sts = new Object();
-    sts.verify = sinon.stub().yieldsAsync(null, {
+    var acs = new Object();
+    acs.verify = sinon.stub().yieldsAsync(null, {
       client: {
         id: 's6BhdRkqt3',
         name: 'Example Client'
@@ -35,6 +35,7 @@ describe('http/token/grant/code', function() {
         scope: [ 'profile', 'email' ]
       }
     });
+    var sts = new Object();
     sts.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
     
     var codeSpy = sinon.stub();
@@ -42,7 +43,7 @@ describe('http/token/grant/code', function() {
     
     var factory = $require('../../../../app/http/token/grant/code',
       { 'oauth2orize': { exchange: { code: codeSpy } } });
-    var exchange = factory(sts);
+    var exchange = factory(sts, acs);
     
     it('should create exchange', function() {
       expect(codeSpy.callCount).to.equal(1);
@@ -68,9 +69,8 @@ describe('http/token/grant/code', function() {
       });
       
       it('should verify authorization code', function() {
-        expect(sts.verify.callCount).to.equal(1);
-        expect(sts.verify.args[0][0]).to.equal('SplxlOBeZQQYbYS6WxSbIA');
-        expect(sts.verify.args[0][1]).to.equal('authorization_code');
+        expect(acs.verify.callCount).to.equal(1);
+        expect(acs.verify.args[0][0]).to.equal('SplxlOBeZQQYbYS6WxSbIA');
       });
       
       it('should issue access token', function() {
@@ -86,7 +86,6 @@ describe('http/token/grant/code', function() {
             displayName: 'Jane Doe'
           }
         });
-        expect(sts.issue.args[0][1]).to.equal('access_token');
       });
       
       it('should yield access token', function() {

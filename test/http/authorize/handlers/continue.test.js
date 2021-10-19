@@ -51,14 +51,21 @@ describe('http/authorize/handlers/continue', function() {
         };
       }
       
+      function session() {
+        return function(req, res, next) {
+          next();
+        };
+      }
+      
       var authenticateSpy = sinon.spy(authenticate);
       var stateSpy = sinon.spy(state);
+      var sessionSpy = sinon.spy(session);
       
       
       var request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, server, authenticateSpy, stateSpy);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy);
         
         chai.express.handler(handler)
           .req(function(req) {
