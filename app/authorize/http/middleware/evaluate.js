@@ -63,5 +63,5 @@ exports = module.exports = function(prompts, service, server) {
 exports['@require'] = [
   'http://i.authnomicon.org/prompts/http/Registry',
   'http://i.authnomicon.org/oauth2/AuthorizationService',
-  '../../server'
+  '../../../http/server'
 ];

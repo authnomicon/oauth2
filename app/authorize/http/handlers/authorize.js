@@ -80,7 +80,7 @@ exports = module.exports = function(evaluate, server, authenticate, state, sessi
 
 exports['@require'] = [
   '../middleware/evaluate',
-  '../../server',
+  '../../../http/server',
   'http://i.bixbyjs.org/http/middleware/authenticate',
   'http://i.bixbyjs.org/http/middleware/state',
   'http://i.bixbyjs.org/http/middleware/session',
