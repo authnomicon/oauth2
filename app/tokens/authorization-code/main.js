@@ -92,6 +92,7 @@ exports = module.exports = function(IoC, jwt, tokens, logger) {
     });
 };
 
+// TODO: Make this work and implement http://i.authnomicon.org/oauth2/AuthorizationCodeService
 exports['@implements'] = 'http://schemas.authnomicon.org/js/oauth2/tokens/authorization-code';
 exports['@singleton'] = true;
 exports['@require'] = [

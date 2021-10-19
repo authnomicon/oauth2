@@ -1,4 +1,4 @@
-exports = module.exports = function(sts) {
+exports = module.exports = function(ats, acs) {
   var oauth2orize = require('oauth2orize');
   
   return oauth2orize.exchange.code(function(client, code, redirectURI, body, authInfo, cb) {
@@ -14,7 +14,7 @@ exports = module.exports = function(sts) {
     
     //codes.decode(code, { issuer: 'sts-local' }, function(err, claims) {
     //sts2.decode(code, {}, function(err, claims) {
-    sts.verify(code, 'authorization_code', function(err, claims) {
+    acs.verify(code, function(err, claims) {
       if (err) { return cb(err); }
       
       var conf, i, len;
@@ -25,6 +25,7 @@ exports = module.exports = function(sts) {
         return cb(null, false);
       }
       
+      // TODO: Simplify this so claims just contains redirect_uri directly
       if (claims.confirmation) {
         
         for (i = 0, len = claims.confirmation.length; i < len; ++i) {
@@ -62,7 +63,7 @@ exports = module.exports = function(sts) {
       
       console.log(msg);
       
-      sts.issue(msg, 'access_token', function(err, token) {
+      ats.issue(msg, function(err, token) {
         console.log('ISSUED ACCESS TOKEN');
         console.log(err);
         console.log(token);
@@ -77,5 +78,6 @@ exports = module.exports = function(sts) {
 exports['@implements'] = 'http://i.authnomicon.org/oauth2/token/http/AuthorizationGrantExchange';
 exports['@type'] = 'authorization_code';
 exports['@require'] = [
-  'http://i.authnomicon.org/oauth2/SecurityTokenService',
+  'http://i.authnomicon.org/oauth2/AccessTokenService',
+  'http://i.authnomicon.org/oauth2/AuthorizationCodeService'
 ];
