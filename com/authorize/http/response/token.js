@@ -1,4 +1,4 @@
-exports = module.exports = function(container, issue, logger) {
+exports = module.exports = function(container, ats, logger) {
   var oauth2orize = require('oauth2orize');
   
   
@@ -28,7 +28,18 @@ exports = module.exports = function(container, issue, logger) {
       
       return oauth2orize.grant.token({
         modes: modes
-      }, issue);
+      }, function(client, user, ares, areq, locals, cb) {
+        var msg = {};
+        msg.client = client;
+        msg.redirectURI = redirectURI;
+        msg.user = user;
+        msg.grant = ares;
+        
+        ats.issue(msg, function(err, token) {
+          if (err) { return cb(err); }
+          return cb(null, token);
+        });
+      });
     });
 };
 
@@ -36,6 +47,6 @@ exports['@implements'] = 'http://i.authnomicon.org/oauth2/authorization/http/Res
 exports['@type'] = 'token';
 exports['@require'] = [
   '!container',
-  './token/issue',
+  'http://i.authnomicon.org/oauth2/AccessTokenService',
   'http://i.bixbyjs.org/Logger'
 ];
