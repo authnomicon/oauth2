@@ -36,7 +36,6 @@
       "authorize/http/request/responsemode",
       "authorize/http/request/webmessage",
       "authorize/http/response/code",
-      "authorize/http/response/code/issue",
       "authorize/http/response/token",
       "authorize/http/response/token/issue",
       "authorize/http/response/modes/formpost",
