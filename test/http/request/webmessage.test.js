@@ -3,7 +3,7 @@
 var $require = require('proxyquire');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../app/http/request/webmessage');
+var factory = require('../../../com/http/request/webmessage');
 
 
 describe('http/request/webmessage', function() {
@@ -20,7 +20,7 @@ describe('http/request/webmessage', function() {
   describe('creating extensions', function() {
     var extensionsSpy = sinon.stub();
     
-    var factory = $require('../../../app/http/request/webmessage',
+    var factory = $require('../../../com/http/request/webmessage',
       { 'oauth2orize-wmrm': { extensions: extensionsSpy } });
     var extensions = factory();
     

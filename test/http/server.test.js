@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var factory = require('../../app/http/server');
+var factory = require('../../com/http/server');
 
 
 describe('http/server', function() {

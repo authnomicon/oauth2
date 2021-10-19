@@ -1,7 +1,7 @@
 var $require = require('proxyquire');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../app/http/transactionstore');
+var factory = require('../../com/http/transactionstore');
 var TransactionStore = require('../../lib/transactionstore');
 
 
@@ -17,7 +17,7 @@ describe('transactionstore', function() {
   
   describe('creating with defaults', function() {
     var TransactionStoreSpy = sinon.spy(TransactionStore);
-    var factory = $require('../../app/http/transactionstore',
+    var factory = $require('../../com/http/transactionstore',
       { '../../lib/transactionstore': TransactionStoreSpy });
   
     var store = factory();

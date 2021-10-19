@@ -3,7 +3,7 @@
 var chai = require('chai');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../../app/token/http/handlers/token');
+var factory = require('../../../../com/token/http/handlers/token');
 
 
 describe('http/token/handlers/token', function() {

@@ -2,7 +2,7 @@
 
 var $require = require('proxyquire');
 var expect = require('chai').expect;
-var factory = require('../../../../../app/authorize/http/response/modes/webmessage');
+var factory = require('../../../../../com/authorize/http/response/modes/webmessage');
 
 
 describe('http/authorize/response/modes/webmessage', function() {

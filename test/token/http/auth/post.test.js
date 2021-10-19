@@ -3,7 +3,7 @@
 var $require = require('proxyquire');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../../app/token/http/auth/post');
+var factory = require('../../../../com/token/http/auth/post');
 var Strategy = require('passport-oauth2-client-password').Strategy;
 
 
@@ -27,7 +27,7 @@ describe('http/token/auth/post', function() {
     
     var StrategySpy = sinon.spy(Strategy);
     
-    var factory = $require('../../../../app/token/http/auth/post',
+    var factory = $require('../../../../com/token/http/auth/post',
       { 'passport-oauth2-client-password': { Strategy: StrategySpy } });
     var strategy = factory(secrets, clients);
     
@@ -84,7 +84,7 @@ describe('http/token/auth/post', function() {
     
     var StrategySpy = sinon.spy(Strategy);
     
-    var factory = $require('../../../../app/token/http/auth/post',
+    var factory = $require('../../../../com/token/http/auth/post',
       { 'passport-oauth2-client-password': { Strategy: StrategySpy } });
     var strategy = factory(secrets, clients);
     
@@ -141,7 +141,7 @@ describe('http/token/auth/post', function() {
     
     var StrategySpy = sinon.spy(Strategy);
     
-    var factory = $require('../../../../app/token/http/auth/post',
+    var factory = $require('../../../../com/token/http/auth/post',
       { 'passport-oauth2-client-password': { Strategy: StrategySpy } });
     var strategy = factory(secrets, clients);
     
@@ -193,7 +193,7 @@ describe('http/token/auth/post', function() {
     
     var StrategySpy = sinon.spy(Strategy);
     
-    var factory = $require('../../../../app/token/http/auth/post',
+    var factory = $require('../../../../com/token/http/auth/post',
       { 'passport-oauth2-client-password': { Strategy: StrategySpy } });
     var strategy = factory(secrets, clients);
     
@@ -250,7 +250,7 @@ describe('http/token/auth/post', function() {
     
     var StrategySpy = sinon.spy(Strategy);
     
-    var factory = $require('../../../../app/token/http/auth/post',
+    var factory = $require('../../../../com/token/http/auth/post',
       { 'passport-oauth2-client-password': { Strategy: StrategySpy } });
     var strategy = factory(secrets, clients);
     

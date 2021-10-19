@@ -2,7 +2,7 @@
 
 var $require = require('proxyquire');
 var expect = require('chai').expect;
-var factory = require('../../../../../app/authorize/http/response/modes/formpost');
+var factory = require('../../../../../com/authorize/http/response/modes/formpost');
 
 
 describe('http/authorize/response/modes/formpost', function() {

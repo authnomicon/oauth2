@@ -3,7 +3,7 @@
 var $require = require('proxyquire');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../app/http/request/responsemode');
+var factory = require('../../../com/http/request/responsemode');
 
 
 describe('http/request/responsemode', function() {
@@ -20,7 +20,7 @@ describe('http/request/responsemode', function() {
   describe('creating extensions', function() {
     var extensionsSpy = sinon.stub();
     
-    var factory = $require('../../../app/http/request/responsemode',
+    var factory = $require('../../../com/http/request/responsemode',
       { 'oauth2orize-response-mode': { extensions: extensionsSpy } });
     var extensions = factory();
     
