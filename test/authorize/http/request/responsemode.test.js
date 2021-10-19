@@ -3,10 +3,10 @@
 var $require = require('proxyquire');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../com/http/request/webmessage');
+var factory = require('../../../../com/authorize/http/request/responsemode');
 
 
-describe('http/request/webmessage', function() {
+describe('http/request/responsemode', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
@@ -20,8 +20,8 @@ describe('http/request/webmessage', function() {
   describe('creating extensions', function() {
     var extensionsSpy = sinon.stub();
     
-    var factory = $require('../../../com/http/request/webmessage',
-      { 'oauth2orize-wmrm': { extensions: extensionsSpy } });
+    var factory = $require('../../../../com/authorize/http/request/responsemode',
+      { 'oauth2orize-response-mode': { extensions: extensionsSpy } });
     var extensions = factory();
     
     it('should create extensions', function() {
