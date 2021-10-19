@@ -12,7 +12,7 @@ describe('http/authorize/response/modes/webmessage', function() {
   });
   
   it('should be annotated', function() {
-    expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/authorize/http/ResponseMode');
+    expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode');
     expect(factory['@mode']).to.equal('web_message');
     expect(factory['@singleton']).to.be.undefined;
   });

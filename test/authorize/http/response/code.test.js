@@ -21,7 +21,7 @@ describe('http/authorize/response/code', function() {
   describe('creating grant', function() {
     var container = new Object();
     container.components = sinon.stub()
-    container.components.withArgs('http://i.authnomicon.org/oauth2/authorize/http/ResponseMode').returns([]);
+    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([]);
     var acs = new Object();
     acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
     
