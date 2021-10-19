@@ -47,7 +47,7 @@ describe('http/authorize/middleware/evaluate', function() {
         
         var handler = factory(prompts, listener, server);
         
-        chai.express.handler(handler)
+        chai.express.handler([ handler ])
           .req(function(req) {
             request = req;
             req.state = {};
@@ -128,7 +128,7 @@ describe('http/authorize/middleware/evaluate', function() {
         
         var handler = factory(prompts, listener, server);
         
-        chai.express.handler(handler)
+        chai.express.handler([ handler ])
           .req(function(req) {
             request = req;
             req.state = {};
@@ -214,7 +214,7 @@ describe('http/authorize/middleware/evaluate', function() {
       before(function(done) {
         var handler = factory(prompts, listener, server);
         
-        chai.express.handler(handler)
+        chai.express.handler([ handler ])
           .req(function(req) {
             request = req;
             req.state = {};
