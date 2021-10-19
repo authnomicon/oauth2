@@ -38,12 +38,9 @@ exports = module.exports = function(prompts, service, server) {
     }
   
     function onprompt(name, options) {
-      var prompt;
-      try {
-        prompt = prompts.get(name);
-      } catch (ex) {
-        return next(ex);
-      }
+      // TODO: Replace this with prompts.dispatch(name,...)
+      var prompt = prompts.get(name);
+      if (!prompt) { return next(new Error("Unknown prompt '" + name + "'")); }
       
       // FIXME: Merge rather than overwrite
       res.locals = options || {};
@@ -64,7 +61,7 @@ exports = module.exports = function(prompts, service, server) {
 };
 
 exports['@require'] = [
-  'http://i.authnomicon.org/http/prompt/Registry',
-  'http://i.authnomicon.org/oauth2/Listener',
+  'http://i.authnomicon.org/prompts/http/Registry',
+  'http://i.authnomicon.org/oauth2/AuthorizationService',
   '../../server'
 ];
