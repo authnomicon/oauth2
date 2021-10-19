@@ -33,6 +33,8 @@
     "namespace": "org.authnomicon/oauth2",
     "components": [
       "authorize/http/service",
+      "authorize/http/request/responsemode",
+      "authorize/http/request/webmessage",
       "authorize/http/response/code",
       "authorize/http/response/code/issue",
       "authorize/http/response/token",
@@ -45,8 +47,6 @@
       "token/http/auth/none",
       "token/http/grant/code",
       "token/http/grant/password",
-      "http/request/responsemode",
-      "http/request/webmessage",
       "http/middleware/errorhandler"
     ]
   },
