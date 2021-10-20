@@ -2,18 +2,9 @@ exports = module.exports = function(ats, acs) {
   var oauth2orize = require('oauth2orize');
   
   return oauth2orize.exchange.code(function(client, code, redirectURI, body, authInfo, cb) {
-    console.log('EXCHANGE!');
-    console.log(client);
-    console.log(code);
-    console.log(redirectURI);
-    console.log(body);
-    console.log(authInfo);
-    
     // TODO: Pass self trust store to token verify, using list of issuers like `ca` to Node's http
     // module
     
-    //codes.decode(code, { issuer: 'sts-local' }, function(err, claims) {
-    //sts2.decode(code, {}, function(err, claims) {
     acs.verify(code, function(err, claims) {
       if (err) { return cb(err); }
       
@@ -61,13 +52,7 @@ exports = module.exports = function(ats, acs) {
       //var audience = [ resource ];
       var audience = [];
       
-      console.log(msg);
-      
       ats.issue(msg, function(err, token) {
-        console.log('ISSUED ACCESS TOKEN');
-        console.log(err);
-        console.log(token);
-        
         if (err) { return cb(err); }
         return cb(null, token);
       });
