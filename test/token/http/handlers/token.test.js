@@ -73,21 +73,19 @@ describe('http/token/handlers/token', function() {
       before(function(done) {
         var promise = factory(container, server, parseSpy, authenticate, errorLogging, logger);
         promise.then(function(handler) {
-          chai.express.handler(handler)
-            .req(function(req) {
+          chai.express.use(handler)
+            .request(function(req, res) {
               request = req;
-            })
-            .res(function(res) {
               response = res;
             })
-            .end(function() {
+            .finish(function() {
               done();
             })
             .next(function(err) {
               console.log('next')
               console.log(err)
             })
-            .dispatch();
+            .listen();
         });
       });
       

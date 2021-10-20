@@ -47,8 +47,8 @@ describe('http/authorize/middleware/evaluate', function() {
         
         var handler = factory(prompts, listener, server);
         
-        chai.express.handler([ handler ])
-          .req(function(req) {
+        chai.express.use([ handler ])
+          .request(function(req, res) {
             request = req;
             req.state = {};
             req.state.complete = sinon.spy();
@@ -61,14 +61,13 @@ describe('http/authorize/middleware/evaluate', function() {
               id: '248289761001',
               displayName: 'Jane Doe'
             };
-          })
-          .res(function(res) {
+            
             response = res;
           })
-          .end(function() {
+          .finish(function() {
             done();
           })
-          .dispatch();
+          .listen();
       });
       
       it('should call listener', function() {
@@ -128,8 +127,8 @@ describe('http/authorize/middleware/evaluate', function() {
         
         var handler = factory(prompts, listener, server);
         
-        chai.express.handler([ handler ])
-          .req(function(req) {
+        chai.express.use([ handler ])
+          .request(function(req, res) {
             request = req;
             req.state = {};
             req.state.complete = sinon.spy();
@@ -142,14 +141,13 @@ describe('http/authorize/middleware/evaluate', function() {
               id: '248289761001',
               displayName: 'Jane Doe'
             };
-          })
-          .res(function(res) {
+            
             response = res;
           })
-          .end(function() {
+          .finish(function() {
             done();
           })
-          .dispatch();
+          .listen();
       });
       
       it('should call listener', function() {
@@ -214,8 +212,8 @@ describe('http/authorize/middleware/evaluate', function() {
       before(function(done) {
         var handler = factory(prompts, listener, server);
         
-        chai.express.handler([ handler ])
-          .req(function(req) {
+        chai.express.use([ handler ])
+          .request(function(req, res) {
             request = req;
             req.state = {};
             req.state.complete = sinon.spy();
@@ -224,14 +222,13 @@ describe('http/authorize/middleware/evaluate', function() {
               id: 's6BhdRkqt3',
               name: 'Example Client'
             };
-          })
-          .res(function(res) {
+            
             response = res;
           })
-          .end(function() {
+          .finish(function() {
             done();
           })
-          .dispatch();
+          .listen();
       });
       
       it('should call listener', function() {

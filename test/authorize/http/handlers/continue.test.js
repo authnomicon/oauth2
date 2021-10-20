@@ -67,17 +67,15 @@ describe('http/authorize/handlers/continue', function() {
       before(function(done) {
         var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy);
         
-        chai.express.handler(handler)
-          .req(function(req) {
+        chai.express.use(handler)
+          .request(function(req, res) {
             request = req;
-          })
-          .res(function(res) {
             response = res;
           })
-          .end(function() {
+          .finish(function() {
             done()
           })
-          .dispatch();
+          .listen();
       });
       
       it('should setup middleware', function() {

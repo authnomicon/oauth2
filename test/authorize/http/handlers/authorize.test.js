@@ -83,21 +83,20 @@ describe('http/authorize/handlers/authorize', function() {
       before(function(done) {
         var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
         
-        chai.express.handler(handler)
-          .req(function(req) {
+        chai.express.use(handler)
+          .request(function(req, res) {
             request = req;
             req.query = {
               client_id: 's6BhdRkqt3',
               redirect_uri: 'https://client.example.com/cb'
             };
-          })
-          .res(function(res) {
+            
             response = res;
           })
-          .end(function() {
+          .finish(function() {
             done()
           })
-          .dispatch();
+          .listen();
       });
       
       it('should setup middleware', function() {
@@ -162,21 +161,20 @@ describe('http/authorize/handlers/authorize', function() {
       before(function(done) {
         var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
         
-        chai.express.handler(handler)
-          .req(function(req) {
+        chai.express.use(handler)
+          .request(function(req, res) {
             request = req;
             req.query = {
               client_id: 's6BhdRkqt3',
               redirect_uri: 'https://client.example.com/cb2'
             };
-          })
-          .res(function(res) {
+            
             response = res;
           })
-          .end(function() {
+          .finish(function() {
             done()
           })
-          .dispatch();
+          .listen();
       });
       
       it('should setup middleware', function() {
@@ -241,20 +239,19 @@ describe('http/authorize/handlers/authorize', function() {
       before(function(done) {
         var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
         
-        chai.express.handler(handler)
-          .req(function(req) {
+        chai.express.use(handler)
+          .request(function(req, res) {
             request = req;
             req.query = {
               client_id: 's6BhdRkqt3'
             };
-          })
-          .res(function(res) {
+            
             response = res;
           })
-          .end(function() {
+          .finish(function() {
             done()
           })
-          .dispatch();
+          .listen();
       });
       
       it('should setup middleware', function() {
@@ -315,22 +312,21 @@ describe('http/authorize/handlers/authorize', function() {
       before(function(done) {
         var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
         
-        chai.express.handler(handler)
-          .req(function(req) {
+        chai.express.use(handler)
+          .request(function(req, res) {
             request = req;
             req.query = {
               client_id: 's6BhdRkqt3',
               redirect_uri: 'https://client.example.com/cb'
             };
-          })
-          .res(function(res) {
+            
             response = res;
           })
           .next(function(err) {
             error = err;
             done();
           })
-          .dispatch();
+          .listen();
       });
       
       it('should setup middleware', function() {
@@ -390,22 +386,21 @@ describe('http/authorize/handlers/authorize', function() {
       before(function(done) {
         var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
         
-        chai.express.handler(handler)
-          .req(function(req) {
+        chai.express.use(handler)
+          .request(function(req, res) {
             request = req;
             req.query = {
               client_id: 's6BhdRkqt3',
               redirect_uri: 'https://client.example.com/cb'
             };
-          })
-          .res(function(res) {
+            
             response = res;
           })
           .next(function(err) {
             error = err;
             done();
           })
-          .dispatch();
+          .listen();
       });
       
       it('should setup middleware', function() {
@@ -466,22 +461,21 @@ describe('http/authorize/handlers/authorize', function() {
       before(function(done) {
         var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
         
-        chai.express.handler(handler)
-          .req(function(req) {
+        chai.express.use(handler)
+          .request(function(req, res) {
             request = req;
             req.query = {
               client_id: 's6BhdRkqt3',
               redirect_uri: 'https://client.example.com/cb'
             };
-          })
-          .res(function(res) {
+            
             response = res;
           })
           .next(function(err) {
             error = err;
             done();
           })
-          .dispatch();
+          .listen();
       });
       
       it('should setup middleware', function() {
@@ -545,22 +539,21 @@ describe('http/authorize/handlers/authorize', function() {
       before(function(done) {
         var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
         
-        chai.express.handler(handler)
-          .req(function(req) {
+        chai.express.use(handler)
+          .request(function(req, res) {
             request = req;
             req.query = {
               client_id: 's6BhdRkqt3',
               redirect_uri: 'https://client.example.org/cb'
             };
-          })
-          .res(function(res) {
+            
             response = res;
           })
           .next(function(err) {
             error = err;
             done();
           })
-          .dispatch();
+          .listen();
       });
       
       it('should setup middleware', function() {
@@ -624,21 +617,20 @@ describe('http/authorize/handlers/authorize', function() {
       before(function(done) {
         var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
         
-        chai.express.handler(handler)
-          .req(function(req) {
+        chai.express.use(handler)
+          .request(function(req, res) {
             request = req;
             req.query = {
               client_id: 's6BhdRkqt3'
             };
-          })
-          .res(function(res) {
+            
             response = res;
           })
           .next(function(err) {
             error = err;
             done();
           })
-          .dispatch();
+          .listen();
       });
       
       it('should setup middleware', function() {
@@ -695,21 +687,20 @@ describe('http/authorize/handlers/authorize', function() {
       before(function(done) {
         var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
         
-        chai.express.handler(handler)
-          .req(function(req) {
+        chai.express.use(handler)
+          .request(function(req, res) {
             request = req;
             req.query = {
               client_id: 's6BhdRkqt3'
             };
-          })
-          .res(function(res) {
+            
             response = res;
           })
           .next(function(err) {
             error = err;
             done();
           })
-          .dispatch();
+          .listen();
       });
       
       it('should setup middleware', function() {
