@@ -52,16 +52,14 @@
     "com": "com"
   },
   "dependencies": {
-    "clone": "^1.0.2",
-    "express": "^4.15.3",
+    "express": "^4.17.1",
     "oauth2orize": "^1.8.0",
     "oauth2orize-fprm": "^0.2.1",
     "oauth2orize-response-mode": "^0.1.0",
     "oauth2orize-wmrm": "0.0.3",
     "passport-http": "^0.3.0",
     "passport-oauth2-client-password": "^0.1.2",
-    "passport-oauth2-client-public": "0.0.1",
-    "uid2": "0.0.3"
+    "passport-oauth2-client-public": "0.0.1"
   },
   "devDependencies": {
     "chai": "^4.3.4",
