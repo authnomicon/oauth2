@@ -31,9 +31,10 @@ exports = module.exports = function(container, ats, logger) {
       }, function(client, user, ares, areq, locals, cb) {
         var msg = {};
         msg.client = client;
-        msg.redirectURI = redirectURI;
         msg.user = user;
         msg.grant = ares;
+        // TODO: Pass some indicator that this is an implicit flow, so token lifetimes
+        //. can be constrained accordingly
         
         ats.issue(msg, function(err, token) {
           if (err) { return cb(err); }
