@@ -21,7 +21,7 @@ exports = module.exports = function(evaluate, server, authenticate, state, sessi
   
   return [
     session(),
-    state({ external: true, continue: '/oauth2/authorize/continue' }),
+    state({ external: true }),
     authenticate([ 'session', 'anonymous' ], { multi: true }),
     server.authorization(
       function validateClient(clientID, redirectURI, cb) {
