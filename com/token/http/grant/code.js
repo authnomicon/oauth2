@@ -71,8 +71,9 @@ exports = module.exports = function(ats, acs, logger, C) {
           }
   
           if (err) { return cb(err); }
-      
-          var params = {};
+  
+  
+          
   
           var msg = {};
           msg.user = claims.user;
@@ -84,12 +85,20 @@ exports = module.exports = function(ats, acs, logger, C) {
           */
           //var audience = [ resource ];
           var audience = [];
-  
+          
           ats.issue(msg, function(err, token) {
             if (err) { return cb(err); }
+            
+            var params = {};
+            
             var txn = {};
+            txn.issuer = 'https://www.example.com/'; // TODO: plumb issuer through
+            txn.user = claims.user;
+            txn.client = client;
+            var res = {};
+            res.accessToken = token;
             var i = 0;
-        
+            
             (function iter(err, exparams) {
               if (err) { return cb(err); }
           
@@ -100,7 +109,12 @@ exports = module.exports = function(ats, acs, logger, C) {
                 return cb(null, token, null, params);
               }
           
-              extension(txn, iter)
+              var arity = extension.length;
+              if (arity == 3) {
+                extension(txn, res, iter);
+              } else {
+                extension(txn, iter);
+              }
             })();
           });
         });
