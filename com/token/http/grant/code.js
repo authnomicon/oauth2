@@ -1,27 +1,58 @@
-exports = module.exports = function(ats, acs) {
-  var oauth2orize = require('oauth2orize');
+exports = module.exports = function(ats, acs, logger, C) {
+  var oauth2orize = require('oauth2orize')
+    , merge = require('utils-merge');
   
+  
+  return Promise.resolve(null)
+    .then(function() {
+      var extensions = [];
+      
+      return new Promise(function(resolve, reject) {
+        var components = C.components('http://i.authnomicon.org/oauth2/token/http/ResponseParameters');
+      
+        (function iter(i) {
+          var component = components[i];
+          if (!component) {
+            return resolve(extensions);
+          }
+          
+          component.create()
+            .then(function(extension) {
+              logger.info('Loaded response parameter extension: ');
+              extensions.push(extension);
+              iter(i + 1);
+            }, function(err) {
+              var msg = 'Failed to load response parameter extension:\n';
+              msg += err.stack;
+              logger.warning(msg);
+              return iter(i + 1);
+            })
+        })(0);
+      });
+    })
+    .then(function(extensions) {
+      
   return oauth2orize.exchange.code(function(client, code, redirectURI, body, authInfo, cb) {
     // TODO: Pass self trust store to token verify, using list of issuers like `ca` to Node's http
     // module
-    
+
     acs.verify(code, function(err, claims) {
       if (err) { return cb(err); }
-      
+  
       var conf, i, len;
-        
+    
       // Verify that the authorization code was issued to the client that is
       // attempting to exchange it for an access token.
       if (client.id !== claims.client.id) {
         return cb(null, false);
       }
-      
+  
       // TODO: Simplify this so claims just contains redirect_uri directly
       if (claims.confirmation) {
-        
+    
         for (i = 0, len = claims.confirmation.length; i < len; ++i) {
           conf = claims.confirmation[i];
-          
+      
           switch (conf.method) {
           case 'redirect-uri':
             // Verify that the redirect URI matches the value sent in the
@@ -32,15 +63,17 @@ exports = module.exports = function(ats, acs) {
               return cb(new oauth2orize.TokenError('Mismatched redirect URI', 'invalid_grant'));
             }
             break;
-            
+        
           default:
             return cb(new Error('Unsupported code confirmation method: ' + conf.name));
           }
         }
       }
-      
+  
       if (err) { return cb(err); }
       
+      var params = {};
+  
       var msg = {};
       msg.user = claims.user;
       msg.client = client;
@@ -51,18 +84,36 @@ exports = module.exports = function(ats, acs) {
       */
       //var audience = [ resource ];
       var audience = [];
-      
+  
       ats.issue(msg, function(err, token) {
         if (err) { return cb(err); }
-        return cb(null, token);
+        var txn = {};
+        var i = 0;
+        
+        (function iter(err, exparams) {
+          if (err) { return cb(err); }
+          
+          if (exparams) { merge(params, exparams); }
+          
+          var extension = extensions[i++];
+          if (!extension) {
+            return cb(null, token, null, params);
+          }
+          
+          extension(txn, iter)
+        })();
       });
     });
   });
+      
+    });
 }
 
 exports['@implements'] = 'http://i.authnomicon.org/oauth2/token/http/AuthorizationGrantExchange';
 exports['@type'] = 'authorization_code';
 exports['@require'] = [
   'http://i.authnomicon.org/oauth2/AccessTokenService',
-  'http://i.authnomicon.org/oauth2/AuthorizationCodeService'
+  'http://i.authnomicon.org/oauth2/AuthorizationCodeService',
+  'http://i.bixbyjs.org/Logger',
+  '!container'
 ];

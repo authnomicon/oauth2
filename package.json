@@ -60,7 +60,8 @@
     "oauth2orize-wmrm": "0.0.3",
     "passport-http": "^0.3.0",
     "passport-oauth2-client-password": "^0.1.2",
-    "passport-oauth2-client-public": "0.0.1"
+    "passport-oauth2-client-public": "0.0.1",
+    "utils-merge": "^1.0.1"
   },
   "devDependencies": {
     "chai": "^4.3.4",
