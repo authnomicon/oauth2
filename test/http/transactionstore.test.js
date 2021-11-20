@@ -73,6 +73,9 @@ describe('transactionstore', function() {
               type: 'code',
               scope: undefined,
               state: 'xyz'
+            },
+            locals: {
+              issuer: undefined
             }
           });
         });
@@ -85,7 +88,9 @@ describe('transactionstore', function() {
       
       describe('storing transaction', function(done) {
         var req = new Object();
+        req.headers = {};
         req.state = new Object();
+        req.pushState = sinon.spy();
         
         before(function(done) {
           var txn = {
@@ -111,7 +116,8 @@ describe('transactionstore', function() {
         });
         
         it('should set state', function() {
-          expect(req.state).to.deep.equal({
+          expect(req.pushState).to.be.calledWith({
+            issuer: 'undefined://undefined',
             responseType: 'code',
             client: {
               id: 's6BhdRkqt3',
@@ -126,7 +132,10 @@ describe('transactionstore', function() {
       
       describe('storing transaction with web origin', function(done) {
         var req = new Object();
+        req.headers = {};
         req.state = new Object();
+        
+        req.pushState = sinon.spy();
         
         before(function(done) {
           var txn = {
@@ -153,7 +162,8 @@ describe('transactionstore', function() {
         });
         
         it('should set state', function() {
-          expect(req.state).to.deep.equal({
+          expect(req.pushState).to.be.calledWith({
+            issuer: 'undefined://undefined',
             responseType: 'code',
             client: {
               id: 's6BhdRkqt3',
