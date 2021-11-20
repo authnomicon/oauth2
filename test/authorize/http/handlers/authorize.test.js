@@ -100,7 +100,7 @@ describe('http/authorize/handlers/authorize', function() {
       });
       
       it('should setup middleware', function() {
-        expect(stateSpy).to.be.calledOnceWith({ external: true, continue: '/oauth2/authorize/continue' });
+        expect(stateSpy).to.be.calledOnceWith({ external: true });
         expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
       });
       
@@ -178,7 +178,7 @@ describe('http/authorize/handlers/authorize', function() {
       });
       
       it('should setup middleware', function() {
-        expect(stateSpy).to.be.calledOnceWith({ external: true, continue: '/oauth2/authorize/continue' });
+        expect(stateSpy).to.be.calledOnceWith({ external: true });
         expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
       });
       
@@ -255,7 +255,7 @@ describe('http/authorize/handlers/authorize', function() {
       });
       
       it('should setup middleware', function() {
-        expect(stateSpy).to.be.calledOnceWith({ external: true, continue: '/oauth2/authorize/continue' });
+        expect(stateSpy).to.be.calledOnceWith({ external: true });
         expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
       });
       
@@ -330,7 +330,7 @@ describe('http/authorize/handlers/authorize', function() {
       });
       
       it('should setup middleware', function() {
-        expect(stateSpy).to.be.calledOnceWith({ external: true, continue: '/oauth2/authorize/continue' });
+        expect(stateSpy).to.be.calledOnceWith({ external: true });
         expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
       });
       
@@ -404,7 +404,7 @@ describe('http/authorize/handlers/authorize', function() {
       });
       
       it('should setup middleware', function() {
-        expect(stateSpy).to.be.calledOnceWith({ external: true, continue: '/oauth2/authorize/continue' });
+        expect(stateSpy).to.be.calledOnceWith({ external: true });
         expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
       });
       
@@ -479,7 +479,7 @@ describe('http/authorize/handlers/authorize', function() {
       });
       
       it('should setup middleware', function() {
-        expect(stateSpy).to.be.calledOnceWith({ external: true, continue: '/oauth2/authorize/continue' });
+        expect(stateSpy).to.be.calledOnceWith({ external: true });
         expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
       });
       
@@ -557,7 +557,7 @@ describe('http/authorize/handlers/authorize', function() {
       });
       
       it('should setup middleware', function() {
-        expect(stateSpy).to.be.calledOnceWith({ external: true, continue: '/oauth2/authorize/continue' });
+        expect(stateSpy).to.be.calledOnceWith({ external: true });
         expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
       });
       
@@ -634,7 +634,7 @@ describe('http/authorize/handlers/authorize', function() {
       });
       
       it('should setup middleware', function() {
-        expect(stateSpy).to.be.calledOnceWith({ external: true, continue: '/oauth2/authorize/continue' });
+        expect(stateSpy).to.be.calledOnceWith({ external: true });
         expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
       });
       
@@ -704,7 +704,7 @@ describe('http/authorize/handlers/authorize', function() {
       });
       
       it('should setup middleware', function() {
-        expect(stateSpy).to.be.calledOnceWith({ external: true, continue: '/oauth2/authorize/continue' });
+        expect(stateSpy).to.be.calledOnceWith({ external: true });
         expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
       });
       
