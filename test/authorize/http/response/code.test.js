@@ -66,39 +66,34 @@ describe('http/authorize/response/code', function() {
       expect(codeSpy.args[0][1]).to.be.a('function');
     });
     
-    describe('issue', function() {
+    it('should do somthing', function(done) {
       var code;
       
-      before(function(done) {
-        var client = {
-          id: 's6BhdRkqt3',
-          name: 'Example Client',
-          redirectURIs: [ 'https://client.example.com/cb' ]
-        };
-        var user = {
-          id: '248289761001',
-          displayName: 'Jane Doe'
-        };
-        var ares = {
-          allow: true,
-          scope: [ 'profile', 'email' ]
-        }
-        var areq = {
-          type: 'code',
-          clientID: 's6BhdRkqt3',
-          redirectURI: 'https://client.example.com/cb',
-          state: 'xyz'
-        }
-        
-        var issue = codeSpy.args[0][1];
-        issue(client, 'https://client.example.com/cb', user, ares, areq, {}, function(err, c) {
-          if (err) { return done(err); }
-          code = c;
-          done();
-        });
-      });
+      var client = {
+        id: 's6BhdRkqt3',
+        name: 'Example Client',
+        redirectURIs: [ 'https://client.example.com/cb' ]
+      };
+      var user = {
+        id: '248289761001',
+        displayName: 'Jane Doe'
+      };
+      var ares = {
+        allow: true,
+        scope: [ 'profile', 'email' ]
+      }
+      var areq = {
+        type: 'code',
+        clientID: 's6BhdRkqt3',
+        redirectURI: 'https://client.example.com/cb',
+        state: 'xyz'
+      }
       
-      it('should issue authorization code', function() {
+      var issue = codeSpy.args[0][1];
+      issue(client, 'https://client.example.com/cb', user, ares, areq, {}, function(err, c) {
+        if (err) { return done(err); }
+        code = c;
+        
         expect(acs.issue.callCount).to.equal(1);
         expect(acs.issue.args[0][0]).to.deep.equal({
           client: {
@@ -116,10 +111,10 @@ describe('http/authorize/response/code', function() {
             scope: [ 'profile', 'email' ]
           }
         });
-      });
-      
-      it('should yield authorization code', function() {
+        
         expect(code).to.equal('SplxlOBeZQQYbYS6WxSbIA');
+        
+        done();
       });
     }); // issue
     
