@@ -13,11 +13,10 @@ describe('http/authorize/response/code', function() {
     expect(factory['@type']).to.equal('code');
   });
   
-  it('should create response type', function(done) {
+  it('should create response type without response modes', function(done) {
     var container = new Object();
     container.components = sinon.stub();
     container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([]);
-    
     var acs = new Object();
     acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
     
@@ -28,20 +27,16 @@ describe('http/authorize/response/code', function() {
       }
     });
     
-    factory(acs, null, container)
+    factory(acs, undefined, container)
       .then(function(type) {
-        
-        expect(codeSpy.callCount).to.equal(1);
-        expect(codeSpy.args[0][0]).to.deep.equal({ modes: {} });
-        expect(codeSpy.args[0][1]).to.be.a('function');
-        
+        expect(codeSpy).to.be.calledOnce;
+        expect(codeSpy).to.be.calledWith({ modes: {} });
         done();
       })
       .catch(function(error) {
-        console.log(error);
+        done(error);
       });
-    
-  })
+  }); // should create response type without response modes
   
   
   describe('creating grant', function() {
