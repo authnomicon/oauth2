@@ -66,9 +66,11 @@ describe('http/token/handlers/token', function() {
         sinon.stub(container, 'create').returns(Promise.reject(new Error('component not found')));
       });
       
+      /*
       after(function() {
         container.create.restore();
       });
+      */
       
       before(function(done) {
         var promise = factory(container, server, parseSpy, authenticate, errorLogging, logger);

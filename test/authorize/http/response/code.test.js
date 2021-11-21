@@ -8,15 +8,41 @@ var factory = require('../../../../com/authorize/http/response/code');
 
 describe('http/authorize/response/code', function() {
   
-  it('should export factory function', function() {
-    expect(factory).to.be.a('function');
-  });
-  
   it('should be annotated', function() {
     expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/authorization/http/ResponseType');
     expect(factory['@type']).to.equal('code');
-    expect(factory['@singleton']).to.be.undefined;
   });
+  
+  it('should create response type', function(done) {
+    var container = new Object();
+    container.components = sinon.stub();
+    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([]);
+    
+    var acs = new Object();
+    acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
+    
+    var codeSpy = sinon.stub();
+    var factory = $require('../../../../com/authorize/http/response/code', {
+      'oauth2orize': {
+        grant: { code: codeSpy }
+      }
+    });
+    
+    factory(acs, null, container)
+      .then(function(type) {
+        
+        expect(codeSpy.callCount).to.equal(1);
+        expect(codeSpy.args[0][0]).to.deep.equal({ modes: {} });
+        expect(codeSpy.args[0][1]).to.be.a('function');
+        
+        done();
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    
+  })
+  
   
   describe('creating grant', function() {
     var container = new Object();
@@ -32,7 +58,7 @@ describe('http/authorize/response/code', function() {
     
     var grant;
     before(function(done) {
-      var promise = factory(container, acs);
+      var promise = factory(acs, null, container);
       promise.then(function(g) {
         grant = g;
         done();

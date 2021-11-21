@@ -31,9 +31,11 @@ describe('http/authorize/response/token', function() {
         sinon.stub(container, 'components').returns([]);
       });
       
+      /*
       after(function() {
         container.components.restore();
       });
+      */
       
       var tokenSpy = sinon.stub();
       

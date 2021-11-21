@@ -3,11 +3,6 @@
 var expect = require('chai').expect;
 var sinon = require('sinon');
 
-/*
-afterEach(function() {
-  sinon.restore();
-});
-*/
 
 describe('@authnomicon/oauth2', function() {
   
@@ -23,10 +18,8 @@ describe('@authnomicon/oauth2', function() {
     });
   });
   
-  it('should throw if required', function() {
-    expect(function() {
-      var pkg = require('..');
-    }).to.throw(Error).with.property('code', 'MODULE_NOT_FOUND');
-  });
-  
+});
+
+afterEach(function() {
+  sinon.restore();
 });
