@@ -19,6 +19,16 @@ describe('http/token/grant/code', function() {
   });
 
   describe('creating exchange', function() {
+    var container = new Object();
+    container.components = sinon.stub()
+    container.components.withArgs('http://i.authnomicon.org/oauth2/token/http/ResponseParameters').returns([]);
+    
+    var logger = {
+      notice: function(){},
+      warning: function(){},
+      info: function(){}
+    }
+    
     var acs = new Object();
     acs.verify = sinon.stub().yieldsAsync(null, {
       client: {
@@ -43,7 +53,19 @@ describe('http/token/grant/code', function() {
     
     var factory = $require('../../../../com/token/http/grant/code',
       { 'oauth2orize': { exchange: { code: codeSpy } } });
-    var exchange = factory(sts, acs);
+    
+    var exchange;
+    before(function(done) {
+      var promise = factory(sts, acs, logger, container);
+      promise.then(function(e) {
+        exchange = e;
+        done();
+      })
+      .catch(function(error) {
+        console.log(error)
+      });
+    });
+    
     
     it('should create exchange', function() {
       expect(codeSpy.callCount).to.equal(1);
