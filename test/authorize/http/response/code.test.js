@@ -106,9 +106,9 @@ describe('http/authorize/response/code', function() {
         
         done();
       });
-    }); // issue
+    }); // should issue authorization code with redirect URI
     
-  }); // creating grant
+  }); // issue
   
   // TODO: createing grant with response modes
   
