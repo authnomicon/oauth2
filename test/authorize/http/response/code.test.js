@@ -78,7 +78,7 @@ describe('http/authorize/response/code', function() {
       var areq = {
         type: 'code',
         clientID: 's6BhdRkqt3',
-        redirectURI: 'https://client.example.com/cb',
+        redirectURI: 'https://client.example.org/cb',
         state: 'af0ifjsldkj'
       }
       
@@ -101,9 +101,7 @@ describe('http/authorize/response/code', function() {
             scope: [ 'profile', 'email' ]
           }
         });
-        
         expect(code).to.equal('SplxlOBeZQQYbYS6WxSbIA');
-        
         done();
       });
     }); // should issue authorization code without locals

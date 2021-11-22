@@ -25,21 +25,15 @@ describe('http/token/grant/code', function() {
     };
     var acs = new Object();
     acs.verify = sinon.stub().yieldsAsync(null, {
-      client: {
-        id: 's6BhdRkqt3'
-      },
-      redirectURI: 'https://client.example.com/cb',
-      user: {
-        id: '248289761001'
-      }
+      client: { id: 's6BhdRkqt3' },
+      redirectURI: 'https://client.example.org/cb',
+      user: { id: '248289761001' }
     });
     var ats = new Object();
     ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
     
     
     var codeSpy = sinon.stub();
-    var issue = function(){};
-    
     var factory = $require('../../../../com/token/http/grant/code', {
       'oauth2orize': {
         exchange: { code: codeSpy }
@@ -64,73 +58,61 @@ describe('http/token/grant/code', function() {
       notice: function(){},
       info: function(){}
     };
-    
-    var acs = new Object();
-    acs.verify = sinon.stub().yieldsAsync(null, {
-      client: {
-        id: 's6BhdRkqt3',
-        name: 'Example Client'
-      },
-      redirectURI: 'https://client.example.com/cb',
-      user: {
-        id: '248289761001',
-        displayName: 'Jane Doe'
-      },
-      grant: {
-        allow: true,
-        scope: [ 'profile', 'email' ]
-      }
-    });
     var ats = new Object();
     ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
     
     it('should do something', function(done) {
-      var token;
-      
-      
       var codeSpy = sinon.stub();
-      var issue = function(){};
-    
       var factory = $require('../../../../com/token/http/grant/code',
         { 'oauth2orize': { exchange: { code: codeSpy } } });
       
-      var client = {
-        id: 's6BhdRkqt3',
-        name: 'Example Client',
-        redirectURIs: [ 'https://client.example.com/cb' ]
-      };
-      
+      var acs = new Object();
+      acs.verify = sinon.stub().yieldsAsync(null, {
+        client: { id: 's6BhdRkqt3' },
+        redirectURI: 'https://client.example.org/cb',
+        user: {
+          id: '248289761001',
+          displayName: 'Jane Doe'
+        },
+        grant: {
+          allow: true,
+          scope: [ 'profile', 'email' ]
+        }
+      });
       
       factory(ats, acs, logger, container)
         .then(function(exchange) {
-          var issue = codeSpy.args[0][0];
-          issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(err, t) {
+          
+          var client = {
+            id: 's6BhdRkqt3',
+            name: 'Example Client',
+            redirectURIs: [ 'https://client.example.org/cb' ]
+          };
+          
+          var issue = codeSpy.getCall(0).args[0];
+          issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.org/cb', {}, {}, function(err, token) {
             if (err) { return done(err); }
-            token = t;
         
-            expect(acs.verify.callCount).to.equal(1);
-            expect(acs.verify.args[0][0]).to.equal('SplxlOBeZQQYbYS6WxSbIA');
-        
-            expect(ats.issue.callCount).to.equal(1);
-            expect(ats.issue.args[0][0]).to.deep.equal({
+            expect(acs.verify).to.be.calledOnce;
+            expect(acs.verify.getCall(0).args[0]).to.equal('SplxlOBeZQQYbYS6WxSbIA');
+            expect(ats.issue).to.be.calledOnce;
+            expect(ats.issue.getCall(0).args[0]).to.deep.equal({
               client: {
                 id: 's6BhdRkqt3',
                 name: 'Example Client',
-                redirectURIs: [ 'https://client.example.com/cb' ]
+                redirectURIs: [ 'https://client.example.org/cb' ]
               },
               user: {
                 id: '248289761001',
                 displayName: 'Jane Doe'
               }
             });
-        
             expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
-        
             done();
           });
         })
         .catch(done);
-    }); // issue
+    }); // should do something
     
   }); // creating exchange
   
