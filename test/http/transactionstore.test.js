@@ -30,7 +30,7 @@ describe('transactionstore', function() {
     
     describe('#load', function() {
       
-      describe('loading transaction', function(done) {
+      it('loading transaction', function(done) {
         var req = new Object();
         req.state = {
           responseType: 'code',
@@ -44,17 +44,9 @@ describe('transactionstore', function() {
         };
         req.state.handle = 'XXXXXXXX';
         
-        var txn;
-        
-        before(function(done) {
-          store.load(req, function(err, t) {
-            if (err) { return done(err); }
-            txn = t;
-            done();
-          });
-        });
-        
-        it('should load transaction', function() {
+        store.load(req, function(err, txn) {
+          if (err) { return done(err); }
+          
           expect(txn).to.deep.equal({
             client: {
               id: 's6BhdRkqt3',
@@ -70,6 +62,8 @@ describe('transactionstore', function() {
               issuer: undefined
             }
           });
+          
+          done();
         });
       }); // loading transaction
       
@@ -78,36 +72,31 @@ describe('transactionstore', function() {
     
     describe('#store', function() {
       
-      describe('storing transaction', function(done) {
+      it('storing transaction', function(done) {
         var req = new Object();
         req.headers = {};
         req.state = new Object();
         req.pushState = sinon.spy();
         
-        before(function(done) {
-          var txn = {
-            client: {
-              id: 's6BhdRkqt3',
-              name: 'My Example Client',
-              redirectURIs: [ 'https://client.example.com/cb' ]
-            },
+        var txn = {
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'My Example Client',
+            redirectURIs: [ 'https://client.example.com/cb' ]
+          },
+          redirectURI: 'https://client.example.com/cb',
+          req: {
+            type: 'code',
+            clientID: 's6BhdRkqt3',
             redirectURI: 'https://client.example.com/cb',
-            req: {
-              type: 'code',
-              clientID: 's6BhdRkqt3',
-              redirectURI: 'https://client.example.com/cb',
-              scope: undefined,
-              state: 'xyz'
-            },
-          };
-          
-          store.store(req, txn, function(err) {
-            if (err) { return done(err); }
-            done();
-          });
-        });
+            scope: undefined,
+            state: 'xyz'
+          },
+        };
         
-        it('should set state', function() {
+        store.store(req, txn, function(err) {
+          if (err) { return done(err); }
+          
           expect(req.pushState).to.be.calledWith({
             issuer: 'undefined://undefined',
             responseType: 'code',
@@ -119,41 +108,38 @@ describe('transactionstore', function() {
             scope: undefined,
             state: 'xyz'
           });
+          
+          done();
         });
       }); // storing transaction
       
-      describe('storing transaction with web origin', function(done) {
+      it('storing transaction with web origin', function(done) {
         var req = new Object();
         req.headers = {};
         req.state = new Object();
         
         req.pushState = sinon.spy();
         
-        before(function(done) {
-          var txn = {
-            client: {
-              id: 's6BhdRkqt3',
-              name: 'My Example Client',
-              redirectURIs: [ 'https://client.example.com/cb' ]
-            },
+        var txn = {
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'My Example Client',
+            redirectURIs: [ 'https://client.example.com/cb' ]
+          },
+          redirectURI: 'https://client.example.com/cb',
+          webOrigin: 'https://client.example.com',
+          req: {
+            type: 'code',
+            clientID: 's6BhdRkqt3',
             redirectURI: 'https://client.example.com/cb',
-            webOrigin: 'https://client.example.com',
-            req: {
-              type: 'code',
-              clientID: 's6BhdRkqt3',
-              redirectURI: 'https://client.example.com/cb',
-              scope: undefined,
-              state: 'xyz'
-            },
-          };
-          
-          store.store(req, txn, function(err) {
-            if (err) { return done(err); }
-            done();
-          });
-        });
+            scope: undefined,
+            state: 'xyz'
+          },
+        };
         
-        it('should set state', function() {
+        store.store(req, txn, function(err) {
+          if (err) { return done(err); }
+          
           expect(req.pushState).to.be.calledWith({
             issuer: 'undefined://undefined',
             responseType: 'code',
@@ -166,6 +152,8 @@ describe('transactionstore', function() {
             scope: undefined,
             state: 'xyz'
           });
+          
+          done();
         });
       }); // storing transaction with web origin
       
@@ -173,34 +161,29 @@ describe('transactionstore', function() {
     
     describe('#update', function() {
       
-      describe('updating transaction', function(done) {
+      it('updating transaction', function(done) {
         var req = new Object();
         req.state = new Object();
         
-        before(function(done) {
-          var txn = {
-            client: {
-              id: 's6BhdRkqt3',
-              name: 'My Example Client',
-              redirectURIs: [ 'https://client.example.com/cb' ]
-            },
+        var txn = {
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'My Example Client',
+            redirectURIs: [ 'https://client.example.com/cb' ]
+          },
+          redirectURI: 'https://client.example.com/cb',
+          req: {
+            type: 'code',
+            clientID: 's6BhdRkqt3',
             redirectURI: 'https://client.example.com/cb',
-            req: {
-              type: 'code',
-              clientID: 's6BhdRkqt3',
-              redirectURI: 'https://client.example.com/cb',
-              scope: undefined,
-              state: 'xyz'
-            },
-          };
-          
-          store.update(req, 'XXXXXXXX', txn, function(err) {
-            if (err) { return done(err); }
-            done();
-          });
-        });
+            scope: undefined,
+            state: 'xyz'
+          },
+        };
         
-        it('should set state', function() {
+        store.update(req, 'XXXXXXXX', txn, function(err) {
+          if (err) { return done(err); }
+          
           expect(req.state).to.deep.equal({
             responseType: 'code',
             client: {
@@ -211,7 +194,10 @@ describe('transactionstore', function() {
             scope: undefined,
             state: 'xyz'
           });
+          
+          done();
         });
+          
       }); // storing transaction
       
     }); // #update
