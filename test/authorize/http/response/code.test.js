@@ -62,7 +62,7 @@ describe('http/authorize/response/code', function() {
         .catch(done);
     });
     
-    it('should issue authorization code with redirect URI', function(done) {
+    it('should issue authorization code without locals', function(done) {
       var client = {
         id: 's6BhdRkqt3',
         name: 'My Example Client'
@@ -106,7 +106,7 @@ describe('http/authorize/response/code', function() {
         
         done();
       });
-    }); // should issue authorization code with redirect URI
+    }); // should issue authorization code without locals
     
   }); // issue
   
