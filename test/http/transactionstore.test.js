@@ -7,29 +7,21 @@ var TransactionStore = require('../../lib/transactionstore');
 
 describe('transactionstore', function() {
   
-  it('should export factory function', function() {
-    expect(factory).to.be.a('function');
-  });
-  
   it('should be annotated', function() {
     expect(factory['@singleton']).to.equal(true);
   });
   
-  describe('creating with defaults', function() {
+  describe('should construct TransactionStore', function() {
     var TransactionStoreSpy = sinon.spy(TransactionStore);
-    var factory = $require('../../com/http/transactionstore',
-      { '../../lib/transactionstore': TransactionStoreSpy });
-  
+    var factory = $require('../../com/http/transactionstore', {
+      '../../lib/transactionstore': TransactionStoreSpy
+    });
+    
     var store = factory();
   
-    it('should construct store', function() {
-      expect(TransactionStoreSpy).to.have.been.calledOnce;
-      expect(TransactionStoreSpy).to.have.been.calledWithNew;
-    });
-  
-    it('should return store', function() {
-      expect(store).to.be.an.instanceOf(TransactionStore);
-    });
+    expect(TransactionStoreSpy).to.have.been.calledOnce;
+    expect(TransactionStoreSpy).to.have.been.calledWithNew;
+    expect(store).to.be.an.instanceOf(TransactionStore);
   }); // creating with defaults
   
   
