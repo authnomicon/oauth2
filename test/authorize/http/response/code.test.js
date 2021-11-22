@@ -33,13 +33,11 @@ describe('http/authorize/response/code', function() {
         expect(codeSpy).to.be.calledWith({ modes: {} });
         done();
       })
-      .catch(function(error) {
-        done(error);
-      });
+      .catch(done);
   }); // should create response type without response modes
   
   
-  describe('creating grant', function() {
+  describe('issue', function() {
     var container = new Object();
     container.components = sinon.stub()
     container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([]);
@@ -47,32 +45,27 @@ describe('http/authorize/response/code', function() {
     acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
     
     var codeSpy = sinon.stub();
+    var factory = $require('../../../../com/authorize/http/response/code', {
+      'oauth2orize': {
+        grant: { code: codeSpy }
+      }
+    });
     
-    var factory = $require('../../../../com/authorize/http/response/code',
-      { 'oauth2orize': { grant: { code: codeSpy } } });
+    var issue;
     
-    var grant;
     before(function(done) {
-      var promise = factory(acs, null, container);
-      promise.then(function(g) {
-        grant = g;
-        done();
-      });
+      factory(acs, null, container)
+        .then(function(type) {
+          issue = codeSpy.getCall(0).args[1];
+          done();
+        })
+        .catch(done);
     });
     
-    it('should create grant', function() {
-      expect(codeSpy.callCount).to.equal(1);
-      expect(codeSpy.args[0][0]).to.deep.equal({ modes: {} });
-      expect(codeSpy.args[0][1]).to.be.a('function');
-    });
-    
-    it('should do somthing', function(done) {
-      var code;
-      
+    it('should issue authorization code with redirect URI', function(done) {
       var client = {
         id: 's6BhdRkqt3',
-        name: 'Example Client',
-        redirectURIs: [ 'https://client.example.com/cb' ]
+        name: 'My Example Client'
       };
       var user = {
         id: '248289761001',
@@ -86,22 +79,19 @@ describe('http/authorize/response/code', function() {
         type: 'code',
         clientID: 's6BhdRkqt3',
         redirectURI: 'https://client.example.com/cb',
-        state: 'xyz'
+        state: 'af0ifjsldkj'
       }
       
-      var issue = codeSpy.args[0][1];
-      issue(client, 'https://client.example.com/cb', user, ares, areq, {}, function(err, c) {
+      issue(client, 'https://client.example.org/cb', user, ares, areq, {}, function(err, code) {
         if (err) { return done(err); }
-        code = c;
         
         expect(acs.issue.callCount).to.equal(1);
-        expect(acs.issue.args[0][0]).to.deep.equal({
+        expect(acs.issue.getCall(0).args[0]).to.deep.equal({
           client: {
             id: 's6BhdRkqt3',
-            name: 'Example Client',
-            redirectURIs: [ 'https://client.example.com/cb' ]
+            name: 'My Example Client'
           },
-          redirectURI: 'https://client.example.com/cb',
+          redirectURI: 'https://client.example.org/cb',
           user: {
             id: '248289761001',
             displayName: 'Jane Doe'
