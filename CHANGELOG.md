@@ -11,6 +11,10 @@ the response with parameters extensions yield.
 - Added `request` property to transaction state stored in session, containing
 all parameters in the authorization request.
 
+### Changed
+- `AuthorizationCodeService` is called with `msg` argument containing `scope`
+property, rather than `grant.scope`.
+
 ### Removed
 - Removed `responseType`, `scope`, and `state` properties from transaction state
 stored in session.  Use parameters stored under `request`.

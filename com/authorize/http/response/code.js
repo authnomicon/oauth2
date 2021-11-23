@@ -1,8 +1,8 @@
-exports = module.exports = function(container, acs, logger) {
+exports = module.exports = function(acs, logger, C) {
   var oauth2orize = require('oauth2orize');
   
   
-  var components = container.components('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode');
+  var components = C.components('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode');
   return Promise.all(components.map(function(comp) { return comp.create(); } ))
     .then(function(plugins) {
       var modes = {}
@@ -16,13 +16,15 @@ exports = module.exports = function(container, acs, logger) {
       return oauth2orize.grant.code({
         modes: modes
       }, function(client, redirectURI, user, ares, areq, locals, cb) {
-        var ctx = {};
-        ctx.client = client;
-        ctx.redirectURI = redirectURI;
-        ctx.user = user;
-        ctx.grant = ares;
+        var msg = {};
+        msg.client = client;
+        msg.redirectURI = redirectURI;
+        msg.user = user;
+        // TODO: Put a grant ID in here somehere
+        //msg.grant = ares;
+        if (ares.scope) { msg.scope = ares.scope; }
         
-        acs.issue(ctx, function(err, code) {
+        acs.issue(msg, function(err, code) {
           if (err) { return cb(err); }
           return cb(null, code);
         });
@@ -33,7 +35,7 @@ exports = module.exports = function(container, acs, logger) {
 exports['@implements'] = 'http://i.authnomicon.org/oauth2/authorization/http/ResponseType';
 exports['@type'] = 'code';
 exports['@require'] = [
-  '!container',
   'http://i.authnomicon.org/oauth2/AuthorizationCodeService',
-  'http://i.bixbyjs.org/Logger'
+  'http://i.bixbyjs.org/Logger',
+  '!container'
 ];

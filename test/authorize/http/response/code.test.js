@@ -62,7 +62,7 @@ describe('http/authorize/response/code', function() {
         .catch(done);
     });
     
-    it('should issue authorization code without locals', function(done) {
+    it('should issue authorization code with scope', function(done) {
       var client = {
         id: 's6BhdRkqt3',
         name: 'My Example Client'
@@ -96,15 +96,12 @@ describe('http/authorize/response/code', function() {
             id: '248289761001',
             displayName: 'Jane Doe'
           },
-          grant: {
-            allow: true,
-            scope: [ 'profile', 'email' ]
-          }
+          scope: [ 'profile', 'email' ]
         });
         expect(code).to.equal('SplxlOBeZQQYbYS6WxSbIA');
         done();
       });
-    }); // should issue authorization code without locals
+    }); // should issue authorization code with scope
     
   }); // issue
   
