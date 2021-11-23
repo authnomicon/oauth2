@@ -62,10 +62,20 @@ describe('transactionstore', function() {
               state: 'xyz'
             }
           });
-          
           done();
         });
       }); // should load transaction
+      
+      it('should error when state middleware is not in use', function(done) {
+        var req = new Object();
+        
+        store.load(req, function(err, txn) {
+          expect(err).to.be.an.instanceOf(Error);
+          expect(err.message).to.equal('OAuth 2.0 requires state support. Did you forget to use `flowstate` middleware?');
+          expect(txn).to.be.undefined;
+          done();
+        });
+      }); // should error when state middleware is not in use
       
     }); // #load
     
