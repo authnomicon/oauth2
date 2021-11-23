@@ -169,6 +169,7 @@ describe('http/authorize/response/code', function() {
         
         expect(acs.issue.callCount).to.equal(1);
         expect(acs.issue.getCall(0).args[0]).to.deep.equal({
+          issuer: 'https://server.example.com',
           client: {
             id: 's6BhdRkqt3',
             name: 'My Example Client'
