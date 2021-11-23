@@ -27,7 +27,7 @@ describe('http/token/grant/code', function() {
     var acs = new Object();
     acs.verify = sinon.stub().yieldsAsync(null, {
       client: { id: 's6BhdRkqt3' },
-      redirectURI: 'https://client.example.org/cb',
+      redirectURI: 'https://client.example.com/cb',
       user: { id: '248289761001' }
     });
     var ats = new Object();
@@ -77,11 +77,10 @@ describe('http/token/grant/code', function() {
       
       factory(ats, acs, logger, container)
         .then(function(exchange) {
-          
           var client = {
             id: 's6BhdRkqt3',
             name: 'Example Client',
-            redirectURIs: [ 'https://client.example.org/cb' ]
+            redirectURIs: [ 'https://client.example.com/cb' ]
           };
           
           var issue = codeSpy.getCall(0).args[0];
@@ -98,7 +97,7 @@ describe('http/token/grant/code', function() {
               client: {
                 id: 's6BhdRkqt3',
                 name: 'Example Client',
-                redirectURIs: [ 'https://client.example.org/cb' ]
+                redirectURIs: [ 'https://client.example.com/cb' ]
               }
             });
             expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
@@ -166,7 +165,7 @@ describe('http/token/grant/code', function() {
       var acs = new Object();
       acs.verify = sinon.stub().yieldsAsync(null, {
         client: { id: 's6BhdRkqt3' },
-        redirectURI: 'https://client.example.org/cb',
+        redirectURI: 'https://client.example.com/cb',
         user: { id: '248289761001' }
       });
       var ats = new Object();
@@ -177,11 +176,11 @@ describe('http/token/grant/code', function() {
           var client = {
             id: 'XXXXXXXX',
             name: 'Example Client',
-            redirectURIs: [ 'https://client.example.org/cb' ]
+            redirectURIs: [ 'https://client.example.com/cb' ]
           };
           
           var issue = codeSpy.getCall(0).args[0];
-          issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.org/cb', {}, {}, function(err, token) {
+          issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(err, token) {
             if (err) { return done(err); }
         
             expect(acs.verify).to.be.calledOnce;
@@ -203,7 +202,7 @@ describe('http/token/grant/code', function() {
       var acs = new Object();
       acs.verify = sinon.stub().yieldsAsync(null, {
         client: { id: 's6BhdRkqt3' },
-        redirectURI: 'https://client.example.org/cb',
+        redirectURI: 'https://client.example.com/cb',
         user: { id: '248289761001' }
       });
       var ats = new Object();
@@ -214,11 +213,11 @@ describe('http/token/grant/code', function() {
           var client = {
             id: 's6BhdRkqt3',
             name: 'Example Client',
-            redirectURIs: [ 'https://client.example.org/cb' ]
+            redirectURIs: [ 'https://client.example.com/cb' ]
           };
           
           var issue = codeSpy.getCall(0).args[0];
-          issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.org/callback', {}, {}, function(err, token) {
+          issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/callback', {}, {}, function(err, token) {
             expect(err).to.be.an.instanceOf(oauth2orize.TokenError);
             expect(err.message).to.equal('Mismatched redirect URI');
         
