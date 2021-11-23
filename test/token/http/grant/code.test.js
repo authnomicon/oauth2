@@ -47,7 +47,7 @@ describe('http/token/grant/code', function() {
         done();
       })
       .catch(done);
-  });
+  }); // should create exchange without response parameters
 
   describe('issue', function() {
     var container = new Object();
@@ -121,8 +121,7 @@ describe('http/token/grant/code', function() {
       acs.verify = sinon.stub().yieldsAsync(null, {
         client: { id: 's6BhdRkqt3' },
         redirectURI: 'https://client.example.org/cb',
-        user: { id: '248289761001' },
-        scope: [ 'profile', 'email' ]
+        user: { id: '248289761001' }
       });
       var ats = new Object();
       ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
@@ -160,8 +159,7 @@ describe('http/token/grant/code', function() {
       acs.verify = sinon.stub().yieldsAsync(null, {
         client: { id: 's6BhdRkqt3' },
         redirectURI: 'https://client.example.org/cb',
-        user: { id: '248289761001' },
-        scope: [ 'profile', 'email' ]
+        user: { id: '248289761001' }
       });
       var ats = new Object();
       ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
@@ -189,6 +187,6 @@ describe('http/token/grant/code', function() {
         .catch(done);
     }); // should not issue access token when redirect URI is not identical to initial authorization request
     
-  }); // creating exchange
+  }); // issue
   
 });
