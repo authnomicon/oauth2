@@ -8,12 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Authorization code grant loads token response parameter extensions and extends
 the response with parameters extensions yield.
+- Added `scope` property to `msg` argument passed to `AccessTokenService#issue()`.
 - Added `request` property to transaction state stored in session, containing
 all parameters in the authorization request.
 
 ### Changed
-- `AuthorizationCodeService` is called with `msg` argument containing `scope`
-property, rather than `grant.scope`.
+- `AuthorizationCodeService#issue()` is called with `msg` argument containing
+`scope` property, rather than `grant.scope`.
 
 ### Removed
 - Removed `responseType`, `scope`, and `state` properties from transaction state

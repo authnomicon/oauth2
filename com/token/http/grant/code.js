@@ -38,7 +38,7 @@ exports = module.exports = function(ats, acs, logger, C) {
 
         acs.verify(code, function(err, claims) {
           if (err) { return cb(err); }
-  
+          
           var conf, i, len;
     
           // Verify that the authorization code was issued to the client that is
@@ -78,6 +78,7 @@ exports = module.exports = function(ats, acs, logger, C) {
           var msg = {};
           msg.user = claims.user;
           msg.client = client;
+          if (claims.scope) { msg.scope = claims.scope; }
           /*
           msg.permissions = [
             { resource: resource, scope: claims.permissions[0].scope }

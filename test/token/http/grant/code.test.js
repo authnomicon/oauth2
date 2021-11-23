@@ -61,7 +61,7 @@ describe('http/token/grant/code', function() {
     var ats = new Object();
     ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
     
-    it('should do something', function(done) {
+    it('should issue access token with scope', function(done) {
       var codeSpy = sinon.stub();
       var factory = $require('../../../../com/token/http/grant/code', {
         'oauth2orize': { exchange: { code: codeSpy } }
@@ -71,14 +71,8 @@ describe('http/token/grant/code', function() {
       acs.verify = sinon.stub().yieldsAsync(null, {
         client: { id: 's6BhdRkqt3' },
         redirectURI: 'https://client.example.org/cb',
-        user: {
-          id: '248289761001',
-          displayName: 'Jane Doe'
-        },
-        grant: {
-          allow: true,
-          scope: [ 'profile', 'email' ]
-        }
+        user: { id: '248289761001' },
+        scope: [ 'profile', 'email' ]
       });
       
       factory(ats, acs, logger, container)
@@ -98,22 +92,22 @@ describe('http/token/grant/code', function() {
             expect(acs.verify.getCall(0).args[0]).to.equal('SplxlOBeZQQYbYS6WxSbIA');
             expect(ats.issue).to.be.calledOnce;
             expect(ats.issue.getCall(0).args[0]).to.deep.equal({
+              user: {
+                id: '248289761001'
+              },
               client: {
                 id: 's6BhdRkqt3',
                 name: 'Example Client',
                 redirectURIs: [ 'https://client.example.org/cb' ]
               },
-              user: {
-                id: '248289761001',
-                displayName: 'Jane Doe'
-              }
+              scope: [ 'profile', 'email' ]
             });
             expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
             done();
           });
         })
         .catch(done);
-    }); // should do something
+    }); // should issue access token with scope
     
   }); // creating exchange
   
