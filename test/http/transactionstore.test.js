@@ -84,7 +84,6 @@ describe('transactionstore', function() {
       
       it('should push state', function(done) {
         var req = new Object();
-        req.headers = {};
         req.pushState = sinon.spy();
         
         var txn = {
@@ -124,7 +123,6 @@ describe('transactionstore', function() {
       
       it('should push state with web origin', function(done) {
         var req = new Object();
-        req.headers = {};
         req.pushState = sinon.spy();
         
         var txn = {

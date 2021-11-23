@@ -143,6 +143,48 @@ describe('http/authorize/response/code', function() {
       });
     }); // should issue authorization code with scope
     
+    it('should issue authorization code with issuer', function(done) {
+      var client = {
+        id: 's6BhdRkqt3',
+        name: 'My Example Client'
+      };
+      var user = {
+        id: '248289761001',
+        displayName: 'Jane Doe'
+      };
+      var ares = {
+        allow: true,
+        issuer: 'https://server.example.com',
+        scope: [ 'profile', 'email' ]
+      }
+      var areq = {
+        type: 'code',
+        clientID: 's6BhdRkqt3',
+        redirectURI: 'https://client.example.org/cb',
+        state: 'af0ifjsldkj'
+      }
+      
+      issue(client, 'https://client.example.org/cb', user, ares, areq, {}, function(err, code) {
+        if (err) { return done(err); }
+        
+        expect(acs.issue.callCount).to.equal(1);
+        expect(acs.issue.getCall(0).args[0]).to.deep.equal({
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'My Example Client'
+          },
+          redirectURI: 'https://client.example.org/cb',
+          user: {
+            id: '248289761001',
+            displayName: 'Jane Doe'
+          },
+          scope: [ 'profile', 'email' ]
+        });
+        expect(code).to.equal('SplxlOBeZQQYbYS6WxSbIA');
+        done();
+      });
+    }); // should issue authorization code with issuer
+    
     it('should issue authorization code with authentication context', function(done) {
       var client = {
         id: 's6BhdRkqt3',
