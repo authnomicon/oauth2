@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Authorization code grant loads token response parameter extensions and extends
 the response with parameters extensions yield.
+- Added `request` property to transaction state stored in session, containing
+all parameters in the authorization request.
+
+### Removed
+- Removed `responseType`, `scope`, and `state` properties from transaction state
+stored in session.  Use parameters stored under `request`.
 
 ## [0.0.2] - 2021-11-17
 ### Added

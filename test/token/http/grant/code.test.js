@@ -63,8 +63,9 @@ describe('http/token/grant/code', function() {
     
     it('should do something', function(done) {
       var codeSpy = sinon.stub();
-      var factory = $require('../../../../com/token/http/grant/code',
-        { 'oauth2orize': { exchange: { code: codeSpy } } });
+      var factory = $require('../../../../com/token/http/grant/code', {
+        'oauth2orize': { exchange: { code: codeSpy } }
+      });
       
       var acs = new Object();
       acs.verify = sinon.stub().yieldsAsync(null, {

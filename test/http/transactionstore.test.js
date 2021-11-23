@@ -30,19 +30,21 @@ describe('transactionstore', function() {
     
     describe('#load', function() {
       
-      it('loading transaction', function(done) {
+      it('should load transaction', function(done) {
         var req = new Object();
         req.state = {
-          responseType: 'code',
           client: {
             id: 's6BhdRkqt3',
             name: 'My Example Client'
           },
           redirectURI: 'https://client.example.com/cb',
-          scope: undefined,
-          state: 'xyz'
+          request: {
+            type: 'code',
+            clientID: 's6BhdRkqt3',
+            redirectURI: 'https://client.example.com/cb',
+            state: 'xyz'
+          }
         };
-        req.state.handle = 'XXXXXXXX';
         
         store.load(req, function(err, txn) {
           if (err) { return done(err); }
@@ -55,27 +57,24 @@ describe('transactionstore', function() {
             redirectURI: 'https://client.example.com/cb',
             req: {
               type: 'code',
-              scope: undefined,
+              clientID: 's6BhdRkqt3',
+              redirectURI: 'https://client.example.com/cb',
               state: 'xyz'
-            },
-            locals: {
-              issuer: undefined
             }
           });
           
           done();
         });
-      }); // loading transaction
+      }); // should load transaction
       
     }); // #load
     
     
     describe('#store', function() {
       
-      it('storing transaction', function(done) {
+      it('should push state', function(done) {
         var req = new Object();
         req.headers = {};
-        req.state = new Object();
         req.pushState = sinon.spy();
         
         var txn = {
@@ -89,7 +88,6 @@ describe('transactionstore', function() {
             type: 'code',
             clientID: 's6BhdRkqt3',
             redirectURI: 'https://client.example.com/cb',
-            scope: undefined,
             state: 'xyz'
           },
         };
@@ -97,27 +95,26 @@ describe('transactionstore', function() {
         store.store(req, txn, function(err) {
           if (err) { return done(err); }
           
-          expect(req.pushState).to.be.calledWith({
-            issuer: 'undefined://undefined',
-            responseType: 'code',
+          expect(req.pushState).to.be.calledWithExactly({
             client: {
               id: 's6BhdRkqt3',
               name: 'My Example Client'
             },
             redirectURI: 'https://client.example.com/cb',
-            scope: undefined,
-            state: 'xyz'
-          });
-          
+            request: {
+              type: 'code',
+              clientID: 's6BhdRkqt3',
+              redirectURI: 'https://client.example.com/cb',
+              state: 'xyz'
+            }
+          }, '/oauth2/authorize/continue');
           done();
         });
-      }); // storing transaction
+      }); // should push state
       
-      it('storing transaction with web origin', function(done) {
+      it('should push state with web origin', function(done) {
         var req = new Object();
         req.headers = {};
-        req.state = new Object();
-        
         req.pushState = sinon.spy();
         
         var txn = {
@@ -129,10 +126,10 @@ describe('transactionstore', function() {
           redirectURI: 'https://client.example.com/cb',
           webOrigin: 'https://client.example.com',
           req: {
-            type: 'code',
+            type: 'token',
+            responseMode: 'web_message',
             clientID: 's6BhdRkqt3',
-            redirectURI: 'https://client.example.com/cb',
-            scope: undefined,
+            redirectURI: 'https://client.example.com',
             state: 'xyz'
           },
         };
@@ -140,22 +137,24 @@ describe('transactionstore', function() {
         store.store(req, txn, function(err) {
           if (err) { return done(err); }
           
-          expect(req.pushState).to.be.calledWith({
-            issuer: 'undefined://undefined',
-            responseType: 'code',
+          expect(req.pushState).to.be.calledWithExactly({
             client: {
               id: 's6BhdRkqt3',
               name: 'My Example Client'
             },
             redirectURI: 'https://client.example.com/cb',
             webOrigin: 'https://client.example.com',
-            scope: undefined,
-            state: 'xyz'
-          });
-          
+            request: {
+              type: 'token',
+              responseMode: 'web_message',
+              clientID: 's6BhdRkqt3',
+              redirectURI: 'https://client.example.com',
+              state: 'xyz'
+            }
+          }, '/oauth2/authorize/continue');
           done();
         });
-      }); // storing transaction with web origin
+      }); // should push state with web origin
       
     }); // #store
     
@@ -168,31 +167,32 @@ describe('transactionstore', function() {
         var txn = {
           client: {
             id: 's6BhdRkqt3',
-            name: 'My Example Client',
-            redirectURIs: [ 'https://client.example.com/cb' ]
+            name: 'My Example Client'
           },
           redirectURI: 'https://client.example.com/cb',
           req: {
             type: 'code',
             clientID: 's6BhdRkqt3',
-            redirectURI: 'https://client.example.com/cb',
-            scope: undefined,
-            state: 'xyz'
-          },
+            redirectURI: 'https://client.example.org/cb',
+            state: 'af0ifjsldkj'
+          }
         };
         
         store.update(req, 'XXXXXXXX', txn, function(err) {
           if (err) { return done(err); }
           
           expect(req.state).to.deep.equal({
-            responseType: 'code',
             client: {
               id: 's6BhdRkqt3',
               name: 'My Example Client'
             },
             redirectURI: 'https://client.example.com/cb',
-            scope: undefined,
-            state: 'xyz'
+            request: {
+              type: 'code',
+              clientID: 's6BhdRkqt3',
+              redirectURI: 'https://client.example.org/cb',
+              state: 'af0ifjsldkj'
+            }
           });
           
           done();
