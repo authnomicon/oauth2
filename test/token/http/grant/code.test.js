@@ -60,6 +60,53 @@ describe('http/token/grant/code', function() {
       info: function(){}
     };
     
+    it('should issue access token', function(done) {
+      var codeSpy = sinon.stub();
+      var factory = $require('../../../../com/token/http/grant/code', {
+        'oauth2orize': { exchange: { code: codeSpy } }
+      });
+      
+      var acs = new Object();
+      acs.verify = sinon.stub().yieldsAsync(null, {
+        client: { id: 's6BhdRkqt3' },
+        redirectURI: 'https://client.example.com/cb',
+        user: { id: '248289761001' }
+      });
+      var ats = new Object();
+      ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
+      
+      factory(ats, acs, logger, container)
+        .then(function(exchange) {
+          
+          var client = {
+            id: 's6BhdRkqt3',
+            name: 'Example Client',
+            redirectURIs: [ 'https://client.example.org/cb' ]
+          };
+          
+          var issue = codeSpy.getCall(0).args[0];
+          issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(err, token) {
+            if (err) { return done(err); }
+        
+            expect(acs.verify).to.be.calledOnce;
+            expect(acs.verify.getCall(0).args[0]).to.equal('SplxlOBeZQQYbYS6WxSbIA');
+            expect(ats.issue).to.be.calledOnce;
+            expect(ats.issue.getCall(0).args[0]).to.deep.equal({
+              user: {
+                id: '248289761001'
+              },
+              client: {
+                id: 's6BhdRkqt3',
+                name: 'Example Client',
+                redirectURIs: [ 'https://client.example.org/cb' ]
+              }
+            });
+            expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
+            done();
+          });
+        })
+        .catch(done);
+    }); // should issue access token
     
     it('should issue access token with scope', function(done) {
       var codeSpy = sinon.stub();
@@ -79,7 +126,6 @@ describe('http/token/grant/code', function() {
       
       factory(ats, acs, logger, container)
         .then(function(exchange) {
-          
           var client = {
             id: 's6BhdRkqt3',
             name: 'Example Client',
@@ -128,7 +174,6 @@ describe('http/token/grant/code', function() {
       
       factory(ats, acs, logger, container)
         .then(function(exchange) {
-          
           var client = {
             id: 'XXXXXXXX',
             name: 'Example Client',
@@ -166,7 +211,6 @@ describe('http/token/grant/code', function() {
       
       factory(ats, acs, logger, container)
         .then(function(exchange) {
-          
           var client = {
             id: 's6BhdRkqt3',
             name: 'Example Client',
