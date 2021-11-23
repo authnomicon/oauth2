@@ -39,41 +39,19 @@ exports = module.exports = function(ats, acs, logger, C) {
         acs.verify(code, function(err, claims) {
           if (err) { return cb(err); }
           
-          var conf, i, len;
-    
           // Verify that the authorization code was issued to the client that is
           // attempting to exchange it for an access token.
           if (client.id !== claims.client.id) {
             return cb(null, false);
           }
-  
-          // TODO: Simplify this so claims just contains redirect_uri directly
-          if (claims.confirmation) {
-    
-            for (i = 0, len = claims.confirmation.length; i < len; ++i) {
-              conf = claims.confirmation[i];
-      
-              switch (conf.method) {
-              case 'redirect-uri':
-                // Verify that the redirect URI matches the value sent in the
-                // initial authorization request.
-                // 
-                // Refer to Section 4.1.3 of RFC 6749 for further details.
-                if (redirectURI !== conf.uri) {
-                  return cb(new oauth2orize.TokenError('Mismatched redirect URI', 'invalid_grant'));
-                }
-                break;
-        
-              default:
-                return cb(new Error('Unsupported code confirmation method: ' + conf.name));
-              }
-            }
-          }
-  
-          if (err) { return cb(err); }
-  
-  
           
+          // Verify that the redirect URI matches the value sent in the
+          // initial authorization request.
+          //
+          // Refer to Section 4.1.3 of RFC 6749 for further details.
+          if (redirectURI !== claims.redirectURI) {
+            return cb(new oauth2orize.TokenError('Mismatched redirect URI', 'invalid_grant'));
+          }
   
           var msg = {};
           msg.user = claims.user;

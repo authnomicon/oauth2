@@ -15,6 +15,8 @@ all parameters in the authorization request.
 ### Changed
 - `AuthorizationCodeService#issue()` is called with `msg` argument containing
 `scope` property, rather than `grant.scope`.
+- Simplifed authorization code exchange validation of redirect URI based on
+`claims.redirectURI`, rather than more complicated `claims.confirmation`.
 
 ### Removed
 - Removed `responseType`, `scope`, and `state` properties from transaction state
