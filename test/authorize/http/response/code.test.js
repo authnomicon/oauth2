@@ -42,7 +42,6 @@ describe('http/authorize/response/code', function() {
     container.components = sinon.stub()
     container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([]);
     var acs = new Object();
-    acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
     
     var codeSpy = sinon.stub();
     var factory = $require('../../../../com/authorize/http/response/code', {
@@ -53,7 +52,9 @@ describe('http/authorize/response/code', function() {
     
     var issue;
     
-    before(function(done) {
+    beforeEach(function(done) {
+      acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
+      
       factory(acs, null, container)
         .then(function(type) {
           issue = codeSpy.getCall(0).args[1];
@@ -61,6 +62,45 @@ describe('http/authorize/response/code', function() {
         })
         .catch(done);
     });
+    
+    it('should issue authorization code', function(done) {
+      var client = {
+        id: 's6BhdRkqt3',
+        name: 'My Example Client'
+      };
+      var user = {
+        id: '248289761001',
+        displayName: 'Jane Doe'
+      };
+      var ares = {
+        allow: true
+      }
+      var areq = {
+        type: 'code',
+        clientID: 's6BhdRkqt3',
+        redirectURI: 'https://client.example.com/cb',
+        state: 'xyz'
+      }
+      
+      issue(client, 'https://client.example.com/cb', user, ares, areq, {}, function(err, code) {
+        if (err) { return done(err); }
+        
+        expect(acs.issue.callCount).to.equal(1);
+        expect(acs.issue.getCall(0).args[0]).to.deep.equal({
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'My Example Client'
+          },
+          redirectURI: 'https://client.example.com/cb',
+          user: {
+            id: '248289761001',
+            displayName: 'Jane Doe'
+          }
+        });
+        expect(code).to.equal('SplxlOBeZQQYbYS6WxSbIA');
+        done();
+      });
+    }); // should issue authorization code
     
     it('should issue authorization code with scope', function(done) {
       var client = {
