@@ -188,7 +188,7 @@ describe('transactionstore', function() {
           }
         };
         
-        store.update(req, 'XXXXXXXX', txn, function(err) {
+        store.update(req, undefined, txn, function(err) {
           if (err) { return done(err); }
           
           expect(req.state).to.deep.equal({
@@ -204,11 +204,10 @@ describe('transactionstore', function() {
               state: 'af0ifjsldkj'
             }
           });
-          
           done();
         });
           
-      }); // storing transaction
+      }); // updating transaction
       
     }); // #update
     
