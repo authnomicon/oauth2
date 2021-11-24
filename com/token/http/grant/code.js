@@ -54,33 +54,23 @@ exports = module.exports = function(ats, acs, logger, C) {
           }
   
           var msg = {};
+          if (claims.issuer) { msg.issuer = claims.issuer; }
           msg.user = claims.user;
           msg.client = client;
           if (claims.scope) { msg.scope = claims.scope; }
-          /*
-          msg.permissions = [
-            { resource: resource, scope: claims.permissions[0].scope }
-          ];
-          */
-          //var audience = [ resource ];
-          var audience = [];
+          if (claims.authContext) { msg.authContext = claims.authContext; }
           
           ats.issue(msg, function(err, token) {
             if (err) { return cb(err); }
             
-            var params = {};
-            
-            var txn = {};
-            txn.issuer = 'https://www.example.com/'; // TODO: plumb issuer through
-            txn.user = claims.user;
-            txn.client = client;
             var res = {};
             res.accessToken = token;
+            
+            var params = {};
             var i = 0;
             
             (function iter(err, exparams) {
               if (err) { return cb(err); }
-          
               if (exparams) { merge(params, exparams); }
           
               var extension = extensions[i++];
@@ -90,9 +80,9 @@ exports = module.exports = function(ats, acs, logger, C) {
           
               var arity = extension.length;
               if (arity == 3) {
-                extension(txn, res, iter);
+                extension(msg, res, iter);
               } else {
-                extension(txn, iter);
+                extension(msg, iter);
               }
             })();
           });
