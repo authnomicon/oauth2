@@ -113,7 +113,7 @@ describe('http/authorize/response/code', function() {
       };
       var ares = {
         allow: true,
-        scope: [ 'profile', 'email' ]
+        scope: [ 'openid', 'profile', 'email' ]
       }
       var areq = {
         type: 'code',
@@ -136,7 +136,7 @@ describe('http/authorize/response/code', function() {
             id: '248289761001',
             displayName: 'Jane Doe'
           },
-          scope: [ 'profile', 'email' ]
+          scope: [ 'openid', 'profile', 'email' ]
         });
         expect(code).to.equal('SplxlOBeZQQYbYS6WxSbIA');
         done();
@@ -155,7 +155,7 @@ describe('http/authorize/response/code', function() {
       var ares = {
         allow: true,
         issuer: 'https://server.example.com',
-        scope: [ 'profile', 'email' ]
+        scope: [ 'openid', 'profile', 'email' ]
       }
       var areq = {
         type: 'code',
@@ -179,7 +179,7 @@ describe('http/authorize/response/code', function() {
             id: '248289761001',
             displayName: 'Jane Doe'
           },
-          scope: [ 'profile', 'email' ]
+          scope: [ 'openid', 'profile', 'email' ]
         });
         expect(code).to.equal('SplxlOBeZQQYbYS6WxSbIA');
         done();
@@ -197,7 +197,7 @@ describe('http/authorize/response/code', function() {
       };
       var ares = {
         allow: true,
-        scope: [ 'profile', 'email' ],
+        scope: [ 'openid', 'profile', 'email' ],
         authContext: {
           sessionID: 'YU7uoYRVAxF34TuoAodVfw-1eA13rhqW',
           methods: [
@@ -226,7 +226,7 @@ describe('http/authorize/response/code', function() {
             id: '248289761001',
             displayName: 'Jane Doe'
           },
-          scope: [ 'profile', 'email' ],
+          scope: [ 'openid', 'profile', 'email' ],
           authContext: {
             sessionID: 'YU7uoYRVAxF34TuoAodVfw-1eA13rhqW',
             methods: [

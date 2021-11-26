@@ -118,7 +118,7 @@ describe('http/token/grant/code', function() {
         client: { id: 's6BhdRkqt3' },
         redirectURI: 'https://client.example.org/cb',
         user: { id: '248289761001' },
-        scope: [ 'profile', 'email' ]
+        scope: [ 'openid', 'profile', 'email' ]
       });
       var ats = new Object();
       ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
@@ -147,7 +147,7 @@ describe('http/token/grant/code', function() {
                 name: 'Example Client',
                 redirectURIs: [ 'https://client.example.org/cb' ]
               },
-              scope: [ 'profile', 'email' ]
+              scope: [ 'openid', 'profile', 'email' ]
             });
             expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
             done();
@@ -168,7 +168,7 @@ describe('http/token/grant/code', function() {
         client: { id: 's6BhdRkqt3' },
         redirectURI: 'https://client.example.org/cb',
         user: { id: '248289761001' },
-        scope: [ 'profile', 'email' ]
+        scope: [ 'openid', 'profile', 'email' ]
       });
       var ats = new Object();
       ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
@@ -198,7 +198,7 @@ describe('http/token/grant/code', function() {
                 name: 'Example Client',
                 redirectURIs: [ 'https://client.example.org/cb' ]
               },
-              scope: [ 'profile', 'email' ]
+              scope: [ 'openid', 'profile', 'email' ]
             });
             expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
             done();
@@ -218,7 +218,7 @@ describe('http/token/grant/code', function() {
         client: { id: 's6BhdRkqt3' },
         redirectURI: 'https://client.example.org/cb',
         user: { id: '248289761001' },
-        scope: [ 'profile', 'email' ],
+        scope: [ 'openid', 'profile', 'email' ],
         authContext: {
           sessionID: 'YU7uoYRVAxF34TuoAodVfw-1eA13rhqW',
           methods: [
@@ -253,7 +253,7 @@ describe('http/token/grant/code', function() {
                 name: 'Example Client',
                 redirectURIs: [ 'https://client.example.org/cb' ]
               },
-              scope: [ 'profile', 'email' ],
+              scope: [ 'openid', 'profile', 'email' ],
               authContext: {
                 sessionID: 'YU7uoYRVAxF34TuoAodVfw-1eA13rhqW',
                 methods: [
