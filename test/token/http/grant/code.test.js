@@ -7,7 +7,7 @@ var factory = require('../../../../com/token/http/grant/code');
 var oauth2orize = require('oauth2orize');
 
 
-describe('http/token/grant/code', function() {
+describe('token/http/grant/code', function() {
   
   it('should be annotated', function() {
     expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/token/http/AuthorizationGrantExchange');
