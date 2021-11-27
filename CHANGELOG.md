@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Authorization code grant loads token response parameter extensions and extends
-the response with parameters extensions yield.
+the response with parameters yield by extensions.
 - Added `scope` property to `msg` argument passed to `AccessTokenService#issue()`.
 - Added `issuer` property to `msg` argument passed to `AccessTokenService#issue()`.
 - Added `authContext` property to `msg` argument passed to `AccessTokenService#issue()`.
