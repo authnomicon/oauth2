@@ -7,7 +7,7 @@ var factory = require('../../../../com/token/http/auth/none');
 var Strategy = require('passport-oauth2-client-public').Strategy;
 
 
-describe('http/token/auth/none', function() {
+describe('token/http/auth/none', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');

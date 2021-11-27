@@ -7,7 +7,7 @@ var factory = require('../../../../com/token/http/auth/basic');
 var Strategy = require('passport-http').BasicStrategy;
 
 
-describe('http/token/auth/basic', function() {
+describe('token/http/auth/basic', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
