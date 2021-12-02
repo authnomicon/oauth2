@@ -14,7 +14,7 @@ exports = module.exports = function(prompts, service, server) {
     
     
     if (req.state.selectedSession) {
-      azreq.selectedSession = req.state.selectedSession;
+      azres.selectedSession = req.state.selectedSession;
     }
     
     

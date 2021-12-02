@@ -11,7 +11,7 @@ extends the response with parameters yielded by extensions.
 - Authorization code response type loads authorization response parameter
 extensions and extends the response with parameters yielded by extensions.
 - Added `prompt` property to `request` passed to `AuthorizationService`.
-- Added `selectedSession` property to `request` passed to `AuthorizationService`.
+- Added `selectedSession` property to `response` passed to `AuthorizationService`.
 - Added `issuer` to `req.oauth2.res` prior to responding to authorization
 request.
 - Added `authContext` to `req.oauth2.res` prior to responding to authorization
