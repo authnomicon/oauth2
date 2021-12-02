@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 extends the response with parameters yielded by extensions.
 - Authorization code response type loads authorization response parameter
 extensions and extends the response with parameters yielded by extensions.
+- Added `prompt` property to `request` passed to `AuthorizationService`.
+- Added `selectedSession` property to `request` passed to `AuthorizationService`.
+- Added `issuer` to `req.oauth2.res` prior to responding to authorization
+request.
+- Added `authContext` to `req.oauth2.res` prior to responding to authorization
+request.
 - Added `scope` property to `msg` argument passed to `AccessTokenService#issue()`.
 - Added `issuer` property to `msg` argument passed to `AccessTokenService#issue()`.
 - Added `authContext` property to `msg` argument passed to `AccessTokenService#issue()`.
@@ -25,6 +31,7 @@ all parameters in the authorization request.
 `claims.redirectURI`, rather than more complicated `claims.confirmation`.
 - `/authorize` and `/authorize/continue` endpoints parse cookies, to facilitate
 implementation of [OpenID Connect Session Management](https://openid.net/specs/openid-connect-session-1_0.html).
+- Updated to call `Router#dispatch`, as provided by latest `@authnomicon/prompts`.
 
 ### Removed
 - Removed `responseType`, `scope`, and `state` properties from transaction state

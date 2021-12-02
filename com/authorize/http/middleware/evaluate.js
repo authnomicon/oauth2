@@ -1,6 +1,7 @@
 exports = module.exports = function(prompts, service, server) {
   var Request = require('../../../../lib/request')
     , Response = require('../../../../lib/response');
+  var merge = require('utils-merge');
   
   
   // TODO: Going to need to pass some "select account" function to passport to
@@ -8,8 +9,14 @@ exports = module.exports = function(prompts, service, server) {
   
   
   return function(req, res, next) {
-    var azreq = new Request(req.oauth2.client, req.oauth2.user)
+    var azreq = new Request(req.oauth2.client, req.oauth2.req, req.oauth2.user)
       , azres = new Response();
+    
+    
+    if (req.state.selectedSession) {
+      azreq.selectedSession = req.state.selectedSession;
+    }
+    
     
     // FIXME: Normalize this data structure correctly
     if (req.session) {
@@ -25,6 +32,14 @@ exports = module.exports = function(prompts, service, server) {
         //req.oauth2.res = { permissions: [ { resource: { id: 'userinfo' }, scope: scope } ]};
         req.oauth2.res = { scope: scope };
         req.oauth2.res.allow = true;
+        
+        // TODO: Ideally use Express's req.hostname here, as it does the trust proxy
+        // stuff, but strips the port.   Need to find a solution.
+        req.oauth2.res.issuer = req.protocol + '://' + req.headers['host'];
+        
+        var authContext = merge({}, req.authInfo);
+        authContext.sessionID = req.sessionID;
+        req.oauth2.res.authContext = authContext;
       
         server._respond(req.oauth2, res, function(err) {
           if (err) { return next(err); }
@@ -38,13 +53,15 @@ exports = module.exports = function(prompts, service, server) {
     }
   
     function onprompt(name, options) {
-      // TODO: Replace this with prompts.dispatch(name,...)
-      var prompt = prompts.get(name);
-      if (!prompt) { return next(new Error("Unknown prompt '" + name + "'")); }
+      /*
+      if (name == 'login' && !req.user) {
+        console.log('WE CAN JUST REDIRECT HERE!');
+      }
+      */
       
       // FIXME: Merge rather than overwrite
       res.locals = options || {};
-      prompt(req, res, next);
+      prompts.dispatch(name, req, res, next);
     }
   
     function onend() {
@@ -61,7 +78,7 @@ exports = module.exports = function(prompts, service, server) {
 };
 
 exports['@require'] = [
-  'http://i.authnomicon.org/prompts/http/Registry',
+  'http://i.authnomicon.org/prompts/http/Router',
   'http://i.authnomicon.org/oauth2/AuthorizationService',
   '../../../http/server'
 ];

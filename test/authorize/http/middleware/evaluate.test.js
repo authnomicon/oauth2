@@ -145,6 +145,7 @@ describe('http/authorize/middleware/evaluate', function() {
               id: '248289761001',
               displayName: 'Jane Doe'
             };
+            req.oauth2.req = {};
             
             response = res;
           })
@@ -196,12 +197,18 @@ describe('http/authorize/middleware/evaluate', function() {
         res.prompt('login');
       });
       
+      /*
       var prompt = sinon.spy(function(req, res) {
         res.redirect('/login');
       });
       
       var prompts = new Object();
       prompts.get = sinon.stub().returns(prompt);
+      */
+      var prompts = new Object();
+      prompts.dispatch = sinon.spy(function(name, req, res, next) {
+        res.redirect('/login');
+      });
       
       var request, response;
       
@@ -228,6 +235,7 @@ describe('http/authorize/middleware/evaluate', function() {
               id: 's6BhdRkqt3',
               name: 'Example Client'
             };
+            req.oauth2.req = {};
             
             response = res;
           })
@@ -253,8 +261,8 @@ describe('http/authorize/middleware/evaluate', function() {
       });
       
       it('should dispatch to prompt', function() {
-        expect(prompts.get).to.have.been.calledOnceWith('login');
-        expect(prompt).to.have.been.calledOnceWith(request, response);
+        expect(prompts.dispatch).to.have.been.calledOnceWith('login');
+        //expect(prompt).to.have.been.calledOnceWith(request, response);
       });
       
       it('should redirect', function() {
