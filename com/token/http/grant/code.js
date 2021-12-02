@@ -36,6 +36,7 @@ exports = module.exports = function(ats, acs, logger, C) {
         // TODO: Pass self trust store to token verify, using list of issuers like `ca` to Node's http
         // module
 
+        // TODO: Yield msg, rather than claims
         acs.verify(code, function(err, claims) {
           if (err) { return cb(err); }
           
