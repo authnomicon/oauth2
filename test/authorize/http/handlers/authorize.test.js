@@ -1,12 +1,12 @@
 /* global describe, it */
 
-var chai = require('chai');
 var expect = require('chai').expect;
+var chai = require('chai');
 var sinon = require('sinon');
 var factory = require('../../../../com/authorize/http/handlers/authorize');
 
 
-describe('http/authorize/handlers/authorize', function() {
+describe('authorize/http/handlers/authorize', function() {
   
   it('should export factory function', function() {
     expect(factory).to.be.a('function');
@@ -73,6 +73,12 @@ describe('http/authorize/handlers/authorize', function() {
         };
       }
       
+      function parseCookies() {
+        return function(req, res, next) {
+          next();
+        };
+      }
+      
       var authenticateSpy = sinon.spy(authenticate);
       var stateSpy = sinon.spy(state);
       var sessionSpy = sinon.spy(session);
@@ -81,7 +87,7 @@ describe('http/authorize/handlers/authorize', function() {
       var request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients, parseCookies);
         
         chai.express.use(handler)
           .request(function(req, res) {
@@ -151,6 +157,12 @@ describe('http/authorize/handlers/authorize', function() {
         };
       }
       
+      function parseCookies() {
+        return function(req, res, next) {
+          next();
+        };
+      }
+      
       var authenticateSpy = sinon.spy(authenticate);
       var stateSpy = sinon.spy(state);
       var sessionSpy = sinon.spy(session);
@@ -159,7 +171,7 @@ describe('http/authorize/handlers/authorize', function() {
       var request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients, parseCookies);
         
         chai.express.use(handler)
           .request(function(req, res) {
@@ -229,6 +241,12 @@ describe('http/authorize/handlers/authorize', function() {
         };
       }
       
+      function parseCookies() {
+        return function(req, res, next) {
+          next();
+        };
+      }
+      
       var authenticateSpy = sinon.spy(authenticate);
       var stateSpy = sinon.spy(state);
       var sessionSpy = sinon.spy(session);
@@ -237,7 +255,7 @@ describe('http/authorize/handlers/authorize', function() {
       var request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients, parseCookies);
         
         chai.express.use(handler)
           .request(function(req, res) {
@@ -302,6 +320,12 @@ describe('http/authorize/handlers/authorize', function() {
         };
       }
       
+      function parseCookies() {
+        return function(req, res, next) {
+          next();
+        };
+      }
+      
       var authenticateSpy = sinon.spy(authenticate);
       var stateSpy = sinon.spy(state);
       var sessionSpy = sinon.spy(session);
@@ -310,7 +334,7 @@ describe('http/authorize/handlers/authorize', function() {
       var error, request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients, parseCookies);
         
         chai.express.use(handler)
           .request(function(req, res) {
@@ -376,6 +400,12 @@ describe('http/authorize/handlers/authorize', function() {
         };
       }
       
+      function parseCookies() {
+        return function(req, res, next) {
+          next();
+        };
+      }
+      
       var authenticateSpy = sinon.spy(authenticate);
       var stateSpy = sinon.spy(state);
       var sessionSpy = sinon.spy(session);
@@ -384,7 +414,7 @@ describe('http/authorize/handlers/authorize', function() {
       var error, request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients, parseCookies);
         
         chai.express.use(handler)
           .request(function(req, res) {
@@ -451,6 +481,12 @@ describe('http/authorize/handlers/authorize', function() {
         };
       }
       
+      function parseCookies() {
+        return function(req, res, next) {
+          next();
+        };
+      }
+      
       var authenticateSpy = sinon.spy(authenticate);
       var stateSpy = sinon.spy(state);
       var sessionSpy = sinon.spy(session);
@@ -459,7 +495,7 @@ describe('http/authorize/handlers/authorize', function() {
       var error, request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients, parseCookies);
         
         chai.express.use(handler)
           .request(function(req, res) {
@@ -529,6 +565,12 @@ describe('http/authorize/handlers/authorize', function() {
         };
       }
       
+      function parseCookies() {
+        return function(req, res, next) {
+          next();
+        };
+      }
+      
       var authenticateSpy = sinon.spy(authenticate);
       var stateSpy = sinon.spy(state);
       var sessionSpy = sinon.spy(session);
@@ -537,7 +579,7 @@ describe('http/authorize/handlers/authorize', function() {
       var error, request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients,  parseCookies);
         
         chai.express.use(handler)
           .request(function(req, res) {
@@ -607,6 +649,12 @@ describe('http/authorize/handlers/authorize', function() {
         };
       }
       
+      function parseCookies() {
+        return function(req, res, next) {
+          next();
+        };
+      }
+      
       var authenticateSpy = sinon.spy(authenticate);
       var stateSpy = sinon.spy(state);
       var sessionSpy = sinon.spy(session);
@@ -615,7 +663,7 @@ describe('http/authorize/handlers/authorize', function() {
       var error, request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients, parseCookies);
         
         chai.express.use(handler)
           .request(function(req, res) {
@@ -677,6 +725,12 @@ describe('http/authorize/handlers/authorize', function() {
         };
       }
       
+      function parseCookies() {
+        return function(req, res, next) {
+          next();
+        };
+      }
+      
       var authenticateSpy = sinon.spy(authenticate);
       var stateSpy = sinon.spy(state);
       var sessionSpy = sinon.spy(session);
@@ -685,7 +739,7 @@ describe('http/authorize/handlers/authorize', function() {
       var error, request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients, parseCookies);
         
         chai.express.use(handler)
           .request(function(req, res) {

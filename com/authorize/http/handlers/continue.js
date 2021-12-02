@@ -1,6 +1,7 @@
-exports = module.exports = function(evaluate, server, authenticate, state, session) {
+exports = module.exports = function(evaluate, server, authenticate, state, session, parseCookies) {
   
   return [
+    parseCookies(),
     session(),
     state(),
     authenticate([ 'session' ], { multi: true }),
@@ -21,5 +22,6 @@ exports['@require'] = [
   '../../../http/server',
   'http://i.bixbyjs.org/http/middleware/authenticate',
   'http://i.bixbyjs.org/http/middleware/state',
-  'http://i.bixbyjs.org/http/middleware/session'
+  'http://i.bixbyjs.org/http/middleware/session',
+  'http://i.bixbyjs.org/http/middleware/parseCookies'
 ];

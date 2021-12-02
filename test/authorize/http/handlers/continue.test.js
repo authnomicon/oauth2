@@ -1,16 +1,12 @@
 /* global describe, it */
 
-var chai = require('chai');
 var expect = require('chai').expect;
+var chai = require('chai');
 var sinon = require('sinon');
 var factory = require('../../../../com/authorize/http/handlers/continue');
 
 
-describe('http/authorize/handlers/continue', function() {
-  
-  it('should export factory function', function() {
-    expect(factory).to.be.a('function');
-  });
+describe('authorize/http/handlers/continue', function() {
   
   it('should be annotated', function() {
     expect(factory['@implements']).to.be.undefined;
@@ -57,6 +53,12 @@ describe('http/authorize/handlers/continue', function() {
         };
       }
       
+      function parseCookies() {
+        return function(req, res, next) {
+          next();
+        };
+      }
+      
       var authenticateSpy = sinon.spy(authenticate);
       var stateSpy = sinon.spy(state);
       var sessionSpy = sinon.spy(session);
@@ -65,7 +67,7 @@ describe('http/authorize/handlers/continue', function() {
       var request, response;
       
       before(function(done) {
-        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy);
+        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, parseCookies);
         
         chai.express.use(handler)
           .request(function(req, res) {

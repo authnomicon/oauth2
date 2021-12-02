@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Authorization code grant loads token response parameter extensions and extends
-the response with parameters yield by extensions.
+the response with parameters yielded by extensions.
 - Added `scope` property to `msg` argument passed to `AccessTokenService#issue()`.
 - Added `issuer` property to `msg` argument passed to `AccessTokenService#issue()`.
 - Added `authContext` property to `msg` argument passed to `AccessTokenService#issue()`.
@@ -21,6 +21,8 @@ all parameters in the authorization request.
 `scope` property, rather than `grant.scope`.
 - Simplifed authorization code exchange validation of redirect URI based on
 `claims.redirectURI`, rather than more complicated `claims.confirmation`.
+- `/authorize` and `/authorize/continue` endpoints parse cookies, to facilitate
+implementation of [OpenID Connect Session Management](https://openid.net/specs/openid-connect-session-1_0.html).
 
 ### Removed
 - Removed `responseType`, `scope`, and `state` properties from transaction state
