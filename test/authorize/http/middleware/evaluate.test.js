@@ -23,70 +23,56 @@ describe('authorize/http/middleware/evaluate', function() {
       }
     };
     
-    describe.skip('permitting access', function() {
+    it('permitting access', function(done) {
       var listener = sinon.spy(function(req, res) {
         res.permit();
       });
       
       var request, response;
       
-      before(function() {
-        sinon.spy(server, '_respond');
-      });
+      var prompts = new Object();
+      
+      var handler = factory(prompts, listener, server);
+      
+      chai.express.use([ handler ])
+        .request(function(req, res) {
+          request = req;
+          req.state = {};
+          req.state.complete = sinon.spy();
+          req.oauth2 = {};
+          req.oauth2.client = {
+            id: 's6BhdRkqt3',
+            name: 'Example Client'
+          };
+          req.oauth2.user = {
+            id: '248289761001',
+            displayName: 'Jane Doe'
+          };
+          req.oauth2.req = {};
+          
+          response = res;
+        })
+        .finish(function() {
+          expect(listener).to.have.been.calledOnce;
+          expect(listener.firstCall.args[0]).to.be.an.instanceOf(Request);
+          expect(listener.firstCall.args[0].client).to.deep.equal({
+            id: 's6BhdRkqt3',
+            name: 'Example Client'
+          });
+          expect(listener.firstCall.args[0].user).to.deep.equal({
+            id: '248289761001',
+            displayName: 'Jane Doe'
+          });
+          expect(listener.firstCall.args[1]).to.be.an.instanceOf(Response);
+          
+          expect(request.state.complete).to.have.been.called;
+          
+          done();
+        })
+        .listen();
       
       /*
-      after(function() {
-        server._respond.restore();
-      });
-      */
-      
-      before(function(done) {
-        var prompts = new Object();
-        
-        var handler = factory(prompts, listener, server);
-        
-        chai.express.use([ handler ])
-          .request(function(req, res) {
-            request = req;
-            req.state = {};
-            req.state.complete = sinon.spy();
-            req.oauth2 = {};
-            req.oauth2.client = {
-              id: 's6BhdRkqt3',
-              name: 'Example Client'
-            };
-            req.oauth2.user = {
-              id: '248289761001',
-              displayName: 'Jane Doe'
-            };
-            
-            response = res;
-          })
-          .finish(function() {
-            done();
-          })
-          .listen();
-      });
-      
-      it('should call listener', function() {
-        expect(listener).to.have.been.calledOnce;
-        expect(listener.firstCall.args[0]).to.be.an.instanceOf(Request);
-        expect(listener.firstCall.args[0].client).to.deep.equal({
-          id: 's6BhdRkqt3',
-          name: 'Example Client'
-        });
-        expect(listener.firstCall.args[0].user).to.deep.equal({
-          id: '248289761001',
-          displayName: 'Jane Doe'
-        });
-        expect(listener.firstCall.args[1]).to.be.an.instanceOf(Response);
-      });
-      
-      it('should complete state', function() {
-        expect(request.state.complete).to.have.been.called;
-      });
-      
-      it('should respond', function() {
+      it.skip('should respond', function() {
         expect(server._respond).to.have.been.calledOnce;
         expect(server._respond).to.have.been.calledWith({
           client: {
@@ -103,6 +89,7 @@ describe('authorize/http/middleware/evaluate', function() {
           },
         }, response);
       });
+      */
     }); // permitting access
     
     it('permitting access with scope', function(done) {
