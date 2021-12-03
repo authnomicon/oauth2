@@ -250,57 +250,25 @@ describe('authorize/http/handlers/authorize', function() {
         name: 'Example Client'
       });
       
-      function authenticate(idp, options) {
-        return function(req, res, next) {
-          req.user = { id: '248289761001', displayName: 'Jane Doe' };
-          next();
-        };
-      }
-      
-      function state() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      function session() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      function parseCookies() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      
-      var error, request, response;
       
       var handler = factory(processRequest, server, authenticate, state, session, clients, parseCookies);
       
       chai.express.use(handler)
         .request(function(req, res) {
-          request = req;
           req.query = {
             client_id: 's6BhdRkqt3',
             redirect_uri: 'https://client.example.com/cb'
           };
-          
-          response = res;
         })
-        .next(function(err) {
-          error = err;
-          
+        .next(function(err, req, res) {
           expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
           
-          expect(request.oauth2).to.be.undefined;
+          expect(req.oauth2).to.be.undefined;
           
-          expect(error).to.be.an.instanceOf(Error);
-          expect(error.message).to.equal('Client has no registered redirect URIs');
-          expect(error.code).to.equal('unauthorized_client');
-          expect(error.status).to.equal(403);
+          expect(err).to.be.an.instanceOf(Error);
+          expect(err.message).to.equal('Client has no registered redirect URIs');
+          expect(err.code).to.equal('unauthorized_client');
+          expect(err.status).to.equal(403);
           
           done();
         })
