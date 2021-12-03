@@ -85,7 +85,7 @@ describe('authorize/http/handlers/authorize', function() {
   
   describe('handler', function() {
     
-    it('processing a valid authorization request', function(done) {
+    it('should evaluate authorization request', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -104,7 +104,6 @@ describe('authorize/http/handlers/authorize', function() {
         })
         .finish(function() {
           expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
-          
           expect(this.req.oauth2.client).to.deep.equal({
             id: 's6BhdRkqt3',
             name: 'Example Client',
@@ -115,20 +114,18 @@ describe('authorize/http/handlers/authorize', function() {
           
           expect(this.statusCode).to.equal(302);
           expect(this.getHeader('Location')).to.equal('/consent');
-          
           done()
         })
         .listen();
-    }); // processing a valid authorization request
+    }); // should evaluate authorization request
     
-    it('processing a valid authorization request where multiple redirect URIs are registered', function(done) {
+    it('should evaluate authorization request from client with multiple redirect URIs', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
         name: 'Example Client',
         redirectURIs: [ 'https://client.example.com/cb', 'https://client.example.com/cb2' ]
       });
-      
       
       var handler = factory(evaluate, clients, server, authenticate, state, session, parseCookies);
       
@@ -141,7 +138,6 @@ describe('authorize/http/handlers/authorize', function() {
         })
         .finish(function() {
           expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
-          
           expect(this.req.oauth2.client).to.deep.equal({
             id: 's6BhdRkqt3',
             name: 'Example Client',
@@ -152,13 +148,12 @@ describe('authorize/http/handlers/authorize', function() {
           
           expect(this.statusCode).to.equal(302);
           expect(this.getHeader('Location')).to.equal('/consent');
-          
           done()
         })
         .listen();
-    }); // processing a valid authorization request where multiple redirect URIs are registered
+    }); // should evaluate authorization request from client with multiple redirect URIs
     
-    it('processing a valid authorization request where redirect URI is ommitted and only one is registered', function(done) {
+    it('should evaluate authorization request from client with single redirect URIs that omits redirect URI parameter', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -176,7 +171,6 @@ describe('authorize/http/handlers/authorize', function() {
         })
         .finish(function() {
           expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
-          
           expect(this.req.oauth2.client).to.deep.equal({
             id: 's6BhdRkqt3',
             name: 'Example Client',
@@ -187,11 +181,10 @@ describe('authorize/http/handlers/authorize', function() {
           
           expect(this.statusCode).to.equal(302);
           expect(this.getHeader('Location')).to.equal('/consent');
-          
           done()
         })
         .listen();
-    }); // processing a valid authorization request where redirect URI is ommitted and only one is registered
+    }); // should evaluate authorization request from client with single redirect URIs that omits redirect URI parameter
     
     it('processing an invalid authorization request sent by unknown client', function(done) {
       var clients = new Object();
