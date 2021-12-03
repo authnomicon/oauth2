@@ -16,6 +16,22 @@ describe('authorize/http/handlers/authorize', function() {
   
   var server = {
     authorization: function(validate, immediate) {
+      return function(req, res, next) {
+        validate(req.query.client_id, req.query.redirect_uri, function(err, client, redirectURI, webOrigin) {
+          if (err) { return next(err); }
+          req.oauth2 = {
+            client: client,
+            redirectURI: redirectURI,
+            webOrigin: webOrigin
+          };
+        
+          immediate(req.oauth2, function(err, allow) {
+            if (err) { return next(err); }
+            if (allow) { return res.redirect(req.oauth2.redirectURI); }
+            return next();
+          })
+        })
+      };
     }
   };
   
@@ -119,18 +135,7 @@ describe('authorize/http/handlers/authorize', function() {
         };
       }
       
-      function parseCookies() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      var authenticateSpy = sinon.spy(authenticate);
-      var stateSpy = sinon.spy(state);
-      var sessionSpy = sinon.spy(session);
-      
-      
-      var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients, parseCookies);
+      var handler = factory(processRequest, server, authenticate, state, session, clients, parseCookies);
       
       chai.express.use(handler)
         .request(function(req, res) {
@@ -140,9 +145,6 @@ describe('authorize/http/handlers/authorize', function() {
           };
         })
         .finish(function() {
-          expect(stateSpy).to.be.calledOnceWith({ external: true });
-          expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
-          
           expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
           
           expect(this.req.oauth2.client).to.deep.equal({
