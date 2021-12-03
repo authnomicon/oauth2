@@ -181,7 +181,7 @@ describe('authorize/http/handlers/authorize', function() {
         .listen();
     }); // processing a valid authorization request where multiple redirect URIs are registered
     
-    describe('processing a valid authorization request where redirect URI is ommitted and only one is registered', function() {
+    it('processing a valid authorization request where redirect URI is ommitted and only one is registered', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -189,79 +189,31 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: [ 'https://client.example.com/cb' ]
       });
       
-      function authenticate(idp, options) {
-        return function(req, res, next) {
-          req.user = { id: '248289761001', displayName: 'Jane Doe' };
-          next();
-        };
-      }
+      var handler = factory(processRequest, server, authenticate, state, session, clients, parseCookies);
       
-      function state() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      function session() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      function parseCookies() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      var authenticateSpy = sinon.spy(authenticate);
-      var stateSpy = sinon.spy(state);
-      var sessionSpy = sinon.spy(session);
-      
-      
-      var request, response;
-      
-      before(function(done) {
-        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients, parseCookies);
-        
-        chai.express.use(handler)
-          .request(function(req, res) {
-            request = req;
-            req.query = {
-              client_id: 's6BhdRkqt3'
-            };
-            
-            response = res;
-          })
-          .finish(function() {
-            done()
-          })
-          .listen();
-      });
-      
-      it('should setup middleware', function() {
-        expect(stateSpy).to.be.calledOnceWith({ external: true });
-        expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
-      });
-      
-      it('should query directory', function() {
-        expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
-      });
-      
-      it('should initialize transaction', function() {
-        expect(request.oauth2.client).to.deep.equal({
-          id: 's6BhdRkqt3',
-          name: 'Example Client',
-          redirectURIs: [ 'https://client.example.com/cb' ]
-        });
-        expect(request.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb');
-        expect(request.oauth2.webOrigin).to.be.undefined;
-      });
-      
-      it('should prompt for consent', function() {
-        expect(response.statusCode).to.equal(302);
-        expect(response.getHeader('Location')).to.equal('/consent');
-      });
+      chai.express.use(handler)
+        .request(function(req, res) {
+          req.query = {
+            client_id: 's6BhdRkqt3'
+          };
+        })
+        .finish(function() {
+          expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
+          
+          expect(this.req.oauth2.client).to.deep.equal({
+            id: 's6BhdRkqt3',
+            name: 'Example Client',
+            redirectURIs: [ 'https://client.example.com/cb' ]
+          });
+          expect(this.req.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb');
+          expect(this.req.oauth2.webOrigin).to.be.undefined;
+          
+          expect(this.statusCode).to.equal(302);
+          expect(this.getHeader('Location')).to.equal('/consent');
+          
+          done()
+        })
+        .listen();
     }); // processing a valid authorization request where redirect URI is ommitted and only one is registered
     
     describe('processing an invalid authorization request sent by unknown client', function() {
