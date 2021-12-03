@@ -85,29 +85,6 @@ describe('authorize/http/handlers/authorize', function() {
   
   describe('handler', function() {
     
-    var server = {
-      authorization: function(validate, immediate) {
-      
-        return function(req, res, next) {
-          validate(req.query.client_id, req.query.redirect_uri, function(err, client, redirectURI, webOrigin) {
-            if (err) { return next(err); }
-            req.oauth2 = {
-              client: client,
-              redirectURI: redirectURI,
-              webOrigin: webOrigin
-            };
-          
-            immediate(req.oauth2, function(err, allow) {
-              if (err) { return next(err); }
-              if (allow) { return res.redirect(req.oauth2.redirectURI); }
-              return next();
-            })
-          })
-        };
-      }
-    };
-    
-    
     it('processing a valid authorization request', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
