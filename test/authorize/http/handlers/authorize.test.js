@@ -13,6 +13,56 @@ describe('authorize/http/handlers/authorize', function() {
     expect(factory['@singleton']).to.be.undefined;
   });
   
+  
+  var server = {
+    authorization: function(validate, immediate) {
+    }
+  };
+  
+  function authenticate() {
+    return function(req, res, next) {
+      next();
+    };
+  }
+  
+  function state() {
+    return function(req, res, next) {
+      next();
+    };
+  }
+  
+  function session() {
+    return function(req, res, next) {
+      next();
+    };
+  }
+  
+  function parseCookies() {
+    return function(req, res, next) {
+      next();
+    };
+  }
+  
+  it('should create handler', function() {
+    function evaluate(req, res, next) {};
+    var authenticateSpy = sinon.spy(authenticate);
+    var stateSpy = sinon.spy(state);
+    var sessionSpy = sinon.spy(session);
+    var parseCookiesSpy = sinon.spy(parseCookies);
+    
+    var handler = factory(evaluate, server, authenticateSpy, stateSpy, sessionSpy, null, parseCookiesSpy);
+    
+    expect(parseCookiesSpy).to.be.calledOnce;
+    expect(sessionSpy).to.be.calledOnce;
+    expect(sessionSpy).to.be.calledAfter(parseCookiesSpy);
+    expect(stateSpy).to.be.calledOnce;
+    expect(stateSpy).to.be.calledWithExactly({ external: true });
+    expect(stateSpy).to.be.calledAfter(sessionSpy);
+    expect(authenticateSpy).to.be.calledOnce;
+    expect(authenticateSpy).to.be.calledWithExactly([ 'session', 'anonymous' ], { multi: true });
+    expect(authenticateSpy).to.be.calledAfter(stateSpy);
+  });
+  
   describe('handler', function() {
     
     var server = {
