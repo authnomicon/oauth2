@@ -331,7 +331,7 @@ describe('authorize/http/handlers/authorize', function() {
         .listen();
     }); // should reject request from client with multiple redirect URIs that omits redirect URI parameter
     
-    it('encountering error while querying directory', function(done) {
+    it('should error when error is encountered while querying directory', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(new Error('something went wrong'));
       
@@ -344,17 +344,12 @@ describe('authorize/http/handlers/authorize', function() {
           };
         })
         .next(function(err, req, res) {
-          expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
-          
-          expect(req.oauth2).to.be.undefined;
-          
           expect(err).to.be.an.instanceOf(Error);
           expect(err.message).to.equal('something went wrong');
-          
           done();
         })
         .listen();
-    }); // processing an invalid authorization request omitting redirect URI
+    }); // should error when error is encountered while querying directory
     
   }); // handler
   
