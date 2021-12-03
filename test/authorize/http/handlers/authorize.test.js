@@ -153,7 +153,7 @@ describe('authorize/http/handlers/authorize', function() {
         .listen();
     }); // should evaluate authorization request from client with multiple redirect URIs
     
-    it('should evaluate authorization request from client with single redirect URIs that omits redirect URI parameter', function(done) {
+    it('should evaluate authorization request from client with single redirect URI that omits redirect URI parameter', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -184,9 +184,9 @@ describe('authorize/http/handlers/authorize', function() {
           done()
         })
         .listen();
-    }); // should evaluate authorization request from client with single redirect URIs that omits redirect URI parameter
+    }); // should evaluate authorization request from client with single redirect URI that omits redirect URI parameter
     
-    it('processing an invalid authorization request sent by unknown client', function(done) {
+    it('should reject request from unregistered client', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null);
       
@@ -200,25 +200,23 @@ describe('authorize/http/handlers/authorize', function() {
           };
         })
         .next(function(err, req, res) {
-          expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
-          
           expect(err).to.be.an.instanceOf(oauth2orize.AuthorizationError);
           expect(err.message).to.equal('Unauthorized client');
           expect(err.code).to.equal('unauthorized_client');
           expect(err.status).to.equal(403);
           
+          expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
           done();
         })
         .listen();
-    }); // processing an invalid authorization request sent by unknown client
+    }); // should reject request from unregistered client
     
-    it('processing an invalid authorization request sent by client with no registered redirect URIs', function(done) {
+    it('should reject request request from client with no registered redirect URIs', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
         name: 'Example Client'
       });
-      
       
       var handler = factory(evaluate, clients, server, authenticate, state, session, parseCookies);
       
@@ -230,21 +228,18 @@ describe('authorize/http/handlers/authorize', function() {
           };
         })
         .next(function(err, req, res) {
-          expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
-          
-          expect(req.oauth2).to.be.undefined;
-          
-          expect(err).to.be.an.instanceOf(Error);
+          expect(err).to.be.an.instanceOf(oauth2orize.AuthorizationError);
           expect(err.message).to.equal('Client has no registered redirect URIs');
           expect(err.code).to.equal('unauthorized_client');
           expect(err.status).to.equal(403);
           
+          expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
           done();
         })
         .listen();
-    }); // processing an invalid authorization request sent by client with no registered redirect URIs
+    }); // should reject request request from client with no registered redirect URIs
     
-    it('processing an invalid authorization request sent by client with empty array of redirect URIs', function(done) {
+    it('should reject request request from client with no registered redirect URIs as indicated by empty array', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -262,21 +257,16 @@ describe('authorize/http/handlers/authorize', function() {
           };
         })
         .next(function(err, req, res) {
-          error = err;
-          
-          expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
-          
-          expect(req.oauth2).to.be.undefined;
-          
           expect(err).to.be.an.instanceOf(Error);
           expect(err.message).to.equal('Client has no registered redirect URIs');
           expect(err.code).to.equal('unauthorized_client');
           expect(err.status).to.equal(403);
           
+          expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
           done();
         })
         .listen();
-    }); // processing an invalid authorization request sent by client with empty array of redirect URIs
+    }); // should reject request request from client with no registered redirect URIs as indicated by empty array
     
     it('processing an invalid authorization request using unregistered redirect URI', function(done) {
       var clients = new Object();
