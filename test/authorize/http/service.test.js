@@ -4,7 +4,7 @@ var expect = require('chai').expect;
 var factory = require('../../../com/authorize/http/service');
 
 
-describe('http/authorize/service', function() {
+describe('authorize/http/service', function() {
   
   it('should be annotated', function() {
     expect(factory['@implements']).to.equal('http://i.bixbyjs.org/http/Service');
