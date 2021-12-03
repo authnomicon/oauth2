@@ -243,7 +243,7 @@ describe('authorize/http/handlers/authorize', function() {
         .listen();
     }); // processing an invalid authorization request sent by unknown client
     
-    describe('processing an invalid authorization request sent by client with no registered redirect URIs', function() {
+    it('processing an invalid authorization request sent by client with no registered redirect URIs', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -275,52 +275,36 @@ describe('authorize/http/handlers/authorize', function() {
         };
       }
       
-      var authenticateSpy = sinon.spy(authenticate);
-      var stateSpy = sinon.spy(state);
-      var sessionSpy = sinon.spy(session);
-      
       
       var error, request, response;
       
-      before(function(done) {
-        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients, parseCookies);
-        
-        chai.express.use(handler)
-          .request(function(req, res) {
-            request = req;
-            req.query = {
-              client_id: 's6BhdRkqt3',
-              redirect_uri: 'https://client.example.com/cb'
-            };
-            
-            response = res;
-          })
-          .next(function(err) {
-            error = err;
-            done();
-          })
-          .listen();
-      });
+      var handler = factory(processRequest, server, authenticate, state, session, clients, parseCookies);
       
-      it('should setup middleware', function() {
-        expect(stateSpy).to.be.calledOnceWith({ external: true });
-        expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
-      });
-      
-      it('should query directory', function() {
-        expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
-      });
-      
-      it('should not initialize transaction', function() {
-        expect(request.oauth2).to.be.undefined;
-      });
-      
-      it('should error', function() {
-        expect(error).to.be.an.instanceOf(Error);
-        expect(error.message).to.equal('Client has no registered redirect URIs');
-        expect(error.code).to.equal('unauthorized_client');
-        expect(error.status).to.equal(403);
-      });
+      chai.express.use(handler)
+        .request(function(req, res) {
+          request = req;
+          req.query = {
+            client_id: 's6BhdRkqt3',
+            redirect_uri: 'https://client.example.com/cb'
+          };
+          
+          response = res;
+        })
+        .next(function(err) {
+          error = err;
+          
+          expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
+          
+          expect(request.oauth2).to.be.undefined;
+          
+          expect(error).to.be.an.instanceOf(Error);
+          expect(error.message).to.equal('Client has no registered redirect URIs');
+          expect(error.code).to.equal('unauthorized_client');
+          expect(error.status).to.equal(403);
+          
+          done();
+        })
+        .listen();
     }); // processing an invalid authorization request sent by client with no registered redirect URIs
     
     describe('processing an invalid authorization request sent by client with empty array of redirect URIs', function() {
