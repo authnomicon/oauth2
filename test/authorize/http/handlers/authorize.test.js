@@ -163,7 +163,7 @@ describe('authorize/http/handlers/authorize', function() {
         .listen();
     }); // processing a valid authorization request
     
-    describe('processing a valid authorization request where multiple redirect URIs are registered', function() {
+    it('processing a valid authorization request where multiple redirect URIs are registered', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -190,61 +190,33 @@ describe('authorize/http/handlers/authorize', function() {
         };
       }
       
-      function parseCookies() {
-        return function(req, res, next) {
-          next();
-        };
-      }
       
-      var authenticateSpy = sinon.spy(authenticate);
-      var stateSpy = sinon.spy(state);
-      var sessionSpy = sinon.spy(session);
+      var handler = factory(processRequest, server, authenticate, state, session, clients, parseCookies);
       
-      
-      var request, response;
-      
-      before(function(done) {
-        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients, parseCookies);
-        
-        chai.express.use(handler)
-          .request(function(req, res) {
-            request = req;
-            req.query = {
-              client_id: 's6BhdRkqt3',
-              redirect_uri: 'https://client.example.com/cb2'
-            };
-            
-            response = res;
-          })
-          .finish(function() {
-            done()
-          })
-          .listen();
-      });
-      
-      it('should setup middleware', function() {
-        expect(stateSpy).to.be.calledOnceWith({ external: true });
-        expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
-      });
-      
-      it('should query directory', function() {
-        expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
-      });
-      
-      it('should initialize transaction', function() {
-        expect(request.oauth2.client).to.deep.equal({
-          id: 's6BhdRkqt3',
-          name: 'Example Client',
-          redirectURIs: [ 'https://client.example.com/cb', 'https://client.example.com/cb2' ]
-        });
-        expect(request.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb2');
-        expect(request.oauth2.webOrigin).to.be.undefined;
-      });
-      
-      it('should prompt for consent', function() {
-        expect(response.statusCode).to.equal(302);
-        expect(response.getHeader('Location')).to.equal('/consent');
-      });
+      chai.express.use(handler)
+        .request(function(req, res) {
+          req.query = {
+            client_id: 's6BhdRkqt3',
+            redirect_uri: 'https://client.example.com/cb2'
+          };
+        })
+        .finish(function() {
+          expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
+          
+          expect(this.req.oauth2.client).to.deep.equal({
+            id: 's6BhdRkqt3',
+            name: 'Example Client',
+            redirectURIs: [ 'https://client.example.com/cb', 'https://client.example.com/cb2' ]
+          });
+          expect(this.req.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb2');
+          expect(this.req.oauth2.webOrigin).to.be.undefined;
+          
+          expect(this.statusCode).to.equal(302);
+          expect(this.getHeader('Location')).to.equal('/consent');
+          
+          done()
+        })
+        .listen();
     }); // processing a valid authorization request where multiple redirect URIs are registered
     
     describe('processing a valid authorization request where redirect URI is ommitted and only one is registered', function() {
