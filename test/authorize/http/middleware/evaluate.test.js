@@ -1,18 +1,14 @@
 /* global describe, it */
 
-var chai = require('chai');
 var expect = require('chai').expect;
+var chai = require('chai');
 var sinon = require('sinon');
 var factory = require('../../../../com/authorize/http/middleware/evaluate');
 var Request = require('../../../../lib/request');
 var Response = require('../../../../lib/response');
 
 
-describe('http/authorize/middleware/evaluate', function() {
-  
-  it('should export factory function', function() {
-    expect(factory).to.be.a('function');
-  });
+describe('authorize/http/middleware/evaluate', function() {
   
   it('should be annotated', function() {
     expect(factory['@implements']).to.be.undefined;
