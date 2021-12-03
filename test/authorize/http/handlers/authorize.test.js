@@ -116,25 +116,6 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: [ 'https://client.example.com/cb' ]
       });
       
-      function authenticate(idp, options) {
-        return function(req, res, next) {
-          req.user = { id: '248289761001', displayName: 'Jane Doe' };
-          next();
-        };
-      }
-      
-      function state() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      function session() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
       var handler = factory(processRequest, server, authenticate, state, session, clients, parseCookies);
       
       chai.express.use(handler)
@@ -170,25 +151,6 @@ describe('authorize/http/handlers/authorize', function() {
         name: 'Example Client',
         redirectURIs: [ 'https://client.example.com/cb', 'https://client.example.com/cb2' ]
       });
-      
-      function authenticate(idp, options) {
-        return function(req, res, next) {
-          req.user = { id: '248289761001', displayName: 'Jane Doe' };
-          next();
-        };
-      }
-      
-      function state() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      function session() {
-        return function(req, res, next) {
-          next();
-        };
-      }
       
       
       var handler = factory(processRequest, server, authenticate, state, session, clients, parseCookies);
