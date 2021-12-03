@@ -85,7 +85,7 @@ describe('authorize/http/handlers/authorize', function() {
   
   describe('handler', function() {
     
-    it('should evaluate authorization request', function(done) {
+    it('should evaluate request', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -117,9 +117,9 @@ describe('authorize/http/handlers/authorize', function() {
           done()
         })
         .listen();
-    }); // should evaluate authorization request
+    }); // should evaluate request
     
-    it('should evaluate authorization request from client with multiple redirect URIs', function(done) {
+    it('should evaluate request from client with multiple redirect URIs', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -151,9 +151,9 @@ describe('authorize/http/handlers/authorize', function() {
           done()
         })
         .listen();
-    }); // should evaluate authorization request from client with multiple redirect URIs
+    }); // should evaluate request from client with multiple redirect URIs
     
-    it('should evaluate authorization request from client with single redirect URI that omits redirect URI parameter', function(done) {
+    it('should evaluate request from client with single redirect URI that omits redirect URI parameter', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -184,7 +184,7 @@ describe('authorize/http/handlers/authorize', function() {
           done()
         })
         .listen();
-    }); // should evaluate authorization request from client with single redirect URI that omits redirect URI parameter
+    }); // should evaluate request from client with single redirect URI that omits redirect URI parameter
     
     it('should reject request from unregistered client', function(done) {
       var clients = new Object();

@@ -76,64 +76,17 @@ describe('authorize/http/handlers/continue', function() {
   
   describe('handler', function() {
     
-    
-    describe('processing request', function() {
-      function authenticate(idp, options) {
-        return function(req, res, next) {
-          req.user = { id: '248289761001', displayName: 'Jane Doe' };
-          next();
-        };
-      }
+    it('should evaluate request', function(done) {
+      var handler = factory(evaluate, server, authenticate, state, session, parseCookies);
       
-      function state() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      function session() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      function parseCookies() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      var authenticateSpy = sinon.spy(authenticate);
-      var stateSpy = sinon.spy(state);
-      var sessionSpy = sinon.spy(session);
-      
-      
-      var request, response;
-      
-      before(function(done) {
-        var handler = factory(evaluate, server, authenticateSpy, stateSpy, sessionSpy, parseCookies);
-        
-        chai.express.use(handler)
-          .request(function(req, res) {
-            request = req;
-            response = res;
-          })
-          .finish(function() {
-            done()
-          })
-          .listen();
-      });
-      
-      it('should setup middleware', function() {
-        expect(stateSpy).to.be.calledOnceWith();
-        expect(authenticateSpy).to.be.calledOnceWith([ 'session' ]);
-      });
-      
-      it('should prompt for consent', function() {
-        expect(response.statusCode).to.equal(302);
-        expect(response.getHeader('Location')).to.equal('/consent');
-      });
-    }); // processing request
+      chai.express.use(handler)
+        .finish(function() {
+          expect(this.statusCode).to.equal(302);
+          expect(this.getHeader('Location')).to.equal('/consent');
+          done()
+        })
+        .listen();
+    }); // should evaluate request
     
   }); // handler
   
