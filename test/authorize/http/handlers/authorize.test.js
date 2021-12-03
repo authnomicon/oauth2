@@ -4,6 +4,7 @@ var expect = require('chai').expect;
 var chai = require('chai');
 var sinon = require('sinon');
 var factory = require('../../../../com/authorize/http/handlers/authorize');
+var oauth2orize = require('oauth2orize');
 
 
 describe('authorize/http/handlers/authorize', function() {
@@ -216,81 +217,30 @@ describe('authorize/http/handlers/authorize', function() {
         .listen();
     }); // processing a valid authorization request where redirect URI is ommitted and only one is registered
     
-    describe('processing an invalid authorization request sent by unknown client', function() {
+    it('processing an invalid authorization request sent by unknown client', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null);
       
-      function authenticate(idp, options) {
-        return function(req, res, next) {
-          req.user = { id: '248289761001', displayName: 'Jane Doe' };
-          next();
-        };
-      }
+      var handler = factory(processRequest, server, authenticate, state, session, clients, parseCookies);
       
-      function state() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      function session() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      function parseCookies() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      var authenticateSpy = sinon.spy(authenticate);
-      var stateSpy = sinon.spy(state);
-      var sessionSpy = sinon.spy(session);
-      
-      
-      var error, request, response;
-      
-      before(function(done) {
-        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients, parseCookies);
-        
-        chai.express.use(handler)
-          .request(function(req, res) {
-            request = req;
-            req.query = {
-              client_id: 's6BhdRkqt3',
-              redirect_uri: 'https://client.example.com/cb'
-            };
-            
-            response = res;
-          })
-          .next(function(err) {
-            error = err;
-            done();
-          })
-          .listen();
-      });
-      
-      it('should setup middleware', function() {
-        expect(stateSpy).to.be.calledOnceWith({ external: true });
-        expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
-      });
-      
-      it('should query directory', function() {
-        expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
-      });
-      
-      it('should not initialize transaction', function() {
-        expect(request.oauth2).to.be.undefined;
-      });
-      
-      it('should error', function() {
-        expect(error).to.be.an.instanceOf(Error);
-        expect(error.message).to.equal('Unauthorized client');
-        expect(error.code).to.equal('unauthorized_client');
-        expect(error.status).to.equal(403);
-      });
+      chai.express.use(handler)
+        .request(function(req, res) {
+          req.query = {
+            client_id: 's6BhdRkqt3',
+            redirect_uri: 'https://client.example.com/cb'
+          };
+        })
+        .next(function(err, req, res) {
+          expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
+          
+          expect(err).to.be.an.instanceOf(oauth2orize.AuthorizationError);
+          expect(err.message).to.equal('Unauthorized client');
+          expect(err.code).to.equal('unauthorized_client');
+          expect(err.status).to.equal(403);
+          
+          done();
+        })
+        .listen();
     }); // processing an invalid authorization request sent by unknown client
     
     describe('processing an invalid authorization request sent by client with no registered redirect URIs', function() {
