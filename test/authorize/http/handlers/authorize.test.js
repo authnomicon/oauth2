@@ -344,7 +344,7 @@ describe('authorize/http/handlers/authorize', function() {
         .listen();
     }); // processing an invalid authorization request using unregistered redirect URI
     
-    describe('processing an invalid authorization request omitting redirect URI', function() {
+    it('processing an invalid authorization request omitting redirect URI', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -355,76 +355,28 @@ describe('authorize/http/handlers/authorize', function() {
         ]
       });
       
-      function authenticate(idp, options) {
-        return function(req, res, next) {
-          req.user = { id: '248289761001', displayName: 'Jane Doe' };
-          next();
-        };
-      }
       
-      function state() {
-        return function(req, res, next) {
-          next();
-        };
-      }
+      var handler = factory(processRequest, server, authenticate, state, session, clients, parseCookies);
       
-      function session() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      function parseCookies() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      var authenticateSpy = sinon.spy(authenticate);
-      var stateSpy = sinon.spy(state);
-      var sessionSpy = sinon.spy(session);
-      
-      
-      var error, request, response;
-      
-      before(function(done) {
-        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients, parseCookies);
-        
-        chai.express.use(handler)
-          .request(function(req, res) {
-            request = req;
-            req.query = {
-              client_id: 's6BhdRkqt3'
-            };
-            
-            response = res;
-          })
-          .next(function(err) {
-            error = err;
-            done();
-          })
-          .listen();
-      });
-      
-      it('should setup middleware', function() {
-        expect(stateSpy).to.be.calledOnceWith({ external: true });
-        expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
-      });
-      
-      it('should query directory', function() {
-        expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
-      });
-      
-      it('should not initialize transaction', function() {
-        expect(request.oauth2).to.be.undefined;
-      });
-      
-      it('should error', function() {
-        expect(error).to.be.an.instanceOf(Error);
-        expect(error.message).to.equal('Missing required parameter: redirect_uri');
-        expect(error.code).to.equal('invalid_request');
-        expect(error.status).to.equal(400);
-      });
+      chai.express.use(handler)
+        .request(function(req, res) {
+          req.query = {
+            client_id: 's6BhdRkqt3'
+          };
+        })
+        .next(function(err, req, res) {
+          expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
+          
+          expect(req.oauth2).to.be.undefined;
+          
+          expect(err).to.be.an.instanceOf(Error);
+          expect(err.message).to.equal('Missing required parameter: redirect_uri');
+          expect(err.code).to.equal('invalid_request');
+          expect(err.status).to.equal(400);
+          
+          done();
+        })
+        .listen();
     }); // processing an invalid authorization request omitting redirect URI
     
     describe('encountering error while querying directory', function() {
