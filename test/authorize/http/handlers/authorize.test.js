@@ -379,78 +379,29 @@ describe('authorize/http/handlers/authorize', function() {
         .listen();
     }); // processing an invalid authorization request omitting redirect URI
     
-    describe('encountering error while querying directory', function() {
+    it('encountering error while querying directory', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(new Error('something went wrong'));
       
-      function authenticate(idp, options) {
-        return function(req, res, next) {
-          req.user = { id: '248289761001', displayName: 'Jane Doe' };
-          next();
-        };
-      }
+      var handler = factory(processRequest, server, authenticate, state, session, clients, parseCookies);
       
-      function state() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      function session() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      function parseCookies() {
-        return function(req, res, next) {
-          next();
-        };
-      }
-      
-      var authenticateSpy = sinon.spy(authenticate);
-      var stateSpy = sinon.spy(state);
-      var sessionSpy = sinon.spy(session);
-      
-      
-      var error, request, response;
-      
-      before(function(done) {
-        var handler = factory(processRequest, server, authenticateSpy, stateSpy, sessionSpy, clients, parseCookies);
-        
-        chai.express.use(handler)
-          .request(function(req, res) {
-            request = req;
-            req.query = {
-              client_id: 's6BhdRkqt3'
-            };
-            
-            response = res;
-          })
-          .next(function(err) {
-            error = err;
-            done();
-          })
-          .listen();
-      });
-      
-      it('should setup middleware', function() {
-        expect(stateSpy).to.be.calledOnceWith({ external: true });
-        expect(authenticateSpy).to.be.calledOnceWith([ 'session', 'anonymous' ]);
-      });
-      
-      it('should query directory', function() {
-        expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
-      });
-      
-      it('should not initialize transaction', function() {
-        expect(request.oauth2).to.be.undefined;
-      });
-      
-      it('should yield error', function() {
-        expect(error).to.be.an.instanceOf(Error);
-        expect(error.message).to.equal('something went wrong');
-      });
+      chai.express.use(handler)
+        .request(function(req, res) {
+          req.query = {
+            client_id: 's6BhdRkqt3'
+          };
+        })
+        .next(function(err, req, res) {
+          expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
+          
+          expect(req.oauth2).to.be.undefined;
+          
+          expect(err).to.be.an.instanceOf(Error);
+          expect(err.message).to.equal('something went wrong');
+          
+          done();
+        })
+        .listen();
     }); // processing an invalid authorization request omitting redirect URI
     
   }); // handler
