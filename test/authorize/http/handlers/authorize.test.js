@@ -211,7 +211,7 @@ describe('authorize/http/handlers/authorize', function() {
         .listen();
     }); // should reject request from unregistered client
     
-    it('should reject request request from client with no registered redirect URIs', function(done) {
+    it('should reject request from client with no registered redirect URIs', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -237,9 +237,9 @@ describe('authorize/http/handlers/authorize', function() {
           done();
         })
         .listen();
-    }); // should reject request request from client with no registered redirect URIs
+    }); // should reject request from client with no registered redirect URIs
     
-    it('should reject request request from client with no registered redirect URIs as indicated by empty array', function(done) {
+    it('should reject request from client with no registered redirect URIs as indicated by empty array', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -257,7 +257,7 @@ describe('authorize/http/handlers/authorize', function() {
           };
         })
         .next(function(err, req, res) {
-          expect(err).to.be.an.instanceOf(Error);
+          expect(err).to.be.an.instanceOf(oauth2orize.AuthorizationError);
           expect(err.message).to.equal('Client has no registered redirect URIs');
           expect(err.code).to.equal('unauthorized_client');
           expect(err.status).to.equal(403);
@@ -266,9 +266,9 @@ describe('authorize/http/handlers/authorize', function() {
           done();
         })
         .listen();
-    }); // should reject request request from client with no registered redirect URIs as indicated by empty array
+    }); // should reject request from client with no registered redirect URIs as indicated by empty array
     
-    it('processing an invalid authorization request using unregistered redirect URI', function(done) {
+    it('should reject request from client using unregistered redirect URI', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -285,25 +285,22 @@ describe('authorize/http/handlers/authorize', function() {
         .request(function(req, res) {
           req.query = {
             client_id: 's6BhdRkqt3',
-            redirect_uri: 'https://client.example.org/cb'
+            redirect_uri: 'https://client.example.net/cb'
           };
         })
         .next(function(err, req, res) {
-          expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
-          
-          expect(req.oauth2).to.be.undefined;
-          
-          expect(err).to.be.an.instanceOf(Error);
+          expect(err).to.be.an.instanceOf(oauth2orize.AuthorizationError);
           expect(err.message).to.equal('Client not permitted to use redirect URI');
           expect(err.code).to.equal('unauthorized_client');
           expect(err.status).to.equal(403);
           
+          expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
           done();
         })
         .listen();
-    }); // processing an invalid authorization request using unregistered redirect URI
+    }); // should reject request from client using unregistered redirect URI
     
-    it('processing an invalid authorization request omitting redirect URI', function(done) {
+    it('should reject request from client with multiple redirect URIs that omits redirect URI parameter', function(done) {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -314,7 +311,6 @@ describe('authorize/http/handlers/authorize', function() {
         ]
       });
       
-      
       var handler = factory(evaluate, clients, server, authenticate, state, session, parseCookies);
       
       chai.express.use(handler)
@@ -324,19 +320,16 @@ describe('authorize/http/handlers/authorize', function() {
           };
         })
         .next(function(err, req, res) {
-          expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
-          
-          expect(req.oauth2).to.be.undefined;
-          
-          expect(err).to.be.an.instanceOf(Error);
+          expect(err).to.be.an.instanceOf(oauth2orize.AuthorizationError);
           expect(err.message).to.equal('Missing required parameter: redirect_uri');
           expect(err.code).to.equal('invalid_request');
           expect(err.status).to.equal(400);
           
+          expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
           done();
         })
         .listen();
-    }); // processing an invalid authorization request omitting redirect URI
+    }); // should reject request from client with multiple redirect URIs that omits redirect URI parameter
     
     it('encountering error while querying directory', function(done) {
       var clients = new Object();
