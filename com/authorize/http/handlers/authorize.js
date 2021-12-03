@@ -14,7 +14,7 @@
  * redirect the user to an invalid redirection URI.
  */
 
-exports = module.exports = function(evaluate, server, authenticate, state, session, clients, parseCookies) {
+exports = module.exports = function(evaluate, clients, server, authenticate, state, session, parseCookies) {
   var oauth2orize = require('oauth2orize')
     , uri = require('url');
   
@@ -81,10 +81,10 @@ exports = module.exports = function(evaluate, server, authenticate, state, sessi
 
 exports['@require'] = [
   '../middleware/evaluate',
+  'http://i.authnomicon.org/oauth2/ClientDirectory',
   '../../../http/server',
   'http://i.bixbyjs.org/http/middleware/authenticate',
   'http://i.bixbyjs.org/http/middleware/state',
   'http://i.bixbyjs.org/http/middleware/session',
-  'http://i.authnomicon.org/oauth2/ClientDirectory',
   'http://i.bixbyjs.org/http/middleware/parseCookies'
 ];

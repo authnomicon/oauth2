@@ -70,7 +70,7 @@ describe('authorize/http/handlers/authorize', function() {
     var sessionSpy = sinon.spy(session);
     var parseCookiesSpy = sinon.spy(parseCookies);
     
-    var handler = factory(evaluate, server, authenticateSpy, stateSpy, sessionSpy, null, parseCookiesSpy);
+    var handler = factory(evaluate, null, server, authenticateSpy, stateSpy, sessionSpy, parseCookiesSpy);
     
     expect(parseCookiesSpy).to.be.calledOnce;
     expect(sessionSpy).to.be.calledOnce;
@@ -116,7 +116,7 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: [ 'https://client.example.com/cb' ]
       });
       
-      var handler = factory(evaluate, server, authenticate, state, session, clients, parseCookies);
+      var handler = factory(evaluate, clients, server, authenticate, state, session, parseCookies);
       
       chai.express.use(handler)
         .request(function(req, res) {
@@ -153,7 +153,7 @@ describe('authorize/http/handlers/authorize', function() {
       });
       
       
-      var handler = factory(evaluate, server, authenticate, state, session, clients, parseCookies);
+      var handler = factory(evaluate, clients, server, authenticate, state, session, parseCookies);
       
       chai.express.use(handler)
         .request(function(req, res) {
@@ -189,7 +189,7 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: [ 'https://client.example.com/cb' ]
       });
       
-      var handler = factory(evaluate, server, authenticate, state, session, clients, parseCookies);
+      var handler = factory(evaluate, clients, server, authenticate, state, session, parseCookies);
       
       chai.express.use(handler)
         .request(function(req, res) {
@@ -220,7 +220,7 @@ describe('authorize/http/handlers/authorize', function() {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null);
       
-      var handler = factory(evaluate, server, authenticate, state, session, clients, parseCookies);
+      var handler = factory(evaluate, clients, server, authenticate, state, session, parseCookies);
       
       chai.express.use(handler)
         .request(function(req, res) {
@@ -250,7 +250,7 @@ describe('authorize/http/handlers/authorize', function() {
       });
       
       
-      var handler = factory(evaluate, server, authenticate, state, session, clients, parseCookies);
+      var handler = factory(evaluate, clients, server, authenticate, state, session, parseCookies);
       
       chai.express.use(handler)
         .request(function(req, res) {
@@ -282,7 +282,7 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: []
       });
       
-      var handler = factory(evaluate, server, authenticate, state, session, clients, parseCookies);
+      var handler = factory(evaluate, clients, server, authenticate, state, session, parseCookies);
       
       chai.express.use(handler)
         .request(function(req, res) {
@@ -319,7 +319,7 @@ describe('authorize/http/handlers/authorize', function() {
         ]
       });
       
-      var handler = factory(evaluate, server, authenticate, state, session, clients,  parseCookies);
+      var handler = factory(evaluate, clients, server, authenticate, state, session, parseCookies);
       
       chai.express.use(handler)
         .request(function(req, res) {
@@ -355,7 +355,7 @@ describe('authorize/http/handlers/authorize', function() {
       });
       
       
-      var handler = factory(evaluate, server, authenticate, state, session, clients, parseCookies);
+      var handler = factory(evaluate, clients, server, authenticate, state, session, parseCookies);
       
       chai.express.use(handler)
         .request(function(req, res) {
@@ -382,7 +382,7 @@ describe('authorize/http/handlers/authorize', function() {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(new Error('something went wrong'));
       
-      var handler = factory(evaluate, server, authenticate, state, session, clients, parseCookies);
+      var handler = factory(evaluate, clients, server, authenticate, state, session, parseCookies);
       
       chai.express.use(handler)
         .request(function(req, res) {
