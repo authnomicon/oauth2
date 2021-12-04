@@ -1,16 +1,17 @@
 /* global describe, it */
 
-var $require = require('proxyquire');
 var expect = require('chai').expect;
+var $require = require('proxyquire');
 var sinon = require('sinon');
 var factory = require('../../../../com/authorize/http/response/code');
 
 
-describe('http/authorize/response/code', function() {
+describe('authorize/http/response/code', function() {
   
   it('should be annotated', function() {
     expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/authorization/http/ResponseType');
     expect(factory['@type']).to.equal('code');
+    expect(factory['@singleton']).to.be.undefined;
   });
   
   it('should create response type without response modes', function(done) {
