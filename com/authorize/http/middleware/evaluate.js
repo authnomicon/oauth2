@@ -30,8 +30,8 @@ exports = module.exports = function(prompts, service, server) {
       if (result === true) {
         // TODO: Introduce support for multiple resource servers, scoped individually (UMA, etc)
         //req.oauth2.res = { permissions: [ { resource: { id: 'userinfo' }, scope: scope } ]};
-        req.oauth2.res = { scope: scope };
-        req.oauth2.res.allow = true;
+        req.oauth2.res = { allow: true };
+        if (scope) { req.oauth2.res.scope = scope; }
         
         // TODO: Ideally use Express's req.hostname here, as it does the trust proxy
         // stuff, but strips the port.   Need to find a solution.

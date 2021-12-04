@@ -15,23 +15,34 @@ describe('authorize/http/middleware/evaluate', function() {
     expect(factory['@singleton']).to.be.undefined;
   });
   
+  
+  var server = {
+    _respond: function(txn, res, cb) {
+      res.end();
+    }
+  };
+  
   describe('handler', function() {
     
-    var server = {
-      _respond: function(txn, res, cb) {
-        res.end();
-      }
-    };
-    
-    it('permitting access', function(done) {
+    it('should permitting access without scope', function(done) {
       var service = sinon.spy(function(req, res) {
+        expect(req).to.be.an.instanceOf(Request);
+        expect(req.client).to.deep.equal({
+          id: 's6BhdRkqt3',
+          name: 'Example Client'
+        });
+        expect(req.prompt).to.deep.equal([]);
+        expect(req.user).to.deep.equal({
+          id: '248289761001',
+          displayName: 'Jane Doe'
+        });
+        expect(res).to.be.an.instanceOf(Response);
+        
         res.permit();
       });
       
-      var prompts = new Object();
-      
       sinon.spy(server, '_respond');
-      var handler = factory(prompts, service, server);
+      var handler = factory(null, service, server);
       
       chai.express.use([ handler ])
         .request(function(req, res) {
@@ -55,25 +66,32 @@ describe('authorize/http/middleware/evaluate', function() {
         })
         .finish(function() {
           expect(service).to.have.been.calledOnce;
-          expect(service.firstCall.args[0]).to.be.an.instanceOf(Request);
-          expect(service.firstCall.args[0].client).to.deep.equal({
-            id: 's6BhdRkqt3',
-            name: 'Example Client'
-          });
-          expect(service.firstCall.args[0].prompt).to.deep.equal([]);
-          expect(service.firstCall.args[0].user).to.deep.equal({
-            id: '248289761001',
-            displayName: 'Jane Doe'
-          });
-          expect(service.firstCall.args[1]).to.be.an.instanceOf(Response);
-          
           expect(this.req.state.complete).to.have.been.calledOnce;
           expect(server._respond).to.have.been.calledOnce;
-          expect(server._respond).to.have.been.calledWith(this.req.oauth2, this);
+          expect(server._respond).to.have.been.calledWith({
+            client: {
+              id: 's6BhdRkqt3',
+              name: 'Example Client'
+            },
+            redirectURI: 'https://client.example.com/cb',
+            req: {
+              type: 'code',
+              clientID: 's6BhdRkqt3'
+            },
+            user: {
+              id: '248289761001',
+              displayName: 'Jane Doe'
+            },
+            res: {
+              allow: true,
+              issuer: 'undefined://undefined',
+              authContext: { sessionID: undefined }
+            }
+          }, this);
           done();
         })
         .listen();
-    }); // permitting access
+    }); // should respond when permitting access
     
     it('permitting access with scope', function(done) {
       var listener = sinon.spy(function(req, res) {

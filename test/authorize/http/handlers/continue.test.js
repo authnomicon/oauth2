@@ -73,7 +73,6 @@ describe('authorize/http/handlers/continue', function() {
     expect(authenticateSpy).to.be.calledAfter(stateSpy);
   });
   
-  
   describe('handler', function() {
     
     it('should evaluate request', function(done) {
