@@ -186,6 +186,7 @@ describe('authorize/http/middleware/evaluate', function() {
       var prompts = new Object();
       prompts.dispatch = sinon.spy(function(name, req, res, next) {
         expect(name).to.equal('login');
+        expect(res.locals).to.deep.equal({});
         
         res.redirect('/login');
       });
