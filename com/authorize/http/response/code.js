@@ -42,7 +42,7 @@ exports = module.exports = function(acs, logger, C) {
             modes[name] = mode;
             logger.info('Loaded response mode for OAuth 2.0 authorization code grant: ' + name);
           });
-      
+          
           return oauth2orize.grant.code({
             modes: modes
           }, function(client, redirectURI, user, ares, areq, locals, cb) {

@@ -31,8 +31,6 @@ describe('authorize/http/response/code', function() {
     container.components = sinon.stub();
     container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
     container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([]);
-    var acs = new Object();
-    acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
     
     var codeSpy = sinon.stub();
     var factory = $require('../../../../com/authorize/http/response/code', {
@@ -41,7 +39,7 @@ describe('authorize/http/response/code', function() {
       }
     });
     
-    factory(acs, logger, container)
+    factory(null, logger, container)
       .then(function(type) {
         expect(codeSpy).to.be.calledOnce;
         expect(codeSpy).to.be.calledWith({ modes: {} });
@@ -50,6 +48,45 @@ describe('authorize/http/response/code', function() {
       .catch(done);
   }); // should create response type without response modes
   
+  it('should create response type with response modes', function(done) {
+    var mode1 = function(){};
+    var mode1Component = new Object();
+    mode1Component.create = sinon.stub().resolves(mode1);
+    mode1Component.a = { '@mode': 'one' };
+    
+    var mode2 = function(){};
+    var mode2Component = new Object();
+    mode2Component.create = sinon.stub().resolves(mode2);
+    mode2Component.a = { '@mode': 'two' };
+    
+    var container = new Object();
+    container.components = sinon.stub();
+    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
+    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([
+      mode1Component,
+      mode2Component
+    ]);
+    
+    var codeSpy = sinon.stub();
+    var factory = $require('../../../../com/authorize/http/response/code', {
+      'oauth2orize': {
+        grant: { code: codeSpy }
+      }
+    });
+    
+    factory(null, logger, container)
+      .then(function(type) {
+        expect(codeSpy).to.be.calledOnce;
+        expect(codeSpy).to.be.calledWith({
+          modes: {
+            one: mode1,
+            two: mode2
+          }
+        });
+        done();
+      })
+      .catch(done);
+  }); // should create response type with response modes
   
   describe('issue', function() {
     var container = new Object();
