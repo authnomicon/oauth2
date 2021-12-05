@@ -1,4 +1,4 @@
-exports = module.exports = function(container, ats, logger) {
+exports = module.exports = function(ats, logger, container) {
   var oauth2orize = require('oauth2orize');
   
   

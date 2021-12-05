@@ -39,7 +39,7 @@ describe('authorize/http/response/token', function() {
       }
     });
     
-    factory(container, logger)
+    factory(null, logger, container)
       .then(function(type) {
         expect(tokenSpy).to.be.calledOnce;
         expect(tokenSpy).to.be.calledWith({ modes: {} });
