@@ -32,7 +32,10 @@ exports = module.exports = function(ats, logger, container) {
         var msg = {};
         msg.client = client;
         msg.user = user;
-        msg.grant = ares;
+        // TODO: Put a grant ID in here somehere
+        // maybe not, since there's no refresh token here?
+        //msg.grant = ares;
+        if (ares.scope) { msg.scope = ares.scope; }
         // TODO: Pass some indicator that this is an implicit flow, so token lifetimes
         //. can be constrained accordingly
         
