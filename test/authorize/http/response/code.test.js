@@ -14,6 +14,18 @@ describe('authorize/http/response/code', function() {
     expect(factory['@singleton']).to.be.undefined;
   });
   
+  
+  var logger = {
+    emergency: function(){},
+    alert: function(){},
+    critical: function(){},
+    error: function(){},
+    warning: function(){},
+    notice: function(){},
+    info: function(){},
+    debug: function(){}
+  };
+  
   it('should create response type without response modes', function(done) {
     var container = new Object();
     container.components = sinon.stub();
@@ -29,7 +41,7 @@ describe('authorize/http/response/code', function() {
       }
     });
     
-    factory(acs, undefined, container)
+    factory(acs, logger, container)
       .then(function(type) {
         expect(codeSpy).to.be.calledOnce;
         expect(codeSpy).to.be.calledWith({ modes: {} });
@@ -58,7 +70,7 @@ describe('authorize/http/response/code', function() {
     beforeEach(function(done) {
       acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
       
-      factory(acs, null, container)
+      factory(acs, logger, container)
         .then(function(type) {
           issue = codeSpy.getCall(0).args[1];
           done();
