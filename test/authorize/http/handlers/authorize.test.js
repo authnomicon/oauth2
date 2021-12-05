@@ -89,7 +89,7 @@ describe('authorize/http/handlers/authorize', function() {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
-        name: 'Example Client',
+        name: 'My Example Client',
         redirectURIs: [ 'https://client.example.com/cb' ]
       });
       
@@ -106,7 +106,7 @@ describe('authorize/http/handlers/authorize', function() {
           expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
           expect(this.req.oauth2.client).to.deep.equal({
             id: 's6BhdRkqt3',
-            name: 'Example Client',
+            name: 'My Example Client',
             redirectURIs: [ 'https://client.example.com/cb' ]
           });
           expect(this.req.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb');
@@ -123,7 +123,7 @@ describe('authorize/http/handlers/authorize', function() {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
-        name: 'Example Client',
+        name: 'My Example Client',
         redirectURIs: [ 'https://client.example.com/cb', 'https://client.example.com/cb2' ]
       });
       
@@ -140,7 +140,7 @@ describe('authorize/http/handlers/authorize', function() {
           expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
           expect(this.req.oauth2.client).to.deep.equal({
             id: 's6BhdRkqt3',
-            name: 'Example Client',
+            name: 'My Example Client',
             redirectURIs: [ 'https://client.example.com/cb', 'https://client.example.com/cb2' ]
           });
           expect(this.req.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb2');
@@ -157,7 +157,7 @@ describe('authorize/http/handlers/authorize', function() {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
-        name: 'Example Client',
+        name: 'My Example Client',
         redirectURIs: [ 'https://client.example.com/cb' ]
       });
       
@@ -173,7 +173,7 @@ describe('authorize/http/handlers/authorize', function() {
           expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
           expect(this.req.oauth2.client).to.deep.equal({
             id: 's6BhdRkqt3',
-            name: 'Example Client',
+            name: 'My Example Client',
             redirectURIs: [ 'https://client.example.com/cb' ]
           });
           expect(this.req.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb');
@@ -215,7 +215,7 @@ describe('authorize/http/handlers/authorize', function() {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
-        name: 'Example Client'
+        name: 'My Example Client'
       });
       
       var handler = factory(evaluate, clients, server, authenticate, state, session, parseCookies);
@@ -243,7 +243,7 @@ describe('authorize/http/handlers/authorize', function() {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
-        name: 'Example Client',
+        name: 'My Example Client',
         redirectURIs: []
       });
       
@@ -272,7 +272,7 @@ describe('authorize/http/handlers/authorize', function() {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
-        name: 'Example Client',
+        name: 'My Example Client',
         redirectURIs: [
           'https://client.example.com/cb',
           'https://client.example.com/cb2'
@@ -304,7 +304,7 @@ describe('authorize/http/handlers/authorize', function() {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
-        name: 'Example Client',
+        name: 'My Example Client',
         redirectURIs: [
           'https://client.example.com/cb',
           'https://client.example.com/cb2'

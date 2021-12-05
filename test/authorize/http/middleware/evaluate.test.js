@@ -29,7 +29,7 @@ describe('authorize/http/middleware/evaluate', function() {
         expect(req).to.be.an.instanceOf(Request);
         expect(req.client).to.deep.equal({
           id: 's6BhdRkqt3',
-          name: 'Example Client'
+          name: 'My Example Client'
         });
         expect(req.prompt).to.deep.equal([]);
         expect(req.user).to.deep.equal({
@@ -51,7 +51,7 @@ describe('authorize/http/middleware/evaluate', function() {
           req.oauth2 = {
             client: {
               id: 's6BhdRkqt3',
-              name: 'Example Client'
+              name: 'My Example Client'
             },
             redirectURI: 'https://client.example.com/cb',
             req: {
@@ -72,7 +72,7 @@ describe('authorize/http/middleware/evaluate', function() {
           expect(server._respond).to.have.been.calledWith({
             client: {
               id: 's6BhdRkqt3',
-              name: 'Example Client'
+              name: 'My Example Client'
             },
             redirectURI: 'https://client.example.com/cb',
             req: {
@@ -100,7 +100,7 @@ describe('authorize/http/middleware/evaluate', function() {
         expect(req).to.be.an.instanceOf(Request);
         expect(req.client).to.deep.equal({
           id: 's6BhdRkqt3',
-          name: 'Example Client'
+          name: 'My Example Client'
         });
         expect(req.prompt).to.deep.equal([]);
         expect(req.user).to.deep.equal({
@@ -122,7 +122,7 @@ describe('authorize/http/middleware/evaluate', function() {
           req.oauth2 = {
             client: {
               id: 's6BhdRkqt3',
-              name: 'Example Client'
+              name: 'My Example Client'
             },
             redirectURI: 'https://client.example.com/cb',
             req: {
@@ -144,7 +144,7 @@ describe('authorize/http/middleware/evaluate', function() {
           expect(server._respond).to.have.been.calledWith({
             client: {
               id: 's6BhdRkqt3',
-              name: 'Example Client'
+              name: 'My Example Client'
             },
             redirectURI: 'https://client.example.com/cb',
             req: {
@@ -174,7 +174,7 @@ describe('authorize/http/middleware/evaluate', function() {
         expect(req).to.be.an.instanceOf(Request);
         expect(req.client).to.deep.equal({
           id: 's6BhdRkqt3',
-          name: 'Example Client'
+          name: 'My Example Client'
         });
         expect(req.prompt).to.deep.equal([]);
         expect(req.user).to.be.undefined;
@@ -201,7 +201,7 @@ describe('authorize/http/middleware/evaluate', function() {
           req.oauth2 = {
             client: {
               id: 's6BhdRkqt3',
-              name: 'Example Client'
+              name: 'My Example Client'
             },
             redirectURI: 'https://client.example.com/cb',
             req: {
