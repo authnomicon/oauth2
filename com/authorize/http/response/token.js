@@ -4,27 +4,52 @@ exports = module.exports = function(ats, logger, C) {
   
   // TODO: require('oauth2orize-idpiframerm')
   
-  var components = C.components('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode');
-  return Promise.all(components.map(function(comp) { return comp.create(); } ))
-    .then(function(plugins) {
-      var modes = {}
-        , name;
-      plugins.forEach(function(mode, i) {
-        name = components[i].a['@mode'];
-        if (name == 'query') {
-          // The default response mode of this response type is the fragment
-          // encoding.  In accordance with security considerations, this
-          // response type must not use query encoding, in order to avoid
-          // leaking sensitive information such as access tokens.
-          //
-          // For more information, refer to:
-          // https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html#Security
-          return;
-        }
+  return Promise.resolve(null)
+    .then(function() {
+      var modes = {};
+    
+      return new Promise(function(resolve, reject) {
+        var components = C.components('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode')
+          , key;
+    
+        (function iter(i) {
+          var component = components[i];
+          if (!component) {
+            return resolve(modes);
+          }
         
-        modes[name] = mode;
-        logger.info('Loaded response mode for OAuth 2.0 implicit grant: ' + name);
+          key = component.a['@mode'];
+          if (key == 'query') {
+            // The default response mode of this response type is the fragment
+            // encoding.  In accordance with security considerations, this
+            // response type must not use query encoding, in order to avoid
+            // leaking sensitive information such as access tokens.
+            //
+            // For more information, refer to:
+            // https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html#Security
+            return iter(i + 1);
+          }
+        
+          component.create()
+            .then(function(mode) {
+              logger.info("Loaded response mode '" + key +  "' for OAuth 2.0 implicit grant");
+              modes[key] = mode;
+              iter(i + 1);
+            }, function(err) {
+              var msg = 'Failed to load response mode for OAuth 2.0 authorization code grant:\n';
+              msg += err.stack;
+              logger.warning(msg);
+              return iter(i + 1);
+            })
+        })(0);
       });
+    })
+    .then(function(modes) {
+      return [ modes ];
+    })
+    .then(function(plugins) {
+      var modes = plugins[0];
+      var extensions = plugins[1];
       
       return oauth2orize.grant.token({
         modes: modes
