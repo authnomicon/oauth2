@@ -29,8 +29,8 @@ describe('authorize/http/response/token', function() {
   it('should create response type without response modes', function(done) {
     var container = new Object();
     container.components = sinon.stub();
-    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
     container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([]);
+    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
     
     var tokenSpy = sinon.stub();
     var factory = $require('../../../../com/authorize/http/response/token', {
@@ -61,11 +61,11 @@ describe('authorize/http/response/token', function() {
     
     var container = new Object();
     container.components = sinon.stub();
-    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
     container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([
       mode1Component,
       mode2Component
     ]);
+    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
     
     var tokenSpy = sinon.stub();
     var factory = $require('../../../../com/authorize/http/response/token', {
@@ -101,11 +101,11 @@ describe('authorize/http/response/token', function() {
     
     var container = new Object();
     container.components = sinon.stub();
-    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
     container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([
       mode1Component,
       mode2Component
     ]);
+    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
     
     var tokenSpy = sinon.stub();
     var factory = $require('../../../../com/authorize/http/response/token', {
@@ -130,8 +130,8 @@ describe('authorize/http/response/token', function() {
   describe('issue', function() {
     var container = new Object();
     container.components = sinon.stub()
-    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
     container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([]);
+    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
     var ats = new Object();
     
     var tokenSpy = sinon.stub();
