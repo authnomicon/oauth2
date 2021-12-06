@@ -5,6 +5,35 @@ exports = module.exports = function(acs, logger, C) {
   
   return Promise.resolve(null)
     .then(function() {
+      var modes = {};
+      
+      return new Promise(function(resolve, reject) {
+        var components = C.components('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode')
+          , key;
+      
+        (function iter(i) {
+          var component = components[i];
+          if (!component) {
+            return resolve(modes);
+          }
+          
+          key = component.a['@mode'];
+          
+          component.create()
+            .then(function(mode) {
+              logger.info("Loaded response mode '" + key +  "' for OAuth 2.0 authorization code grant");
+              modes[key] = mode;
+              iter(i + 1);
+            }, function(err) {
+              var msg = 'Failed to load response mode for OAuth 2.0 authorization code grant:\n';
+              msg += err.stack;
+              logger.warning(msg);
+              return iter(i + 1);
+            })
+        })(0);
+      });
+    })
+    .then(function(modes) {
       var extensions = [];
       
       return new Promise(function(resolve, reject) {
@@ -13,7 +42,7 @@ exports = module.exports = function(acs, logger, C) {
         (function iter(i) {
           var component = components[i];
           if (!component) {
-            return resolve(extensions);
+            return resolve([ modes, extensions ]);
           }
           
           component.create()
@@ -30,54 +59,44 @@ exports = module.exports = function(acs, logger, C) {
         })(0);
       });
     })
-    .then(function(extensions) {
-  
-      var components = C.components('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode');
-      return Promise.all(components.map(function(comp) { return comp.create(); } ))
-        .then(function(plugins) {
-          var modes = {}
-            , name;
-          plugins.forEach(function(mode, i) {
-            name = components[i].a['@mode'];
-            modes[name] = mode;
-            logger.info('Loaded response mode for OAuth 2.0 authorization code grant: ' + name);
-          });
-          
-          return oauth2orize.grant.code({
-            modes: modes
-          }, function(client, redirectURI, user, ares, areq, locals, cb) {
-            var msg = {};
-            if (ares.issuer) { msg.issuer = ares.issuer; }
-            msg.client = client;
-            msg.redirectURI = redirectURI;
-            msg.user = user;
-            // TODO: Put a grant ID in here somehere
-            //msg.grant = ares;
-            if (ares.scope) { msg.scope = ares.scope; }
-            if (ares.authContext) { msg.authContext = ares.authContext; }
-        
-            acs.issue(msg, function(err, code) {
-              if (err) { return cb(err); }
-              return cb(null, code);
-            });
-          }, function(txn, cb) {
-            var params = {};
-            var i = 0;
-            
-            (function iter(err, exparams) {
-              if (err) { return cb(err); }
-              if (exparams) { merge(params, exparams); }
-          
-              var extension = extensions[i++];
-              if (!extension) {
-                return cb(null, params);
-              }
-          
-              var arity = extension.length;
-              extension(txn, iter);
-            })();
-          });
+    .then(function(plugins) {
+      var modes = plugins[0];
+      var extensions = plugins[1];
+      
+      return oauth2orize.grant.code({
+        modes: modes
+      }, function(client, redirectURI, user, ares, areq, locals, cb) {
+        var msg = {};
+        if (ares.issuer) { msg.issuer = ares.issuer; }
+        msg.client = client;
+        msg.redirectURI = redirectURI;
+        msg.user = user;
+        // TODO: Put a grant ID in here somehere
+        //msg.grant = ares;
+        if (ares.scope) { msg.scope = ares.scope; }
+        if (ares.authContext) { msg.authContext = ares.authContext; }
+    
+        acs.issue(msg, function(err, code) {
+          if (err) { return cb(err); }
+          return cb(null, code);
         });
+      }, function(txn, cb) {
+        var params = {};
+        var i = 0;
+        
+        (function iter(err, exparams) {
+          if (err) { return cb(err); }
+          if (exparams) { merge(params, exparams); }
+      
+          var extension = extensions[i++];
+          if (!extension) {
+            return cb(null, params);
+          }
+      
+          var arity = extension.length;
+          extension(txn, iter);
+        })();
+      });
     });
 };
 
