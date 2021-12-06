@@ -48,6 +48,85 @@ describe('authorize/http/response/token', function() {
       .catch(done);
   }); // should create response type without response modes
   
+  it('should create response type with response modes', function(done) {
+    var mode1 = function(){};
+    var mode1Component = new Object();
+    mode1Component.create = sinon.stub().resolves(mode1);
+    mode1Component.a = { '@mode': 'fragment' };
+    
+    var mode2 = function(){};
+    var mode2Component = new Object();
+    mode2Component.create = sinon.stub().resolves(mode2);
+    mode2Component.a = { '@mode': 'form_post' };
+    
+    var container = new Object();
+    container.components = sinon.stub();
+    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
+    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([
+      mode1Component,
+      mode2Component
+    ]);
+    
+    var tokenSpy = sinon.stub();
+    var factory = $require('../../../../com/authorize/http/response/token', {
+      'oauth2orize': {
+        grant: { token: tokenSpy }
+      }
+    });
+    
+    factory(null, logger, container)
+      .then(function(type) {
+        expect(tokenSpy).to.be.calledOnce;
+        expect(tokenSpy).to.be.calledWith({
+          modes: {
+            fragment: mode1,
+            form_post: mode2
+          }
+        });
+        done();
+      })
+      .catch(done);
+  }); // should create response type with response modes
+  
+  it('should not create response type with query response mode', function(done) {
+    var mode1 = function(){};
+    var mode1Component = new Object();
+    mode1Component.create = sinon.stub().resolves(mode1);
+    mode1Component.a = { '@mode': 'query' };
+    
+    var mode2 = function(){};
+    var mode2Component = new Object();
+    mode2Component.create = sinon.stub().resolves(mode2);
+    mode2Component.a = { '@mode': 'fragment' };
+    
+    var container = new Object();
+    container.components = sinon.stub();
+    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
+    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([
+      mode1Component,
+      mode2Component
+    ]);
+    
+    var tokenSpy = sinon.stub();
+    var factory = $require('../../../../com/authorize/http/response/token', {
+      'oauth2orize': {
+        grant: { token: tokenSpy }
+      }
+    });
+    
+    factory(null, logger, container)
+      .then(function(type) {
+        expect(tokenSpy).to.be.calledOnce;
+        expect(tokenSpy).to.be.calledWith({
+          modes: {
+            fragment: mode2
+          }
+        });
+        done();
+      })
+      .catch(done);
+  }); // should not create response type with query response mode
+  
   describe('issue', function() {
     var container = new Object();
     container.components = sinon.stub()

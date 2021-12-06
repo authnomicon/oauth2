@@ -52,12 +52,12 @@ describe('authorize/http/response/code', function() {
     var mode1 = function(){};
     var mode1Component = new Object();
     mode1Component.create = sinon.stub().resolves(mode1);
-    mode1Component.a = { '@mode': 'one' };
+    mode1Component.a = { '@mode': 'query' };
     
     var mode2 = function(){};
     var mode2Component = new Object();
     mode2Component.create = sinon.stub().resolves(mode2);
-    mode2Component.a = { '@mode': 'two' };
+    mode2Component.a = { '@mode': 'form_post' };
     
     var container = new Object();
     container.components = sinon.stub();
@@ -79,8 +79,8 @@ describe('authorize/http/response/code', function() {
         expect(codeSpy).to.be.calledOnce;
         expect(codeSpy).to.be.calledWith({
           modes: {
-            one: mode1,
-            two: mode2
+            query: mode1,
+            form_post: mode2
           }
         });
         done();
