@@ -1,10 +1,10 @@
-exports = module.exports = function(ats, logger, container) {
+exports = module.exports = function(ats, logger, C) {
   var oauth2orize = require('oauth2orize');
   
   
   // TODO: require('oauth2orize-idpiframerm')
   
-  var components = container.components('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode');
+  var components = C.components('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode');
   return Promise.all(components.map(function(comp) { return comp.create(); } ))
     .then(function(plugins) {
       var modes = {}
