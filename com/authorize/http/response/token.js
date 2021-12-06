@@ -50,7 +50,7 @@ exports = module.exports = function(ats, logger, container) {
 exports['@implements'] = 'http://i.authnomicon.org/oauth2/authorization/http/ResponseType';
 exports['@type'] = 'token';
 exports['@require'] = [
-  '!container',
   'http://i.authnomicon.org/oauth2/AccessTokenService',
-  'http://i.bixbyjs.org/Logger'
+  'http://i.bixbyjs.org/Logger',
+  '!container'
 ];
