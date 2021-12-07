@@ -295,6 +295,54 @@ describe('authorize/http/response/code', function() {
   
   describe('extend', function() {
     
-  });
+    it('should not extend with no extensions', function(done) {
+      var container = new Object();
+      container.components = sinon.stub()
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([]);
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
+      var acs = new Object();
+      acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
+    
+      var codeSpy = sinon.stub();
+      var factory = $require('../../../../com/authorize/http/response/code', {
+        'oauth2orize': {
+          grant: { code: codeSpy }
+        }
+      });
+    
+      factory(acs, logger, container)
+        .then(function(type) {
+          var extend = codeSpy.getCall(0).args[2];
+          var txn = {
+            client: {
+              id: 's6BhdRkqt3',
+              name: 'My Example Client'
+            },
+            redirectURI: 'https://client.example.com/cb',
+            req: {
+              type: 'code',
+              clientID: 's6BhdRkqt3',
+              redirectURI: 'https://client.example.com/cb',
+              state: 'xyz'
+            },
+            user: {
+              id: '248289761001',
+              displayName: 'Jane Doe'
+            },
+            res: {
+              allow: true
+            }
+          };
+          
+          extend({}, function(err, params) {
+            if (err) { return done(err); }
+            expect(params).to.deep.equal({});
+            done();
+          });
+        })
+        .catch(done);
+    }); // should not extend with no extensions
+    
+  }); // extend
   
 });
