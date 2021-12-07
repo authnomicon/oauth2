@@ -334,7 +334,7 @@ describe('authorize/http/response/code', function() {
             }
           };
           
-          extend({}, function(err, params) {
+          extend(txn, function(err, params) {
             if (err) { return done(err); }
             expect(params).to.deep.equal({});
             done();
@@ -342,6 +342,85 @@ describe('authorize/http/response/code', function() {
         })
         .catch(done);
     }); // should not extend with no extensions
+    
+    it('should extend with one extension', function(done) {
+      var ext1 = function(txn, cb) {
+        expect(txn).to.deep.equal({
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'My Example Client'
+          },
+          redirectURI: 'https://client.example.com/cb',
+          req: {
+            type: 'code',
+            clientID: 's6BhdRkqt3',
+            redirectURI: 'https://client.example.com/cb',
+            state: 'xyz'
+          },
+          user: {
+            id: '248289761001',
+            displayName: 'Jane Doe'
+          },
+          res: {
+            allow: true
+          }
+        });
+        
+        return cb(null, { session_state: 'c2a7f7f4842520527248dc8cfcfa2a70d786b47b1dc26f29dc1fa7f4069736f3.knrj4ZDIWFQpWAu-pLTTKg' });
+      };
+      var ext1Component = new Object();
+      ext1Component.create = sinon.stub().resolves(ext1);
+      
+      var container = new Object();
+      container.components = sinon.stub()
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([]);
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([
+        ext1Component
+      ]);
+      var acs = new Object();
+      acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
+    
+      var codeSpy = sinon.stub();
+      var factory = $require('../../../../com/authorize/http/response/code', {
+        'oauth2orize': {
+          grant: { code: codeSpy }
+        }
+      });
+    
+      factory(acs, logger, container)
+        .then(function(type) {
+          var extend = codeSpy.getCall(0).args[2];
+          var txn = {
+            client: {
+              id: 's6BhdRkqt3',
+              name: 'My Example Client'
+            },
+            redirectURI: 'https://client.example.com/cb',
+            req: {
+              type: 'code',
+              clientID: 's6BhdRkqt3',
+              redirectURI: 'https://client.example.com/cb',
+              state: 'xyz'
+            },
+            user: {
+              id: '248289761001',
+              displayName: 'Jane Doe'
+            },
+            res: {
+              allow: true
+            }
+          };
+          
+          extend(txn, function(err, params) {
+            if (err) { return done(err); }
+            expect(params).to.deep.equal({
+              session_state: 'c2a7f7f4842520527248dc8cfcfa2a70d786b47b1dc26f29dc1fa7f4069736f3.knrj4ZDIWFQpWAu-pLTTKg'
+            });
+            done();
+          });
+        })
+        .catch(done);
+    }); // should extend with one extension
     
   }); // extend
   
