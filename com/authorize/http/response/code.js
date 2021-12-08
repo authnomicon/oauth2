@@ -87,13 +87,12 @@ exports = module.exports = function(acs, logger, C) {
         (function iter(err, exparams) {
           if (err) { return cb(err); }
           if (exparams) { merge(params, exparams); }
-      
+          
           var extension = extensions[i++];
           if (!extension) {
             return cb(null, params);
           }
-      
-          var arity = extension.length;
+          
           extension(txn, iter);
         })();
       });
