@@ -291,6 +291,52 @@ describe('authorize/http/response/code', function() {
       });
     }); // should issue authorization code with authentication context
     
+    it('should error when encountering an error issuing authorization code', function(done) {
+      var container = new Object();
+      container.components = sinon.stub()
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([]);
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
+      var acs = new Object();
+      acs.issue = sinon.stub().yieldsAsync(new Error('something went wrong'));
+    
+      var codeSpy = sinon.stub();
+      var factory = $require('../../../../com/authorize/http/response/code', {
+        'oauth2orize': {
+          grant: { code: codeSpy }
+        }
+      });
+    
+      factory(acs, logger, container)
+        .then(function(type) {
+          issue = codeSpy.getCall(0).args[1];
+          var client = {
+            id: 's6BhdRkqt3',
+            name: 'My Example Client'
+          };
+          var user = {
+            id: '248289761001',
+            displayName: 'Jane Doe'
+          };
+          var ares = {
+            allow: true
+          }
+          var areq = {
+            type: 'code',
+            clientID: 's6BhdRkqt3',
+            redirectURI: 'https://client.example.com/cb',
+            state: 'xyz'
+          }
+          
+          issue(client, 'https://client.example.com/cb', user, ares, areq, {}, function(err, code) {
+            expect(err).to.be.an.instanceof(Error);
+            expect(err.message).to.equal('something went wrong');
+            expect(code).to.be.undefined;
+            done();
+          });
+        })
+        .catch(done);
+    }); // should error when encountering an error issuing authorization code
+    
   }); // issue
   
   describe('extend', function() {
