@@ -7,10 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Added OAuth 2.0 error middleware to `/authorize` endpoint.
+- Added 4-arity form of token response parameter extension functions, taking
+`msg`, `bind`, `grantType`, and `cb` as arguments.
 
 ### Changed
 - `AccessTokenService#issue()` is called with `msg` argument containing `scope`
 property, rather than `grant.scope`, when called from token response type.
+
+### Removed
+- Removed `type` property indicating grant type from first argument to token response
+parameter extension functions.  Use 4-arity form instead.
 
 ## [0.0.3] - 2021-12-02
 ### Added

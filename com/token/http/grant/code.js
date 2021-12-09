@@ -64,8 +64,6 @@ exports = module.exports = function(ats, acs, logger, C) {
           ats.issue(msg, function(err, token) {
             if (err) { return cb(err); }
             
-            var txn = { type: 'authorization_code' }
-            merge(txn, msg);
             var res = {};
             res.accessToken = token;
             
@@ -82,10 +80,12 @@ exports = module.exports = function(ats, acs, logger, C) {
               }
           
               var arity = extension.length;
-              if (arity == 3) {
-                extension(txn, res, iter);
+              if (arity == 4) {
+                extension(msg, res, 'authorization_code', iter);
+              } else if (arity == 3) {
+                extension(msg, res, iter);
               } else {
-                extension(txn, iter);
+                extension(msg, iter);
               }
             })();
           });
