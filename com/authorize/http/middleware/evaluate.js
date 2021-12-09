@@ -1,4 +1,5 @@
 exports = module.exports = function(prompts, service, server) {
+  var oauth2orize = require('oauth2orize');
   var Request = require('../../../../lib/request')
     , Response = require('../../../../lib/response');
   var merge = require('utils-merge');
@@ -53,6 +54,10 @@ exports = module.exports = function(prompts, service, server) {
     }
   
     function onprompt(name, options) {
+      if (azreq.prompt.indexOf('none') != -1) {
+        return next(new oauth2orize.AuthorizationError('Interaction required', 'interaction_required'));
+      }
+      
       /*
       if (name == 'login' && !req.user) {
         console.log('WE CAN JUST REDIRECT HERE!');

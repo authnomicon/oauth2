@@ -15,6 +15,8 @@ when called from token response type.
 `msg`, `bind`, `grantType`, and `cb` as arguments.
 
 ### Changed
+- Respond with `interaction_required` error if prompt is neccessary, but client
+requested `prompt=none`.
 - `AccessTokenService#issue()` is called with `msg` argument containing `scope`
 property, rather than `grant.scope`, when called from token response type.
 
