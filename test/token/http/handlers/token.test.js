@@ -1,16 +1,12 @@
 /* global describe, it */
 
-var chai = require('chai');
 var expect = require('chai').expect;
+var chai = require('chai');
 var sinon = require('sinon');
 var factory = require('../../../../com/token/http/handlers/token');
 
 
 describe('token/http/handlers/token', function() {
-  
-  it('should export factory function', function() {
-    expect(factory).to.be.a('function');
-  });
   
   it('should be annotated', function() {
     expect(factory['@implements']).to.be.undefined;
