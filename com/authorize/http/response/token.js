@@ -55,12 +55,14 @@ exports = module.exports = function(ats, logger, C) {
         modes: modes
       }, function(client, user, ares, areq, locals, cb) {
         var msg = {};
-        msg.client = client;
+        if (ares.issuer) { msg.issuer = ares.issuer; }
         msg.user = user;
+        msg.client = client;
         // TODO: Put a grant ID in here somehere
         // maybe not, since there's no refresh token here?
         //msg.grant = ares;
         if (ares.scope) { msg.scope = ares.scope; }
+        if (ares.authContext) { msg.authContext = ares.authContext; }
         // TODO: Pass some indicator that this is an implicit flow, so token lifetimes
         //. can be constrained accordingly
         

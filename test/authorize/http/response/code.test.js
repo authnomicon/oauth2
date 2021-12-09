@@ -249,6 +249,7 @@ describe('authorize/http/response/code', function() {
       };
       var ares = {
         allow: true,
+        issuer: 'https://server.example.com',
         scope: [ 'openid', 'profile', 'email' ],
         authContext: {
           sessionID: 'YU7uoYRVAxF34TuoAodVfw-1eA13rhqW',
@@ -269,6 +270,7 @@ describe('authorize/http/response/code', function() {
         
         expect(acs.issue.callCount).to.equal(1);
         expect(acs.issue.getCall(0).args[0]).to.deep.equal({
+          issuer: 'https://server.example.com',
           client: {
             id: 's6BhdRkqt3',
             name: 'My Example'

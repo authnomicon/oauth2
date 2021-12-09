@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Added OAuth 2.0 error middleware to `/authorize` endpoint.
+- Added `issuer` property to `msg` argument passed to `AccessTokenService#issue()`,
+when called from token response type.
+- Added `authContext` property to `msg` argument passed to `AccessTokenService#issue()`,
+when called from token response type.
 - Added 4-arity form of token response parameter extension functions, taking
 `msg`, `bind`, `grantType`, and `cb` as arguments.
 
