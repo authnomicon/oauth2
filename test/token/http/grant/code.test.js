@@ -51,12 +51,6 @@ describe('token/http/grant/code', function() {
     var container = new Object();
     container.components = sinon.stub()
     container.components.withArgs('http://i.authnomicon.org/oauth2/token/http/ResponseParameters').returns([]);
-    var logger = {
-      error: function(){},
-      warning: function(){},
-      notice: function(){},
-      info: function(){}
-    };
     
     it('should issue access token', function(done) {
       var codeSpy = sinon.stub();
@@ -77,7 +71,7 @@ describe('token/http/grant/code', function() {
         .then(function(exchange) {
           var client = {
             id: 's6BhdRkqt3',
-            name: 'Example Client',
+            name: 'My Example Client',
             redirectURIs: [ 'https://client.example.com/cb' ]
           };
           
@@ -94,7 +88,7 @@ describe('token/http/grant/code', function() {
               },
               client: {
                 id: 's6BhdRkqt3',
-                name: 'Example Client',
+                name: 'My Example Client',
                 redirectURIs: [ 'https://client.example.com/cb' ]
               }
             });
@@ -125,7 +119,7 @@ describe('token/http/grant/code', function() {
         .then(function(exchange) {
           var client = {
             id: 's6BhdRkqt3',
-            name: 'Example Client',
+            name: 'My Example',
             redirectURIs: [ 'https://client.example.org/cb' ]
           };
           
@@ -142,7 +136,7 @@ describe('token/http/grant/code', function() {
               },
               client: {
                 id: 's6BhdRkqt3',
-                name: 'Example Client',
+                name: 'My Example',
                 redirectURIs: [ 'https://client.example.org/cb' ]
               },
               scope: [ 'openid', 'profile', 'email' ]
@@ -175,7 +169,7 @@ describe('token/http/grant/code', function() {
         .then(function(exchange) {
           var client = {
             id: 's6BhdRkqt3',
-            name: 'Example Client',
+            name: 'My Example',
             redirectURIs: [ 'https://client.example.org/cb' ]
           };
           
@@ -193,7 +187,7 @@ describe('token/http/grant/code', function() {
               },
               client: {
                 id: 's6BhdRkqt3',
-                name: 'Example Client',
+                name: 'My Example',
                 redirectURIs: [ 'https://client.example.org/cb' ]
               },
               scope: [ 'openid', 'profile', 'email' ]
@@ -231,7 +225,7 @@ describe('token/http/grant/code', function() {
         .then(function(exchange) {
           var client = {
             id: 's6BhdRkqt3',
-            name: 'Example Client',
+            name: 'My Example',
             redirectURIs: [ 'https://client.example.org/cb' ]
           };
           
@@ -248,7 +242,7 @@ describe('token/http/grant/code', function() {
               },
               client: {
                 id: 's6BhdRkqt3',
-                name: 'Example Client',
+                name: 'My Example',
                 redirectURIs: [ 'https://client.example.org/cb' ]
               },
               scope: [ 'openid', 'profile', 'email' ],
@@ -285,7 +279,7 @@ describe('token/http/grant/code', function() {
         .then(function(exchange) {
           var client = {
             id: 'XXXXXXXX',
-            name: 'Example Client',
+            name: 'My Example Client',
             redirectURIs: [ 'https://client.example.com/cb' ]
           };
           
@@ -322,7 +316,7 @@ describe('token/http/grant/code', function() {
         .then(function(exchange) {
           var client = {
             id: 's6BhdRkqt3',
-            name: 'Example Client',
+            name: 'My Example Client',
             redirectURIs: [ 'https://client.example.com/cb' ]
           };
           
