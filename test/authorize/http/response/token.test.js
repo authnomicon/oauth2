@@ -203,13 +203,13 @@ describe('authorize/http/response/token', function() {
       };
       var ares = {
         allow: true,
-        scope: [ 'profile', 'email' ]
+        scope: [ 'openid', 'profile', 'email' ]
       }
       var areq = {
         type: 'code',
         clientID: 's6BhdRkqt3',
-        redirectURI: 'https://client.example.com/cb',
-        state: 'xyz'
+        redirectURI: 'https://client.example.org/cb',
+        state: 'af0ifjsldkj'
       }
       
       issue(client, user, ares, areq, {}, function(err, token) {
@@ -225,7 +225,7 @@ describe('authorize/http/response/token', function() {
             id: '248289761001',
             displayName: 'Jane Doe'
           },
-          scope: [ 'profile', 'email' ]
+          scope: [ 'openid', 'profile', 'email' ]
         });
         expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
         done();
