@@ -195,7 +195,7 @@ describe('authorize/http/response/token', function() {
     it('should issue access token with scope', function(done) {
       var client = {
         id: 's6BhdRkqt3',
-        name: 'My Example Client'
+        name: 'My Example'
       };
       var user = {
         id: '248289761001',
@@ -219,7 +219,7 @@ describe('authorize/http/response/token', function() {
         expect(ats.issue.getCall(0).args[0]).to.deep.equal({
           client: {
             id: 's6BhdRkqt3',
-            name: 'My Example Client'
+            name: 'My Example'
           },
           user: {
             id: '248289761001',

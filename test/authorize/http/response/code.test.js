@@ -157,7 +157,7 @@ describe('authorize/http/response/code', function() {
     it('should issue authorization code with scope', function(done) {
       var client = {
         id: 's6BhdRkqt3',
-        name: 'My Example Client'
+        name: 'My Example'
       };
       var user = {
         id: '248289761001',
@@ -181,7 +181,7 @@ describe('authorize/http/response/code', function() {
         expect(acs.issue.getCall(0).args[0]).to.deep.equal({
           client: {
             id: 's6BhdRkqt3',
-            name: 'My Example Client'
+            name: 'My Example'
           },
           redirectURI: 'https://client.example.org/cb',
           user: {
@@ -198,7 +198,7 @@ describe('authorize/http/response/code', function() {
     it('should issue authorization code with issuer', function(done) {
       var client = {
         id: 's6BhdRkqt3',
-        name: 'My Example Client'
+        name: 'My Example'
       };
       var user = {
         id: '248289761001',
@@ -224,7 +224,7 @@ describe('authorize/http/response/code', function() {
           issuer: 'https://server.example.com',
           client: {
             id: 's6BhdRkqt3',
-            name: 'My Example Client'
+            name: 'My Example'
           },
           redirectURI: 'https://client.example.org/cb',
           user: {
@@ -241,7 +241,7 @@ describe('authorize/http/response/code', function() {
     it('should issue authorization code with authentication context', function(done) {
       var client = {
         id: 's6BhdRkqt3',
-        name: 'My Example Client'
+        name: 'My Example'
       };
       var user = {
         id: '248289761001',
@@ -271,7 +271,7 @@ describe('authorize/http/response/code', function() {
         expect(acs.issue.getCall(0).args[0]).to.deep.equal({
           client: {
             id: 's6BhdRkqt3',
-            name: 'My Example Client'
+            name: 'My Example'
           },
           redirectURI: 'https://client.example.org/cb',
           user: {
