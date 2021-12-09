@@ -36,13 +36,12 @@ exports = module.exports = function(ats, acs, logger, C) {
         // TODO: Pass self trust store to token verify, using list of issuers like `ca` to Node's http
         // module
 
-        // TODO: Yield msg, rather than claims
-        acs.verify(code, function(err, claims) {
+        acs.verify(code, function(err, cmsg) {
           if (err) { return cb(err); }
           
           // Verify that the authorization code was issued to the client that is
           // attempting to exchange it for an access token.
-          if (client.id !== claims.client.id) {
+          if (client.id !== cmsg.client.id) {
             return cb(null, false);
           }
           
@@ -50,16 +49,16 @@ exports = module.exports = function(ats, acs, logger, C) {
           // initial authorization request.
           //
           // Refer to Section 4.1.3 of RFC 6749 for further details.
-          if (redirectURI !== claims.redirectURI) {
+          if (redirectURI !== cmsg.redirectURI) {
             return cb(new oauth2orize.TokenError('Mismatched redirect URI', 'invalid_grant'));
           }
   
           var msg = {};
-          if (claims.issuer) { msg.issuer = claims.issuer; }
-          msg.user = claims.user;
+          if (cmsg.issuer) { msg.issuer = cmsg.issuer; }
+          msg.user = cmsg.user;
           msg.client = client;
-          if (claims.scope) { msg.scope = claims.scope; }
-          if (claims.authContext) { msg.authContext = claims.authContext; }
+          if (cmsg.scope) { msg.scope = cmsg.scope; }
+          if (cmsg.authContext) { msg.authContext = cmsg.authContext; }
           
           ats.issue(msg, function(err, token) {
             if (err) { return cb(err); }
