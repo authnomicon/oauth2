@@ -12,27 +12,25 @@ describe('token/http/grant/code', function() {
   it('should be annotated', function() {
     expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/token/http/AuthorizationGrantExchange');
     expect(factory['@type']).to.equal('authorization_code');
+    expect(factory['@singleton']).to.be.undefined;
   });
+  
+  
+  var logger = {
+    emergency: function(){},
+    alert: function(){},
+    critical: function(){},
+    error: function(){},
+    warning: function(){},
+    notice: function(){},
+    info: function(){},
+    debug: function(){}
+  };
   
   it('should create exchange without response parameters', function(done) {
     var container = new Object();
     container.components = sinon.stub()
     container.components.withArgs('http://i.authnomicon.org/oauth2/token/http/ResponseParameters').returns([]);
-    var logger = {
-      error: function(){},
-      warning: function(){},
-      notice: function(){},
-      info: function(){}
-    };
-    var acs = new Object();
-    acs.verify = sinon.stub().yieldsAsync(null, {
-      client: { id: 's6BhdRkqt3' },
-      redirectURI: 'https://client.example.com/cb',
-      user: { id: '248289761001' }
-    });
-    var ats = new Object();
-    ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
-    
     
     var codeSpy = sinon.stub();
     var factory = $require('../../../../com/token/http/grant/code', {
@@ -41,7 +39,7 @@ describe('token/http/grant/code', function() {
       }
     });
     
-    factory(ats, acs, logger, container)
+    factory(null, null, logger, container)
       .then(function(exchange) {
         expect(codeSpy).to.be.calledOnce;
         done();
