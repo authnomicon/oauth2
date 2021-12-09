@@ -64,9 +64,7 @@ exports = module.exports = function(ats, acs, logger, C) {
           ats.issue(msg, function(err, token) {
             if (err) { return cb(err); }
             
-            var res = {};
-            res.accessToken = token;
-            
+            var bind = { accessToken: token };
             var params = {};
             var i = 0;
             
@@ -81,9 +79,9 @@ exports = module.exports = function(ats, acs, logger, C) {
           
               var arity = extension.length;
               if (arity == 4) {
-                extension(msg, res, 'authorization_code', iter);
+                extension(msg, bind, 'authorization_code', iter);
               } else if (arity == 3) {
-                extension(msg, res, iter);
+                extension(msg, bind, iter);
               } else {
                 extension(msg, iter);
               }
