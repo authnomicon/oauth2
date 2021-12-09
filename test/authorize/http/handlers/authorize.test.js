@@ -37,6 +37,12 @@ describe('authorize/http/handlers/authorize', function() {
           })
         })
       };
+    },
+    
+    authorizationError: function() {
+      return function(err, req, res, next) {
+        next(err);
+      };
     }
   };
   
@@ -65,6 +71,8 @@ describe('authorize/http/handlers/authorize', function() {
   }
   
   it('should create handler', function() {
+    var authorizationErrorSpy = sinon.spy(server, 'authorizationError');
+    var authorizationSpy = sinon.spy(server, 'authorization');
     var authenticateSpy = sinon.spy(authenticate);
     var stateSpy = sinon.spy(state);
     var sessionSpy = sinon.spy(session);
@@ -81,6 +89,10 @@ describe('authorize/http/handlers/authorize', function() {
     expect(authenticateSpy).to.be.calledOnce;
     expect(authenticateSpy).to.be.calledWithExactly([ 'session', 'anonymous' ], { multi: true });
     expect(authenticateSpy).to.be.calledAfter(stateSpy);
+    expect(authorizationSpy).to.be.calledOnce;
+    expect(authorizationSpy).to.be.calledAfter(authenticateSpy);
+    expect(authorizationErrorSpy).to.be.calledOnce;
+    expect(authorizationErrorSpy).to.be.calledAfter(authorizationSpy);
   });
   
   describe('handler', function() {

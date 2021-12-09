@@ -69,6 +69,8 @@ exports = module.exports = function(evaluate, clients, server, authenticate, sta
         }); // clients.read
       },
       function(txn, cb) {
+        // TODO: Filter out "internal" response modes by erroring here?
+        
         // Immediate mode callback.  Always, false, deferring transaction processing to 
         // HTTP handler below where all context is available.
         return cb(null, false);
@@ -76,6 +78,8 @@ exports = module.exports = function(evaluate, clients, server, authenticate, sta
     ),
     evaluate,
     // TODO: Add error handling middleware here
+    // TODO: Check that this is right and not reloading the txn
+    server.authorizationError()
   ];
 };
 
