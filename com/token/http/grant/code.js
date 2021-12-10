@@ -92,7 +92,7 @@ exports = module.exports = function(ats, acs, logger, C) {
     });
 }
 
-exports['@implements'] = 'http://i.authnomicon.org/oauth2/token/http/AuthorizationGrantExchange';
+exports['@implements'] = 'http://i.authnomicon.org/oauth2/token/http/GrantType';
 exports['@type'] = 'authorization_code';
 exports['@require'] = [
   'http://i.authnomicon.org/oauth2/AccessTokenService',

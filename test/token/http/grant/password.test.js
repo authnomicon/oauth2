@@ -13,7 +13,7 @@ describe('token/http/grant/password', function() {
   });
   
   it('should be annotated', function() {
-    expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/token/http/AuthorizationGrantExchange');
+    expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/token/http/GrantType');
     expect(factory['@type']).to.equal('password');
     expect(factory['@singleton']).to.be.undefined;
   });

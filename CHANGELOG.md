@@ -19,6 +19,8 @@ when called from token response type.
 requested `prompt=none`.
 - `AccessTokenService#issue()` is called with `msg` argument containing `scope`
 property, rather than `grant.scope`, when called from token response type.
+- Rename `http://i.authnomicon.org/oauth2/token/http/AuthorizationGrantExchange`
+interface to `http://i.authnomicon.org/oauth2/token/http/GrantType`.
 
 ### Removed
 - Removed `type` property indicating grant type from first argument to token response

@@ -6,6 +6,6 @@ exports = module.exports = function(issue) {
   });
 }
 
-exports['@implements'] = 'http://i.authnomicon.org/oauth2/token/http/AuthorizationGrantExchange';
+exports['@implements'] = 'http://i.authnomicon.org/oauth2/token/http/GrantType';
 exports['@type'] = 'password';
 exports['@require'] = [];
