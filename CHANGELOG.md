@@ -26,6 +26,11 @@ interface to `http://i.authnomicon.org/oauth2/token/http/GrantType`.
 - Removed `type` property indicating grant type from first argument to token response
 parameter extension functions.  Use 4-arity form instead.
 
+### Fixed
+- Popping state pushed prior to sending authorization response.  Fixes issue in
+which incorrect `state` value was sent to client's redirect endpoint when
+response was sent immediately.
+
 ## [0.0.3] - 2021-12-02
 ### Added
 - Authorization code grant type loads token response parameter extensions and

@@ -26,6 +26,8 @@ exports = module.exports = function(prompts, service, server) {
     }
     
     function ondecision(result, scope) {
+      // pop state that was pushed by transaction store, if any.
+      req.popState();
       req.state.complete();
     
       if (result === true) {
@@ -55,6 +57,7 @@ exports = module.exports = function(prompts, service, server) {
   
     function onprompt(name, options) {
       if (azreq.prompt.indexOf('none') != -1) {
+        // FIXME: Need to popState here?
         return next(new oauth2orize.AuthorizationError('Interaction required', 'interaction_required'));
       }
       

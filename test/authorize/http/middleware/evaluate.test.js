@@ -46,6 +46,7 @@ describe('authorize/http/middleware/evaluate', function() {
       
       chai.express.use([ handler ])
         .request(function(req, res) {
+          req.popState = sinon.spy();
           req.state = new Object();
           req.state.complete = sinon.spy();
           req.oauth2 = {
@@ -67,6 +68,7 @@ describe('authorize/http/middleware/evaluate', function() {
         })
         .finish(function() {
           expect(service).to.have.been.calledOnce;
+          expect(this.req.popState).to.have.been.calledOnce;
           expect(this.req.state.complete).to.have.been.calledOnce;
           expect(server._respond).to.have.been.calledOnce;
           expect(server._respond).to.have.been.calledWith({
@@ -117,6 +119,7 @@ describe('authorize/http/middleware/evaluate', function() {
       
       chai.express.use([ handler ])
         .request(function(req, res) {
+          req.popState = sinon.spy();
           req.state = new Object();
           req.state.complete = sinon.spy();
           req.oauth2 = {
@@ -139,6 +142,7 @@ describe('authorize/http/middleware/evaluate', function() {
         })
         .finish(function() {
           expect(service).to.have.been.calledOnce;
+          expect(this.req.popState).to.have.been.calledOnce;
           expect(this.req.state.complete).to.have.been.calledOnce;
           expect(server._respond).to.have.been.calledOnce;
           expect(server._respond).to.have.been.calledWith({
