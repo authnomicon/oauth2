@@ -70,7 +70,22 @@ describe('authorize/http/handlers/authorize', function() {
     };
   }
   
+  var logger = {
+    emergency: function(){},
+    alert: function(){},
+    critical: function(){},
+    error: function(){},
+    warning: function(){},
+    notice: function(){},
+    info: function(){},
+    debug: function(){}
+  };
+  
   it('should create handler', function(done) {
+    var container = new Object();
+    container.components = sinon.stub();
+    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+    
     var authorizationErrorSpy = sinon.spy(server, 'authorizationError');
     var authorizationSpy = sinon.spy(server, 'authorization');
     var authenticateSpy = sinon.spy(authenticate);
@@ -78,7 +93,7 @@ describe('authorize/http/handlers/authorize', function() {
     var sessionSpy = sinon.spy(session);
     var parseCookiesSpy = sinon.spy(parseCookies);
     
-    factory(evaluate, null, server, authenticateSpy, stateSpy, sessionSpy, parseCookiesSpy)
+    factory(evaluate, null, server, authenticateSpy, stateSpy, sessionSpy, parseCookiesSpy, logger, container)
       .then(function(handler) {
         expect(parseCookiesSpy).to.be.calledOnce;
         expect(sessionSpy).to.be.calledOnce;
@@ -101,6 +116,10 @@ describe('authorize/http/handlers/authorize', function() {
   describe('handler', function() {
     
     it('should evaluate request', function(done) {
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -108,7 +127,7 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: [ 'https://client.example.com/cb' ]
       });
       
-      factory(evaluate, clients, server, authenticate, state, session, parseCookies)
+      factory(evaluate, clients, server, authenticate, state, session, parseCookies, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -137,6 +156,10 @@ describe('authorize/http/handlers/authorize', function() {
     }); // should evaluate request
     
     it('should evaluate request from client with multiple redirect URIs', function(done) {
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -144,7 +167,7 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: [ 'https://client.example.com/cb', 'https://client.example.com/cb2' ]
       });
       
-      factory(evaluate, clients, server, authenticate, state, session, parseCookies)
+      factory(evaluate, clients, server, authenticate, state, session, parseCookies, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -173,6 +196,10 @@ describe('authorize/http/handlers/authorize', function() {
     }); // should evaluate request from client with multiple redirect URIs
     
     it('should evaluate request from client with single redirect URI that omits redirect URI parameter', function(done) {
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -180,7 +207,7 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: [ 'https://client.example.com/cb' ]
       });
       
-      factory(evaluate, clients, server, authenticate, state, session, parseCookies)
+      factory(evaluate, clients, server, authenticate, state, session, parseCookies, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -208,10 +235,14 @@ describe('authorize/http/handlers/authorize', function() {
     }); // should evaluate request from client with single redirect URI that omits redirect URI parameter
     
     it('should reject request from unregistered client', function(done) {
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null);
       
-      factory(evaluate, clients, server, authenticate, state, session, parseCookies)
+      factory(evaluate, clients, server, authenticate, state, session, parseCookies, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -235,13 +266,17 @@ describe('authorize/http/handlers/authorize', function() {
     }); // should reject request from unregistered client
     
     it('should reject request from client with no registered redirect URIs', function(done) {
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
         name: 'My Example Client'
       });
       
-      factory(evaluate, clients, server, authenticate, state, session, parseCookies)
+      factory(evaluate, clients, server, authenticate, state, session, parseCookies, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -265,6 +300,10 @@ describe('authorize/http/handlers/authorize', function() {
     }); // should reject request from client with no registered redirect URIs
     
     it('should reject request from client with no registered redirect URIs as indicated by empty array', function(done) {
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -272,7 +311,7 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: []
       });
       
-      factory(evaluate, clients, server, authenticate, state, session, parseCookies)
+      factory(evaluate, clients, server, authenticate, state, session, parseCookies, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -296,6 +335,10 @@ describe('authorize/http/handlers/authorize', function() {
     }); // should reject request from client with no registered redirect URIs as indicated by empty array
     
     it('should reject request from client using unregistered redirect URI', function(done) {
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -306,7 +349,7 @@ describe('authorize/http/handlers/authorize', function() {
         ]
       });
       
-      factory(evaluate, clients, server, authenticate, state, session, parseCookies)
+      factory(evaluate, clients, server, authenticate, state, session, parseCookies, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -330,6 +373,10 @@ describe('authorize/http/handlers/authorize', function() {
     }); // should reject request from client using unregistered redirect URI
     
     it('should reject request from client with multiple redirect URIs that omits redirect URI parameter', function(done) {
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
@@ -340,7 +387,7 @@ describe('authorize/http/handlers/authorize', function() {
         ]
       });
       
-      factory(evaluate, clients, server, authenticate, state, session, parseCookies)
+      factory(evaluate, clients, server, authenticate, state, session, parseCookies, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -363,10 +410,14 @@ describe('authorize/http/handlers/authorize', function() {
     }); // should reject request from client with multiple redirect URIs that omits redirect URI parameter
     
     it('should error when error is encountered while querying directory', function(done) {
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(new Error('something went wrong'));
       
-      factory(evaluate, clients, server, authenticate, state, session, parseCookies)
+      factory(evaluate, clients, server, authenticate, state, session, parseCookies, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {

@@ -14,13 +14,42 @@
  * redirect the user to an invalid redirection URI.
  */
 
-exports = module.exports = function(evaluate, clients, server, authenticate, state, session, parseCookies) {
+exports = module.exports = function(evaluate, clients, server, authenticate, state, session, parseCookies, logger, C) {
   var oauth2orize = require('oauth2orize')
-    , uri = require('url');
+    , url = require('url');
   
   
   return Promise.resolve(null)
     .then(function() {
+      var schemes = {};
+      
+      return new Promise(function(resolve, reject) {
+        var components = C.components('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme')
+          , key;
+      
+        (function iter(i) {
+          var component = components[i];
+          if (!component) {
+            return resolve(schemes);
+          }
+          
+          key = component.a['@scheme'];
+          
+          component.create()
+            .then(function(mode) {
+              logger.info("Loaded redirect URI scheme '" + key +  "'");
+              schemes[key] = mode;
+              iter(i + 1);
+            }, function(err) {
+              var msg = 'Failed to load redirect URI scheme:\n';
+              msg += err.stack;
+              logger.warning(msg);
+              return iter(i + 1);
+            })
+        })(0);
+      });
+    })
+    .then(function(schemes) {
 
       return [
         parseCookies(),
@@ -35,6 +64,7 @@ exports = module.exports = function(evaluate, clients, server, authenticate, sta
               if (!client) {
                 return cb(new oauth2orize.AuthorizationError('Unauthorized client', 'unauthorized_client'));
               }
+              
               if (!client.redirectURIs || !client.redirectURIs.length) {
                 // The client has not registered any redirection endpoints.  Such
                 // clients are not authorized to use the authorization endpoint.
@@ -49,6 +79,22 @@ exports = module.exports = function(evaluate, clients, server, authenticate, sta
                 // include a redirection URI with the authorization request.  Refer to
                 // Section 3.1.2.3 of RFC 6749 for further details.
                 return cb(new oauth2orize.AuthorizationError('Missing required parameter: redirect_uri', 'invalid_request'));
+              }
+
+              var ruri = redirectURI || client.redirectURIs[0];
+              
+              var uri = url.parse(ruri);
+              var proto = uri.protocol.slice(0, -1);
+              var scheme = schemes[proto];
+              var v;
+              
+              if (scheme) {
+                v = scheme.verify(client, redirectURI);
+                if (!v) {
+                  return cb(new oauth2orize.AuthorizationError('Client not permitted to use redirect URI', 'unauthorized_client'));
+                }
+                
+                return cb(null, client, v[0], v[1]);
               }
 
               // WIP
@@ -96,5 +142,7 @@ exports['@require'] = [
   'http://i.bixbyjs.org/http/middleware/authenticate',
   'http://i.bixbyjs.org/http/middleware/state',
   'http://i.bixbyjs.org/http/middleware/session',
-  'http://i.bixbyjs.org/http/middleware/parseCookies'
+  'http://i.bixbyjs.org/http/middleware/parseCookies',
+  'http://i.bixbyjs.org/Logger',
+  '!container'
 ];
