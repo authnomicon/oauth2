@@ -494,6 +494,51 @@ describe('authorize/http/handlers/authorize', function() {
         .catch(done);
     }); // should evaluate request that uses a redirect URI scheme
     
+    it('should reject request that uses an unverified redirect URI scheme', function(done) {
+      var scheme = {
+        verify: function(client, redirectURI) {
+          return false;
+        }
+      };
+      var schemeComponent = new Object();
+      schemeComponent.create = sinon.stub().resolves(scheme);
+      schemeComponent.a = { '@scheme': 'storagerelay' };
+      
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([ schemeComponent ]);
+      
+      var clients = new Object();
+      clients.read = sinon.stub().yieldsAsync(null, {
+        id: 's6BhdRkqt3',
+        name: 'My Example Client',
+        redirectURIs: [ 'https://client.example.com/cb' ],
+        webOrigins: [ 'https://client.example.com' ]
+      });
+      
+      factory(evaluate, clients, server, authenticate, state, session, parseCookies, logger, container)
+        .then(function(handler) {
+          chai.express.use(handler)
+            .request(function(req, res) {
+              req.query = {
+                client_id: 's6BhdRkqt3',
+                redirect_uri: 'storagerelay://https/client.example.com?id=auth304970'
+              };
+            })
+            .next(function(err, req, res) {
+              expect(err).to.be.an.instanceOf(oauth2orize.AuthorizationError);
+              expect(err.message).to.equal('Client not permitted to use redirect URI');
+              expect(err.code).to.equal('unauthorized_client');
+              expect(err.status).to.equal(403);
+          
+              expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
+              done();
+            })
+            .listen();
+        })
+        .catch(done);
+    }); // should reject request that uses an unverified redirect URI scheme
+    
   }); // handler
   
 });
