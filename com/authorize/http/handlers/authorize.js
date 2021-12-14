@@ -19,68 +19,74 @@ exports = module.exports = function(evaluate, clients, server, authenticate, sta
     , uri = require('url');
   
   
-  return [
-    parseCookies(),
-    session(),
-    state({ external: true }),
-    authenticate([ 'session', 'anonymous' ], { multi: true }),
-    server.authorization(
-      function validateClient(clientID, redirectURI, cb) {
+  return Promise.resolve(null)
+    .then(function() {
+
+      return [
+        parseCookies(),
+        session(),
+        state({ external: true }),
+        authenticate([ 'session', 'anonymous' ], { multi: true }),
+        server.authorization(
+          function validateClient(clientID, redirectURI, cb) {
     
-        clients.read(clientID, function(err, client) {
-          if (err) { return cb(err); }
-          if (!client) {
-            return cb(new oauth2orize.AuthorizationError('Unauthorized client', 'unauthorized_client'));
-          }
-          if (!client.redirectURIs || !client.redirectURIs.length) {
-            // The client has not registered any redirection endpoints.  Such
-            // clients are not authorized to use the authorization endpoint.
-            //
-            // This enforcement is in place in order to prevent the authorization
-            // server from functioning as an open redirector.  Refer to Section
-            // 3.1.2.2 of RFC 6749 for further details.
-            return cb(new oauth2orize.AuthorizationError('Client has no registered redirect URIs', 'unauthorized_client'));
-          }
-          if (client.redirectURIs.length > 1 && !redirectURI) {
-            // If multiple redirection URIs have been registered, the client must
-            // include a redirection URI with the authorization request.  Refer to
-            // Section 3.1.2.3 of RFC 6749 for further details.
-            return cb(new oauth2orize.AuthorizationError('Missing required parameter: redirect_uri', 'invalid_request'));
-          }
+            clients.read(clientID, function(err, client) {
+              if (err) { return cb(err); }
+              if (!client) {
+                return cb(new oauth2orize.AuthorizationError('Unauthorized client', 'unauthorized_client'));
+              }
+              if (!client.redirectURIs || !client.redirectURIs.length) {
+                // The client has not registered any redirection endpoints.  Such
+                // clients are not authorized to use the authorization endpoint.
+                //
+                // This enforcement is in place in order to prevent the authorization
+                // server from functioning as an open redirector.  Refer to Section
+                // 3.1.2.2 of RFC 6749 for further details.
+                return cb(new oauth2orize.AuthorizationError('Client has no registered redirect URIs', 'unauthorized_client'));
+              }
+              if (client.redirectURIs.length > 1 && !redirectURI) {
+                // If multiple redirection URIs have been registered, the client must
+                // include a redirection URI with the authorization request.  Refer to
+                // Section 3.1.2.3 of RFC 6749 for further details.
+                return cb(new oauth2orize.AuthorizationError('Missing required parameter: redirect_uri', 'invalid_request'));
+              }
 
-          /*
-          // http://lists.openid.net/pipermail/openid-specs-ab/Week-of-Mon-20151116/005865.html
-          if (redirectURI) {
-            var url = uri.parse(redirectURI);
-            //console.log(url);
-            if (url.protocol == 'storagerelay:') {
-              // TODO: Implement web/js origin checks
-              return cb(null, client, redirectURI, 'http://localhost:3001');
-            }
-          }
-          */
+              // WIP
+              /*
+              // http://lists.openid.net/pipermail/openid-specs-ab/Week-of-Mon-20151116/005865.html
+              if (redirectURI) {
+                var url = uri.parse(redirectURI);
+                //console.log(url);
+                if (url.protocol == 'storagerelay:') {
+                  // TODO: Implement web/js origin checks
+                  return cb(null, client, redirectURI, 'http://localhost:3001');
+                }
+              }
+              */
 
 
-          if (redirectURI && client.redirectURIs.indexOf(redirectURI) == -1) {
-            return cb(new oauth2orize.AuthorizationError('Client not permitted to use redirect URI', 'unauthorized_client'));
-          }
+              if (redirectURI && client.redirectURIs.indexOf(redirectURI) == -1) {
+                return cb(new oauth2orize.AuthorizationError('Client not permitted to use redirect URI', 'unauthorized_client'));
+              }
     
-          return cb(null, client, redirectURI || client.redirectURIs[0]);
-        }); // clients.read
-      },
-      function(txn, cb) {
-        // TODO: Filter out "internal" response modes by erroring here?
+              return cb(null, client, redirectURI || client.redirectURIs[0]);
+            }); // clients.read
+          },
+          function(txn, cb) {
+            // TODO: Filter out "internal" response modes by erroring here?
         
-        // Immediate mode callback.  Always, false, deferring transaction processing to 
-        // HTTP handler below where all context is available.
-        return cb(null, false);
-      }
-    ),
-    evaluate,
-    // TODO: Add error handling middleware here
-    // TODO: Check that this is right and not reloading the txn
-    server.authorizationError()
-  ];
+            // Immediate mode callback.  Always, false, deferring transaction processing to 
+            // HTTP handler below where all context is available.
+            return cb(null, false);
+          }
+        ),
+        evaluate,
+        // TODO: Add error handling middleware here
+        // TODO: Check that this is right and not reloading the txn
+        server.authorizationError()
+      ];
+  
+  });
 };
 
 exports['@require'] = [
