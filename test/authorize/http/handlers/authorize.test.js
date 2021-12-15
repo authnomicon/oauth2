@@ -435,7 +435,97 @@ describe('authorize/http/handlers/authorize', function() {
         .catch(done);
     }); // should error when error is encountered while querying directory
     
-    it('should evaluate request that uses a redirect URI scheme', function(done) {
+    it('should evaluate request from client using redirect URI that is a registered web origin', function(done) {
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      
+      var clients = new Object();
+      clients.read = sinon.stub().yieldsAsync(null, {
+        id: 's6BhdRkqt3',
+        name: 'My Example Client',
+        redirectURIs: [ 'https://client.example.com' ],
+        webOrigins: [ 'https://client.example.com' ]
+      });
+      
+      factory(evaluate, clients, server, authenticate, state, session, parseCookies, logger, container)
+        .then(function(handler) {
+          chai.express.use(handler)
+            .request(function(req, res) {
+              req.query = {
+                client_id: 's6BhdRkqt3',
+                redirect_uri: 'https://client.example.com'
+              };
+            })
+            .finish(function() {
+              expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
+              expect(this.req.oauth2.client).to.deep.equal({
+                id: 's6BhdRkqt3',
+                name: 'My Example Client',
+                redirectURIs: [ 'https://client.example.com' ],
+                webOrigins: [ 'https://client.example.com' ]
+              });
+              expect(this.req.oauth2.redirectURI).to.equal('https://client.example.com');
+              expect(this.req.oauth2.webOrigin).to.equal('https://client.example.com');
+          
+              expect(this.statusCode).to.equal(302);
+              expect(this.getHeader('Location')).to.equal('/consent');
+              done()
+            })
+            .listen();
+        })
+        .catch(done);
+    }); // should evaluate request from client using redirect URI that is a registered web origin
+    
+    it('should evaluate request from client using redirect URI that is not a registered web origin', function(done) {
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      
+      var clients = new Object();
+      clients.read = sinon.stub().yieldsAsync(null, {
+        id: 's6BhdRkqt3',
+        name: 'My Example Client',
+        redirectURIs: [
+          'https://client.example.com',
+          'https://client.example.io'
+        ],
+        webOrigins: [ 'https://client.example.com' ]
+      });
+      
+      factory(evaluate, clients, server, authenticate, state, session, parseCookies, logger, container)
+        .then(function(handler) {
+          chai.express.use(handler)
+            .request(function(req, res) {
+              req.query = {
+                client_id: 's6BhdRkqt3',
+                redirect_uri: 'https://client.example.io'
+              };
+            })
+            .finish(function() {
+              expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
+              expect(this.req.oauth2.client).to.deep.equal({
+                id: 's6BhdRkqt3',
+                name: 'My Example Client',
+                redirectURIs: [
+                  'https://client.example.com',
+                  'https://client.example.io'
+                ],
+                webOrigins: [ 'https://client.example.com' ]
+              });
+              expect(this.req.oauth2.redirectURI).to.equal('https://client.example.io');
+              expect(this.req.oauth2.webOrigin).to.be.undefined;
+          
+              expect(this.statusCode).to.equal(302);
+              expect(this.getHeader('Location')).to.equal('/consent');
+              done()
+            })
+            .listen();
+        })
+        .catch(done);
+    }); // should evaluate request from client using redirect URI that is not a registered web origin
+    
+    it('should evaluate request from client that uses a redirect URI scheme', function(done) {
       var scheme = {
         verify: function(client, redirectURI) {
           expect(client).to.deep.equal({
@@ -492,9 +582,9 @@ describe('authorize/http/handlers/authorize', function() {
             .listen();
         })
         .catch(done);
-    }); // should evaluate request that uses a redirect URI scheme
+    }); // should evaluate request from client that uses a redirect URI scheme
     
-    it('should reject request that uses an unverified redirect URI scheme', function(done) {
+    it('should reject request from client that uses an unverified redirect URI scheme', function(done) {
       var scheme = {
         verify: function(client, redirectURI) {
           return false;
@@ -537,7 +627,7 @@ describe('authorize/http/handlers/authorize', function() {
             .listen();
         })
         .catch(done);
-    }); // should reject request that uses an unverified redirect URI scheme
+    }); // should reject request from client that uses an unverified redirect URI scheme
     
   }); // handler
   

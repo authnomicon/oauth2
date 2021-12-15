@@ -84,7 +84,7 @@ exports = module.exports = function(evaluate, clients, server, authenticate, sta
               var ruri = redirectURI || client.redirectURIs[0]
                 , uri = url.parse(ruri)
                 , proto = uri.protocol.slice(0, -1)
-                , scheme = schemes[proto], v;
+                , scheme = schemes[proto], v, worig;
               
               if (scheme) {
                 v = scheme.verify(client, ruri);
@@ -98,8 +98,11 @@ exports = module.exports = function(evaluate, clients, server, authenticate, sta
               if (redirectURI && client.redirectURIs.indexOf(redirectURI) == -1) {
                 return cb(new oauth2orize.AuthorizationError('Client not permitted to use redirect URI', 'unauthorized_client'));
               }
-    
-              return cb(null, client, ruri);
+              
+              if (client.webOrigins && client.webOrigins.indexOf(redirectURI) !== -1) {
+                worig = redirectURI;
+              }
+              return cb(null, client, ruri, worig);
             }); // clients.read
           },
           function(txn, cb) {
