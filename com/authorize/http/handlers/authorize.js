@@ -81,41 +81,25 @@ exports = module.exports = function(evaluate, clients, server, authenticate, sta
                 return cb(new oauth2orize.AuthorizationError('Missing required parameter: redirect_uri', 'invalid_request'));
               }
 
-              var ruri = redirectURI || client.redirectURIs[0];
-              
-              var uri = url.parse(ruri);
-              var proto = uri.protocol.slice(0, -1);
-              var scheme = schemes[proto];
-              var v;
+              var ruri = redirectURI || client.redirectURIs[0]
+                , uri = url.parse(ruri)
+                , proto = uri.protocol.slice(0, -1)
+                , scheme = schemes[proto], v;
               
               if (scheme) {
-                v = scheme.verify(client, redirectURI);
+                v = scheme.verify(client, ruri);
                 if (!v) {
                   return cb(new oauth2orize.AuthorizationError('Client not permitted to use redirect URI', 'unauthorized_client'));
                 }
-                
                 return cb(null, client, v[0], v[1]);
               }
-
-              // WIP
-              /*
-              // http://lists.openid.net/pipermail/openid-specs-ab/Week-of-Mon-20151116/005865.html
-              if (redirectURI) {
-                var url = uri.parse(redirectURI);
-                //console.log(url);
-                if (url.protocol == 'storagerelay:') {
-                  // TODO: Implement web/js origin checks
-                  return cb(null, client, redirectURI, 'http://localhost:3001');
-                }
-              }
-              */
 
 
               if (redirectURI && client.redirectURIs.indexOf(redirectURI) == -1) {
                 return cb(new oauth2orize.AuthorizationError('Client not permitted to use redirect URI', 'unauthorized_client'));
               }
     
-              return cb(null, client, redirectURI || client.redirectURIs[0]);
+              return cb(null, client, ruri);
             }); // clients.read
           },
           function(txn, cb) {
