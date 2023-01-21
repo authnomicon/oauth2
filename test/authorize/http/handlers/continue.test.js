@@ -42,12 +42,6 @@ describe('authorize/http/handlers/continue', function() {
     };
   }
   
-  function session() {
-    return function(req, res, next) {
-      next();
-    };
-  }
-  
   function parseCookies() {
     return function(req, res, next) {
       next();
@@ -57,17 +51,14 @@ describe('authorize/http/handlers/continue', function() {
   it('should create handler', function() {
     var authenticateSpy = sinon.spy(authenticate);
     var stateSpy = sinon.spy(state);
-    var sessionSpy = sinon.spy(session);
     var parseCookiesSpy = sinon.spy(parseCookies);
     
-    var handler = factory(evaluate, server, authenticateSpy, stateSpy, sessionSpy, parseCookiesSpy);
+    var handler = factory(evaluate, server, authenticateSpy, stateSpy, parseCookiesSpy);
     
     expect(parseCookiesSpy).to.be.calledOnce;
-    expect(sessionSpy).to.be.calledOnce;
-    expect(sessionSpy).to.be.calledAfter(parseCookiesSpy);
     expect(stateSpy).to.be.calledOnce;
     expect(stateSpy).to.be.calledWithExactly();
-    expect(stateSpy).to.be.calledAfter(sessionSpy);
+    expect(stateSpy).to.be.calledAfter(parseCookiesSpy);
     expect(authenticateSpy).to.be.calledOnce;
     expect(authenticateSpy).to.be.calledWithExactly([ 'session' ], { multi: true });
     expect(authenticateSpy).to.be.calledAfter(stateSpy);
@@ -76,7 +67,7 @@ describe('authorize/http/handlers/continue', function() {
   describe('handler', function() {
     
     it('should evaluate request', function(done) {
-      var handler = factory(evaluate, server, authenticate, state, session, parseCookies);
+      var handler = factory(evaluate, server, authenticate, state, parseCookies);
       
       chai.express.use(handler)
         .finish(function() {
