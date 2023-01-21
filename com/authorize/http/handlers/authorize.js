@@ -14,7 +14,7 @@
  * redirect the user to an invalid redirection URI.
  */
 
-exports = module.exports = function(evaluate, clients, server, authenticate, state, session, parseCookies, logger, C) {
+exports = module.exports = function(evaluate, clients, server, authenticate, state, parseCookies, logger, C) {
   var oauth2orize = require('oauth2orize')
     , url = require('url');
   
@@ -53,7 +53,6 @@ exports = module.exports = function(evaluate, clients, server, authenticate, sta
 
       return [
         parseCookies(),
-        session(),
         state({ external: true }),
         authenticate([ 'session', 'anonymous' ], { multi: true }),
         server.authorization(
@@ -128,7 +127,6 @@ exports['@require'] = [
   '../../../http/server',
   'http://i.bixbyjs.org/http/middleware/authenticate',
   'http://i.bixbyjs.org/http/middleware/state',
-  'http://i.bixbyjs.org/http/middleware/session',
   'http://i.bixbyjs.org/http/middleware/parseCookies',
   'http://i.bixbyjs.org/Logger',
   '!container'
