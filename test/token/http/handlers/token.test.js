@@ -34,12 +34,6 @@ describe('token/http/handlers/token', function() {
       }
     }
     
-    function parse() {
-      return function(req, res, next) {
-        next();
-      };
-    }
-    
     function authenticate(schemes) {
       return function(req, res, next) {
         req.authInfo = { schemes: schemes };
@@ -56,7 +50,6 @@ describe('token/http/handlers/token', function() {
     
     describe('default behavior', function() {
       var request, response;
-      var parseSpy = sinon.spy(parse);
       
       before(function() {
         sinon.stub(container, 'create').returns(Promise.reject(new Error('component not found')));
@@ -69,7 +62,7 @@ describe('token/http/handlers/token', function() {
       */
       
       before(function(done) {
-        var promise = factory(container, server, parseSpy, authenticate, errorLogging, logger);
+        var promise = factory(container, server, authenticate, errorLogging, logger);
         promise.then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -85,11 +78,6 @@ describe('token/http/handlers/token', function() {
             })
             .listen();
         });
-      });
-      
-      it('should add parse middleware to stack', function() {
-        expect(parseSpy.callCount).to.equal(1);
-        expect(parseSpy).to.be.calledWithExactly('application/x-www-form-urlencoded');
       });
       
       it('should authenticate', function() {

@@ -1,10 +1,10 @@
-exports = module.exports = function(IoC, server, parse, authenticate, errorLogging, logger) {
+exports = module.exports = function(IoC, server, authenticate, errorLogging, logger) {
   //return server.token();
   
   // curl --data "client_id=1&client_secret=secret&grant_type=authorization_code&code=1234" http://127.0.0.1:8080/token
   
   var stack = [
-    parse('application/x-www-form-urlencoded'),
+    require('body-parser').urlencoded({ extended: false }),
     authenticate(['oauth2-client-authentication/client_secret_basic', 'oauth2-client-authentication/client_secret_post', 'oauth2-client-authentication/none']),
     server.token()
   ];
@@ -30,7 +30,6 @@ exports = module.exports = function(IoC, server, parse, authenticate, errorLoggi
 exports['@require'] = [
   '!container',
   '../../../http/server',
-  'http://i.bixbyjs.org/http/middleware/parse',
   'http://i.bixbyjs.org/http/middleware/authenticate',
   'http://i.bixbyjs.org/http/middleware/errorLogging',
   'http://i.bixbyjs.org/Logger'
