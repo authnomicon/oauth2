@@ -1,6 +1,6 @@
 // $ curl --header "Content-Type: application/json" --request POST --data '{"client_name":"example"}' http://localhost:3000/oauth2/client
 
-exports = module.exports = function(parse, clients) {
+exports = module.exports = function(clients) {
   
   // TODO: Error 5xx not supported if client directory does not have `create()` function
   
@@ -25,12 +25,11 @@ exports = module.exports = function(parse, clients) {
   
   // TODO: authenticate this route?
   return [
-    parse('application/json'),
+    require('body-parser').json(),
     go
   ];
 };
 
 exports['@require'] = [
-  'http://i.bixbyjs.org/http/middleware/parse',
   'http://i.authnomicon.org/oauth2/ClientDirectory'
 ];
