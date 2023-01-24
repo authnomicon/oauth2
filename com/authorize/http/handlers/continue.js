@@ -1,9 +1,9 @@
-exports = module.exports = function(evaluate, server, authenticate, state) {
+exports = module.exports = function(evaluate, server, authenticator, state) {
   
   return [
     // parseCookies(),// TODO: Put this at app level? Why?
     state(),
-    authenticate([ 'session' ], { multi: true }),
+    authenticator.authenticate([ 'session' ], { multi: true }),
     server.resume(
       function(txn, cb) {
         // Immediate mode callback.  Always, false, deferring transaction processing to 
@@ -19,6 +19,6 @@ exports = module.exports = function(evaluate, server, authenticate, state) {
 exports['@require'] = [
   '../middleware/evaluate',
   '../../../http/server',
-  'http://i.bixbyjs.org/http/middleware/authenticate',
+  'module:@authnomicon/session.Authenticator',
   'http://i.bixbyjs.org/http/middleware/state'
 ];

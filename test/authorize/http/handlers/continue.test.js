@@ -46,7 +46,7 @@ describe('authorize/http/handlers/continue', function() {
     var authenticateSpy = sinon.spy(authenticate);
     var stateSpy = sinon.spy(state);
     
-    var handler = factory(evaluate, server, authenticateSpy, stateSpy);
+    var handler = factory(evaluate, server, { authenticate: authenticateSpy }, stateSpy);
     
     expect(stateSpy).to.be.calledOnce;
     expect(stateSpy).to.be.calledWithExactly();
@@ -59,7 +59,7 @@ describe('authorize/http/handlers/continue', function() {
   describe('handler', function() {
     
     it('should evaluate request', function(done) {
-      var handler = factory(evaluate, server, authenticate, state);
+      var handler = factory(evaluate, server, { authenticate: authenticate }, state);
       
       chai.express.use(handler)
         .finish(function() {
