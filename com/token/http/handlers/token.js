@@ -1,11 +1,11 @@
-exports = module.exports = function(IoC, server, authenticate, errorLogging, logger) {
+exports = module.exports = function(IoC, server, authenticator, errorLogging, logger) {
   //return server.token();
   
   // curl --data "client_id=1&client_secret=secret&grant_type=authorization_code&code=1234" http://127.0.0.1:8080/token
   
   var stack = [
     require('body-parser').urlencoded({ extended: false }),
-    authenticate(['oauth2-client-authentication/client_secret_basic', 'oauth2-client-authentication/client_secret_post', 'oauth2-client-authentication/none']),
+    authenticator.authenticate(['oauth2-client-authentication/client_secret_basic', 'oauth2-client-authentication/client_secret_post', 'oauth2-client-authentication/none']),
     server.token()
   ];
   
@@ -30,7 +30,7 @@ exports = module.exports = function(IoC, server, authenticate, errorLogging, log
 exports['@require'] = [
   '!container',
   '../../../http/server',
-  'http://i.bixbyjs.org/http/middleware/authenticate',
+  'module:bixby-express.Authenticator', // TODO: make an oauth2-specific authenticator
   'http://i.bixbyjs.org/http/middleware/errorLogging',
   'http://i.bixbyjs.org/Logger'
 ];

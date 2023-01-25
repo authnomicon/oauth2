@@ -62,7 +62,7 @@ describe('token/http/handlers/token', function() {
       */
       
       before(function(done) {
-        var promise = factory(container, server, authenticate, errorLogging, logger);
+        var promise = factory(container, server, { authenticate: authenticate }, errorLogging, logger);
         promise.then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
