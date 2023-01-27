@@ -1,8 +1,9 @@
-exports = module.exports = function(evaluate, server, authenticator, state) {
+exports = module.exports = function(evaluate, server, authenticator, store) {
   
   return [
     // parseCookies(),// TODO: Put this at app level? Why?
-    state(),
+    //state(),
+    require('flowstate')({ store: store }),
     authenticator.authenticate([ 'session' ], { multi: true }),
     server.resume(
       function(txn, cb) {
@@ -20,5 +21,5 @@ exports['@require'] = [
   '../middleware/evaluate',
   '../../../http/server',
   'module:@authnomicon/session.Authenticator',
-  'http://i.bixbyjs.org/http/middleware/state'
+  'module:flowstate.Store'
 ];
