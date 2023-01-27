@@ -41,12 +41,6 @@ describe('token/http/handlers/token', function() {
       };
     }
     
-    function errorLogging() {
-      return function(err, req, res, next) {
-        next(err);
-      };
-    }
-    
     
     describe('default behavior', function() {
       var request, response;
@@ -62,7 +56,7 @@ describe('token/http/handlers/token', function() {
       */
       
       before(function(done) {
-        var promise = factory(container, server, { authenticate: authenticate }, errorLogging, logger);
+        var promise = factory(container, server, { authenticate: authenticate }, logger);
         promise.then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {

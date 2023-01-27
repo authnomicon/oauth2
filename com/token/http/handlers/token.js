@@ -1,4 +1,4 @@
-exports = module.exports = function(IoC, server, authenticator, errorLogging, logger) {
+exports = module.exports = function(IoC, server, authenticator, /*errorLogging,*/ logger) {
   //return server.token();
   
   // curl --data "client_id=1&client_secret=secret&grant_type=authorization_code&code=1234" http://127.0.0.1:8080/token
@@ -21,7 +21,7 @@ exports = module.exports = function(IoC, server, authenticator, errorLogging, lo
         });
     })
     .then(function(stack) {
-      stack.push(errorLogging());
+      //stack.push(errorLogging());
       stack.push(server.errorHandler());
       return stack;
     });
@@ -31,6 +31,6 @@ exports['@require'] = [
   '!container',
   '../../../http/server',
   'module:bixby-express.Authenticator', // TODO: make an oauth2-specific authenticator
-  'http://i.bixbyjs.org/http/middleware/errorLogging',
+  //'http://i.bixbyjs.org/http/middleware/errorLogging',
   'http://i.bixbyjs.org/Logger'
 ];
