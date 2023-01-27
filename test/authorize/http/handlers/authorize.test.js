@@ -52,12 +52,6 @@ describe('authorize/http/handlers/authorize', function() {
     };
   }
   
-  function state() {
-    return function(req, res, next) {
-      next();
-    };
-  }
-  
   var logger = {
     emergency: function(){},
     alert: function(){},
@@ -77,16 +71,15 @@ describe('authorize/http/handlers/authorize', function() {
     var authorizationErrorSpy = sinon.spy(server, 'authorizationError');
     var authorizationSpy = sinon.spy(server, 'authorization');
     var authenticateSpy = sinon.spy(authenticate);
-    var stateSpy = sinon.spy(state);
     
-    factory(evaluate, null, server, { authenticate: authenticateSpy }, stateSpy, logger, container)
+    // TODO: Add state store
+    factory(evaluate, null, server, { authenticate: authenticateSpy }, undefined, logger, container)
       .then(function(handler) {
-        expect(stateSpy).to.be.calledOnce;
-        expect(stateSpy).to.be.calledWithExactly({ external: true });
+        //expect(stateSpy).to.be.calledOnce;
+        //expect(stateSpy).to.be.calledWithExactly({ external: true });
         //expect(stateSpy).to.be.calledAfter(parseCookiesSpy);
         expect(authenticateSpy).to.be.calledOnce;
         expect(authenticateSpy).to.be.calledWithExactly([ 'session', 'anonymous' ], { multi: true });
-        expect(authenticateSpy).to.be.calledAfter(stateSpy);
         expect(authorizationSpy).to.be.calledOnce;
         expect(authorizationSpy).to.be.calledAfter(authenticateSpy);
         expect(authorizationErrorSpy).to.be.calledOnce;
@@ -110,10 +103,11 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: [ 'https://client.example.com/cb' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, state, logger, container)
+      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
+              req.connection = {};
               req.query = {
                 client_id: 's6BhdRkqt3',
                 redirect_uri: 'https://client.example.com/cb'
@@ -150,10 +144,11 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: [ 'https://client.example.com/cb', 'https://client.example.com/cb2' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, state, logger, container)
+      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
+              req.connection = {};
               req.query = {
                 client_id: 's6BhdRkqt3',
                 redirect_uri: 'https://client.example.com/cb2'
@@ -190,10 +185,11 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: [ 'https://client.example.com/cb' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, state, logger, container)
+      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
+              req.connection = {};
               req.query = {
                 client_id: 's6BhdRkqt3'
               };
@@ -225,10 +221,11 @@ describe('authorize/http/handlers/authorize', function() {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null);
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, state, logger, container)
+      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
+              req.connection = {};
               req.query = {
                 client_id: 's6BhdRkqt3',
                 redirect_uri: 'https://client.example.com/cb'
@@ -259,10 +256,11 @@ describe('authorize/http/handlers/authorize', function() {
         name: 'My Example Client'
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, state, logger, container)
+      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
+              req.connection = {};
               req.query = {
                 client_id: 's6BhdRkqt3',
                 redirect_uri: 'https://client.example.com/cb'
@@ -294,10 +292,11 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: []
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, state, logger, container)
+      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
+              req.connection = {};
               req.query = {
                 client_id: 's6BhdRkqt3',
                 redirect_uri: 'https://client.example.com/cb'
@@ -332,10 +331,11 @@ describe('authorize/http/handlers/authorize', function() {
         ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, state, logger, container)
+      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
+              req.connection = {};
               req.query = {
                 client_id: 's6BhdRkqt3',
                 redirect_uri: 'https://client.example.net/cb'
@@ -370,10 +370,11 @@ describe('authorize/http/handlers/authorize', function() {
         ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, state, logger, container)
+      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
+              req.connection = {};
               req.query = {
                 client_id: 's6BhdRkqt3'
               };
@@ -400,10 +401,11 @@ describe('authorize/http/handlers/authorize', function() {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(new Error('something went wrong'));
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, state, logger, container)
+      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
+              req.connection = {};
               req.query = {
                 client_id: 's6BhdRkqt3'
               };
@@ -431,10 +433,11 @@ describe('authorize/http/handlers/authorize', function() {
         webOrigins: [ 'https://client.example.com' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, state, logger, container)
+      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
+              req.connection = {};
               req.query = {
                 client_id: 's6BhdRkqt3',
                 redirect_uri: 'https://client.example.com'
@@ -476,10 +479,11 @@ describe('authorize/http/handlers/authorize', function() {
         webOrigins: [ 'https://client.example.com' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, state, logger, container)
+      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
+              req.connection = {};
               req.query = {
                 client_id: 's6BhdRkqt3',
                 redirect_uri: 'https://client.example.io'
@@ -538,10 +542,11 @@ describe('authorize/http/handlers/authorize', function() {
         webOrigins: [ 'https://client.example.com' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, state, logger, container)
+      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
+              req.connection = {};
               req.query = {
                 client_id: 's6BhdRkqt3',
                 redirect_uri: 'storagerelay://https/client.example.com?id=auth304970'
@@ -589,10 +594,11 @@ describe('authorize/http/handlers/authorize', function() {
         webOrigins: [ 'https://client.example.com' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, state, logger, container)
+      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
+              req.connection = {};
               req.query = {
                 client_id: 's6BhdRkqt3',
                 redirect_uri: 'storagerelay://https/client.example.com?id=auth304970'

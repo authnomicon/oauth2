@@ -14,7 +14,7 @@
  * redirect the user to an invalid redirection URI.
  */
 
-exports = module.exports = function(evaluate, clients, server, authenticator, state, logger, C) {
+exports = module.exports = function(evaluate, clients, server, authenticator, store, logger, C) {
   var oauth2orize = require('oauth2orize')
     , url = require('url');
   
@@ -53,7 +53,8 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
 
       return [
         //parseCookies(), // TODO: Put this at app level? Why?
-        state({ external: true }),
+        //state({ external: true }),
+        require('flowstate')({ external: true, store: store }),
         authenticator.authenticate([ 'session', 'anonymous' ], { multi: true }),
         server.authorization(
           function validateClient(clientID, redirectURI, cb) {
@@ -126,7 +127,7 @@ exports['@require'] = [
   'http://i.authnomicon.org/oauth2/ClientDirectory',
   '../../../http/server',
   'module:@authnomicon/session.Authenticator',
-  'http://i.bixbyjs.org/http/middleware/state',
+  'module:flowstate.Store',
   'http://i.bixbyjs.org/Logger',
   '!container'
 ];
