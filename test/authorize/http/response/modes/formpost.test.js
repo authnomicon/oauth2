@@ -14,6 +14,6 @@ describe('authorize/http/response/modes/formpost', function() {
   it('should create responder', function() {
     var mode = factory();
     expect(mode).to.be.a('function');
-  }); // should create response mode
+  }); // should create responder
   
 });

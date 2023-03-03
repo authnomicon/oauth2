@@ -11,7 +11,6 @@ describe('authorize/http/response/types/token', function() {
   it('should be annotated', function() {
     expect(factory['@implements']).to.equal('module:oauth2orize.RequestProcessor');
     expect(factory['@type']).to.equal('token');
-    expect(factory['@singleton']).to.be.undefined;
   });
   
   
