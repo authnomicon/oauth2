@@ -74,7 +74,7 @@ exports = module.exports = function(ats, logger, C) {
     });
 };
 
-exports['@implements'] = 'http://i.authnomicon.org/oauth2/authorization/http/ResponseType';
+exports['@implements'] = 'module:oauth2orize.RequestProcessor';
 exports['@type'] = 'token';
 exports['@require'] = [
   'http://i.authnomicon.org/oauth2/AccessTokenService',

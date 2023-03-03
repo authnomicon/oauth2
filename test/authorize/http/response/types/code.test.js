@@ -9,7 +9,7 @@ var factory = require('../../../../../com/authorize/http/response/types/code');
 describe('authorize/http/response/types/code', function() {
   
   it('should be annotated', function() {
-    expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/authorization/http/ResponseType');
+    expect(factory['@implements']).to.equal('module:oauth2orize.RequestProcessor');
     expect(factory['@type']).to.equal('code');
     expect(factory['@singleton']).to.be.undefined;
   });

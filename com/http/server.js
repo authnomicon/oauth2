@@ -40,7 +40,7 @@ exports = module.exports = function(container, store, logger) {
     .then(function(server) {
       // Register response types with the OAuth 2.0 server.
       return new Promise(function(resolve, reject) {
-        var components = container.components('http://i.authnomicon.org/oauth2/authorization/http/ResponseType');
+        var components = container.components('module:oauth2orize.RequestProcessor');
         
         (function iter(i) {
           var component = components[i]
