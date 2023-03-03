@@ -10,7 +10,7 @@ exports = module.exports = function(container, store, logger) {
     .then(function(server) {
       // Register request parameter extensions with the OAuth 2.0 server.
       return new Promise(function(resolve, reject) {
-        var components = container.components('http://i.authnomicon.org/oauth2/authorization/http/RequestParameters');
+        var components = container.components('module:oauth2orize.RequestParametersProcessor');
         
         (function iter(i) {
           var component = components[i];

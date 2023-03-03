@@ -9,11 +9,10 @@ var factory = require('../../../../com/authorize/http/request/responsemode');
 describe('authorize/http/request/responsemode', function() {
   
   it('should be annotated', function() {
-    expect(factory['@implements']).to.equal('http://i.authnomicon.org/oauth2/authorization/http/RequestParameters');
-    expect(factory['@singleton']).to.be.undefined;
+    expect(factory['@implements']).to.equal('module:oauth2orize.RequestParametersProcessor');
   });
   
-  it('should create extension', function() {
+  it('should create processor', function() {
     var extensionsSpy = sinon.stub();
     var factory = $require('../../../../com/authorize/http/request/responsemode', {
       'oauth2orize-response-mode': { extensions: extensionsSpy }
@@ -21,6 +20,6 @@ describe('authorize/http/request/responsemode', function() {
     
     var extensions = factory();
     expect(extensionsSpy).to.have.been.calledOnce;
-  }); // should create extension
+  }); // should create processor
   
 });

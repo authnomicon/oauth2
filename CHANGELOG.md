@@ -13,6 +13,8 @@ authorization request.
 and the storagerelay scheme.
 
 ### Changed
+- Renamed `http://i.authnomicon.org/oauth2/authorization/http/RequestParameters`
+interface to `module:oauth2orize.RequestParametersProcessor`.
 - Renamed `http://i.authnomicon.org/oauth2/authorization/http/ResponseMode`
 interface to `module:oauth2orize.Responder`.
 
