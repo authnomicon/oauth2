@@ -29,7 +29,7 @@ describe('authorize/http/response/types/code', function() {
   it('should create response type without response modes', function(done) {
     var container = new Object();
     container.components = sinon.stub();
-    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([]);
+    container.components.withArgs('module:oauth2orize.Responder').returns([]);
     container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
     
     var codeSpy = sinon.stub();
@@ -61,7 +61,7 @@ describe('authorize/http/response/types/code', function() {
     
     var container = new Object();
     container.components = sinon.stub();
-    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([
+    container.components.withArgs('module:oauth2orize.Responder').returns([
       mode1Component,
       mode2Component
     ]);
@@ -91,7 +91,7 @@ describe('authorize/http/response/types/code', function() {
   describe('issue', function() {
     var container = new Object();
     container.components = sinon.stub()
-    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([]);
+    container.components.withArgs('module:oauth2orize.Responder').returns([]);
     container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
     var acs = new Object();
     
@@ -296,7 +296,7 @@ describe('authorize/http/response/types/code', function() {
     it('should error when encountering an error issuing authorization code', function(done) {
       var container = new Object();
       container.components = sinon.stub()
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([]);
+      container.components.withArgs('module:oauth2orize.Responder').returns([]);
       container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
       var acs = new Object();
       acs.issue = sinon.stub().yieldsAsync(new Error('something went wrong'));
@@ -346,7 +346,7 @@ describe('authorize/http/response/types/code', function() {
     it('should not extend with no extensions', function(done) {
       var container = new Object();
       container.components = sinon.stub()
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([]);
+      container.components.withArgs('module:oauth2orize.Responder').returns([]);
       container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
       var acs = new Object();
       acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
@@ -421,7 +421,7 @@ describe('authorize/http/response/types/code', function() {
       
       var container = new Object();
       container.components = sinon.stub()
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([]);
+      container.components.withArgs('module:oauth2orize.Responder').returns([]);
       container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([
         ext1Component
       ]);
@@ -527,7 +527,7 @@ describe('authorize/http/response/types/code', function() {
       
       var container = new Object();
       container.components = sinon.stub()
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode').returns([]);
+      container.components.withArgs('module:oauth2orize.Responder').returns([]);
       container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([
         ext1Component,
         ext2Component

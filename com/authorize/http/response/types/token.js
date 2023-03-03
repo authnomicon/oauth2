@@ -9,7 +9,7 @@ exports = module.exports = function(ats, logger, C) {
       var modes = {};
     
       return new Promise(function(resolve, reject) {
-        var components = C.components('http://i.authnomicon.org/oauth2/authorization/http/ResponseMode')
+        var components = C.components('module:oauth2orize.Responder')
           , key;
     
         (function iter(i) {

@@ -12,6 +12,10 @@ authorization request.
 - Support for redirect URI schemes, enabling support for [IDP-IFrame-based Implict Flow](http://lists.openid.net/pipermail/openid-specs-ab/Week-of-Mon-20151116/005865.html)
 and the storagerelay scheme.
 
+### Changed
+- Renamed `http://i.authnomicon.org/oauth2/authorization/http/ResponseMode`
+interface to `module:oauth2orize.Responder`.
+
 ## [0.0.4] - 2021-12-13
 ### Added
 - Added OAuth 2.0 error middleware to `/authorize` endpoint.
