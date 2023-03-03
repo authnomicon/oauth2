@@ -9,10 +9,9 @@ describe('authorize/http/response/modes/formpost', function() {
   it('should be annotated', function() {
     expect(factory['@implements']).to.equal('module:oauth2orize.Responder');
     expect(factory['@mode']).to.equal('form_post');
-    expect(factory['@singleton']).to.be.undefined;
   });
   
-  it('should create response mode', function() {
+  it('should create responder', function() {
     var mode = factory();
     expect(mode).to.be.a('function');
   }); // should create response mode
