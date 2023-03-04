@@ -332,55 +332,71 @@ describe('authorize/http/response/types/code', function() {
   
   }); // with failing authorization code service
   
-  describe('extend', function() {
+  describe('without response parameter extensions', function() {
+    var acs = new Object();
     
-    it('should not extend with no extensions', function(done) {
+    var extend;
+    
+    beforeEach(function(done) {
       var container = new Object();
       container.components = sinon.stub()
       container.components.withArgs('module:oauth2orize.Responder').returns([]);
       container.components.withArgs('module:oauth2orize.responseParametersFn').returns([]);
-      var acs = new Object();
       acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
-    
+      
       var codeSpy = sinon.stub();
       var factory = $require('../../../../../com/authorize/http/response/types/code', {
         'oauth2orize': {
           grant: { code: codeSpy }
         }
       });
-    
+      
       factory(acs, logger, container)
-        .then(function(type) {
-          var extend = codeSpy.getCall(0).args[2];
-          var txn = {
-            client: {
-              id: 's6BhdRkqt3',
-              name: 'My Example Client'
-            },
-            redirectURI: 'https://client.example.com/cb',
-            req: {
-              type: 'code',
-              clientID: 's6BhdRkqt3',
-              redirectURI: 'https://client.example.com/cb',
-              state: 'xyz'
-            },
-            user: {
-              id: '248289761001',
-              displayName: 'Jane Doe'
-            },
-            res: {
-              allow: true
-            }
-          };
-          
-          extend(txn, function(err, params) {
-            if (err) { return done(err); }
-            expect(params).to.deep.equal({});
-            done();
+        .then(function(processor) {
+          expect(codeSpy).to.be.calledOnceWith({
+            modes: {}
           });
+          
+          extend = codeSpy.getCall(0).args[2];
+          done();
         })
         .catch(done);
-    }); // should not extend with no extensions
+    });
+    
+    it('should not extend response', function(done) {
+      var txn = {
+        client: {
+          id: 's6BhdRkqt3',
+          name: 'My Example Client'
+        },
+        redirectURI: 'https://client.example.com/cb',
+        req: {
+          type: 'code',
+          clientID: 's6BhdRkqt3',
+          redirectURI: 'https://client.example.com/cb',
+          state: 'xyz'
+        },
+        user: {
+          id: '248289761001',
+          displayName: 'Jane Doe'
+        },
+        res: {
+          allow: true
+        }
+      };
+      
+      extend(txn, function(err, params) {
+        if (err) { return done(err); }
+        expect(params).to.deep.equal({});
+        done();
+      });
+    }); // should yield error
+    
+  }); // without parameter extensions
+  
+  
+  
+  describe('extend', function() {
     
     it('should extend with one extension', function(done) {
       var ext1 = function(txn, cb) {
