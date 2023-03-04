@@ -233,8 +233,8 @@ describe('authorize/http/response/types/code', function() {
         scope: [ 'openid', 'profile', 'email' ],
         authContext: {
           sessionID: 'YU7uoYRVAxF34TuoAodVfw-1eA13rhqW',
-          methods: [
-            { method: 'password', timestamp: new Date('2011-07-21T20:42:49.000Z') }
+          credentials: [
+            { type: 'password', timestamp: new Date('2011-07-21T20:42:49.000Z') }
           ]
         }
       };
@@ -262,8 +262,8 @@ describe('authorize/http/response/types/code', function() {
           scope: [ 'openid', 'profile', 'email' ],
           authContext: {
             sessionID: 'YU7uoYRVAxF34TuoAodVfw-1eA13rhqW',
-            methods: [
-              { method: 'password', timestamp: new Date('2011-07-21T20:42:49.000Z') }
+            credentials: [
+              { type: 'password', timestamp: new Date('2011-07-21T20:42:49.000Z') }
             ]
           }
         });
