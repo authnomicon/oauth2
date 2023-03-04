@@ -73,7 +73,7 @@ exports = module.exports = function(container, store, logger) {
     .then(function(server) {
       // Register grant types with the OAuth 2.0 server.
       return new Promise(function(resolve, reject) {
-        var components = container.components('http://i.authnomicon.org/oauth2/token/http/GrantType');
+        var components = container.components('module:oauth2orize.tokenRequestHandler');
         
         (function iter(i) {
           var component = components[i]

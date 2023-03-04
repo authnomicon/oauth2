@@ -6,6 +6,6 @@ exports = module.exports = function(issue) {
   });
 }
 
-exports['@implements'] = 'http://i.authnomicon.org/oauth2/token/http/GrantType';
+exports['@implements'] = 'module:oauth2orize.tokenRequestHandler';
 exports['@type'] = 'password';
 exports['@require'] = [];
