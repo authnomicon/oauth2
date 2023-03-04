@@ -8,7 +8,7 @@ exports = module.exports = function(ats, acs, logger, C) {
       var extensions = [];
       
       return new Promise(function(resolve, reject) {
-        var components = C.components('http://i.authnomicon.org/oauth2/token/http/ResponseParameters');
+        var components = C.components('module:@authnomicon/oauth2.tokenResponseParametersFn');
       
         (function iter(i) {
           var component = components[i];
@@ -78,6 +78,7 @@ exports = module.exports = function(ats, acs, logger, C) {
           
               var arity = extension.length;
               if (arity == 4) {
+                // TODO: Eliminate the grant argument here, and make it an annotation.
                 extension(msg, bind, 'authorization_code', iter);
               } else if (arity == 3) {
                 extension(msg, bind, iter);

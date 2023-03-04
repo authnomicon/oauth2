@@ -30,7 +30,7 @@ describe('token/http/grant/code', function() {
   it('should create exchange without response parameters', function(done) {
     var container = new Object();
     container.components = sinon.stub()
-    container.components.withArgs('http://i.authnomicon.org/oauth2/token/http/ResponseParameters').returns([]);
+    container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([]);
     
     var codeSpy = sinon.stub();
     var factory = $require('../../../../com/token/http/grant/code', {
@@ -50,7 +50,7 @@ describe('token/http/grant/code', function() {
   describe('issue', function() {
     var container = new Object();
     container.components = sinon.stub()
-    container.components.withArgs('http://i.authnomicon.org/oauth2/token/http/ResponseParameters').returns([]);
+    container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([]);
     
     it('should issue access token', function(done) {
       var codeSpy = sinon.stub();
@@ -359,7 +359,7 @@ describe('token/http/grant/code', function() {
       
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/token/http/ResponseParameters').returns([
+      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([
         ext1Component
       ]);
       
@@ -437,7 +437,7 @@ describe('token/http/grant/code', function() {
       
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/token/http/ResponseParameters').returns([
+      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([
         ext1Component
       ]);
       
@@ -516,7 +516,7 @@ describe('token/http/grant/code', function() {
       
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/token/http/ResponseParameters').returns([
+      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([
         ext1Component
       ]);
       

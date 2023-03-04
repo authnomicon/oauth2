@@ -21,6 +21,8 @@ interface to `module:oauth2orize.RequestParametersProcessor`.
 interface to `module:oauth2orize.Responder`.
 - Renamed `http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters`
 to `module:oauth2orize.responseParametersFn`.
+- Renamed `http://i.authnomicon.org/oauth2/token/http/ResponseParameters`
+to `module:@authnomicon/oauth2.tokenResponseParametersFn`.
 
 ## [0.0.4] - 2021-12-13
 ### Added
