@@ -25,28 +25,6 @@ describe('authorize/http/response/types/code', function() {
     debug: function(){}
   };
   
-  it('should create response type without response modes', function(done) {
-    var container = new Object();
-    container.components = sinon.stub();
-    container.components.withArgs('module:oauth2orize.Responder').returns([]);
-    container.components.withArgs('module:oauth2orize.responseParametersFn').returns([]);
-    
-    var codeSpy = sinon.stub();
-    var factory = $require('../../../../../com/authorize/http/response/types/code', {
-      'oauth2orize': {
-        grant: { code: codeSpy }
-      }
-    });
-    
-    factory(null, logger, container)
-      .then(function(type) {
-        expect(codeSpy).to.be.calledOnce;
-        expect(codeSpy).to.be.calledWith({ modes: {} });
-        done();
-      })
-      .catch(done);
-  }); // should create response type without response modes
-  
   it('should create response type with response modes', function(done) {
     var mode1 = function(){};
     var mode1Component = new Object();
@@ -87,27 +65,31 @@ describe('authorize/http/response/types/code', function() {
       .catch(done);
   }); // should create response type with response modes
   
-  describe('issue', function() {
-    var container = new Object();
-    container.components = sinon.stub()
-    container.components.withArgs('module:oauth2orize.Responder').returns([]);
-    container.components.withArgs('module:oauth2orize.responseParametersFn').returns([]);
+  describe('created without responders or extended response parameters', function() {
     var acs = new Object();
-    
-    var codeSpy = sinon.stub();
-    var factory = $require('../../../../../com/authorize/http/response/types/code', {
-      'oauth2orize': {
-        grant: { code: codeSpy }
-      }
-    });
     
     var issue;
     
     beforeEach(function(done) {
+      var container = new Object();
+      container.components = sinon.stub()
+      container.components.withArgs('module:oauth2orize.Responder').returns([]);
+      container.components.withArgs('module:oauth2orize.responseParametersFn').returns([]);
       acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
       
+      var codeSpy = sinon.stub();
+      var factory = $require('../../../../../com/authorize/http/response/types/code', {
+        'oauth2orize': {
+          grant: { code: codeSpy }
+        }
+      });
+      
       factory(acs, logger, container)
-        .then(function(type) {
+        .then(function(processor) {
+          expect(codeSpy).to.be.calledOnceWith({
+            modes: {}
+          });
+          
           issue = codeSpy.getCall(0).args[1];
           done();
         })
@@ -125,19 +107,18 @@ describe('authorize/http/response/types/code', function() {
       };
       var ares = {
         allow: true
-      }
+      };
       var areq = {
         type: 'code',
         clientID: 's6BhdRkqt3',
         redirectURI: 'https://client.example.com/cb',
         state: 'xyz'
-      }
+      };
       
       issue(client, 'https://client.example.com/cb', user, ares, areq, {}, function(err, code) {
         if (err) { return done(err); }
         
-        expect(acs.issue.callCount).to.equal(1);
-        expect(acs.issue.getCall(0).args[0]).to.deep.equal({
+        expect(acs.issue).to.be.calledOnceWith({
           client: {
             id: 's6BhdRkqt3',
             name: 'My Example Client'
