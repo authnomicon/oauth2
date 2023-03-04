@@ -146,13 +146,13 @@ describe('authorize/http/response/types/code', function() {
       var ares = {
         allow: true,
         scope: [ 'openid', 'profile', 'email' ]
-      }
+      };
       var areq = {
         type: 'code',
         clientID: 's6BhdRkqt3',
         redirectURI: 'https://client.example.org/cb',
         state: 'af0ifjsldkj'
-      }
+      };
       
       issue(client, 'https://client.example.org/cb', user, ares, areq, {}, function(err, code) {
         if (err) { return done(err); }
@@ -175,6 +175,7 @@ describe('authorize/http/response/types/code', function() {
       });
     }); // should issue authorization code with scope
     
+    // TODO: review this
     it('should issue authorization code with issuer', function(done) {
       var client = {
         id: 's6BhdRkqt3',
@@ -229,7 +230,6 @@ describe('authorize/http/response/types/code', function() {
       };
       var ares = {
         allow: true,
-        issuer: 'https://server.example.com',
         scope: [ 'openid', 'profile', 'email' ],
         authContext: {
           sessionID: 'YU7uoYRVAxF34TuoAodVfw-1eA13rhqW',
@@ -237,20 +237,19 @@ describe('authorize/http/response/types/code', function() {
             { method: 'password', timestamp: new Date('2011-07-21T20:42:49.000Z') }
           ]
         }
-      }
+      };
       var areq = {
         type: 'code',
         clientID: 's6BhdRkqt3',
         redirectURI: 'https://client.example.org/cb',
         state: 'af0ifjsldkj'
-      }
+      };
       
       issue(client, 'https://client.example.org/cb', user, ares, areq, {}, function(err, code) {
         if (err) { return done(err); }
         
         expect(acs.issue.callCount).to.equal(1);
         expect(acs.issue.getCall(0).args[0]).to.deep.equal({
-          issuer: 'https://server.example.com',
           client: {
             id: 's6BhdRkqt3',
             name: 'My Example'

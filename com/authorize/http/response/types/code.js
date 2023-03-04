@@ -67,6 +67,7 @@ exports = module.exports = function(acs, logger, C) {
         modes: modes
       }, function(client, redirectURI, user, ares, areq, locals, cb) {
         var msg = {};
+        // TODO: Eliminate this or move this to locals?
         if (ares.issuer) { msg.issuer = ares.issuer; }
         msg.client = client;
         msg.redirectURI = redirectURI;
