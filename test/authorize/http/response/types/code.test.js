@@ -65,7 +65,7 @@ describe('authorize/http/response/types/code', function() {
       .catch(done);
   }); // should create response type with response modes
   
-  describe('created without responders or extended response parameters', function() {
+  describe('default behavior', function() {
     var acs = new Object();
     
     var issue;
@@ -157,8 +157,7 @@ describe('authorize/http/response/types/code', function() {
       issue(client, 'https://client.example.org/cb', user, ares, areq, {}, function(err, code) {
         if (err) { return done(err); }
         
-        expect(acs.issue.callCount).to.equal(1);
-        expect(acs.issue.getCall(0).args[0]).to.deep.equal({
+        expect(acs.issue).to.be.calledOnceWith({
           client: {
             id: 's6BhdRkqt3',
             name: 'My Example'
@@ -248,8 +247,7 @@ describe('authorize/http/response/types/code', function() {
       issue(client, 'https://client.example.org/cb', user, ares, areq, {}, function(err, code) {
         if (err) { return done(err); }
         
-        expect(acs.issue.callCount).to.equal(1);
-        expect(acs.issue.getCall(0).args[0]).to.deep.equal({
+        expect(acs.issue).to.be.calledOnceWith({
           client: {
             id: 's6BhdRkqt3',
             name: 'My Example'
@@ -272,53 +270,67 @@ describe('authorize/http/response/types/code', function() {
       });
     }); // should issue authorization code with authentication context
     
-    it('should error when encountering an error issuing authorization code', function(done) {
+  }); // default behavior
+  
+  describe('with failing authorization code service', function() {
+    var acs = new Object();
+    
+    var issue;
+    
+    beforeEach(function(done) {
       var container = new Object();
       container.components = sinon.stub()
       container.components.withArgs('module:oauth2orize.Responder').returns([]);
       container.components.withArgs('module:oauth2orize.responseParametersFn').returns([]);
-      var acs = new Object();
       acs.issue = sinon.stub().yieldsAsync(new Error('something went wrong'));
-    
+      
       var codeSpy = sinon.stub();
       var factory = $require('../../../../../com/authorize/http/response/types/code', {
         'oauth2orize': {
           grant: { code: codeSpy }
         }
       });
-    
+      
       factory(acs, logger, container)
-        .then(function(type) {
-          issue = codeSpy.getCall(0).args[1];
-          var client = {
-            id: 's6BhdRkqt3',
-            name: 'My Example Client'
-          };
-          var user = {
-            id: '248289761001',
-            displayName: 'Jane Doe'
-          };
-          var ares = {
-            allow: true
-          }
-          var areq = {
-            type: 'code',
-            clientID: 's6BhdRkqt3',
-            redirectURI: 'https://client.example.com/cb',
-            state: 'xyz'
-          }
-          
-          issue(client, 'https://client.example.com/cb', user, ares, areq, {}, function(err, code) {
-            expect(err).to.be.an.instanceof(Error);
-            expect(err.message).to.equal('something went wrong');
-            expect(code).to.be.undefined;
-            done();
+        .then(function(processor) {
+          expect(codeSpy).to.be.calledOnceWith({
+            modes: {}
           });
+          
+          issue = codeSpy.getCall(0).args[1];
+          done();
         })
         .catch(done);
-    }); // should error when encountering an error issuing authorization code
+    });
     
-  }); // issue
+    it('should yield error', function(done) {
+      var client = {
+        id: 's6BhdRkqt3',
+        name: 'My Example Client'
+      };
+      var user = {
+        id: '248289761001',
+        displayName: 'Jane Doe'
+      };
+      var ares = {
+        allow: true
+      };
+      var areq = {
+        type: 'code',
+        clientID: 's6BhdRkqt3',
+        redirectURI: 'https://client.example.com/cb',
+        state: 'xyz'
+      };
+      
+      issue(client, 'https://client.example.com/cb', user, ares, areq, {}, function(err, code) {
+        expect(err).to.be.an.instanceof(Error);
+        expect(err.message).to.equal('something went wrong');
+        expect(code).to.be.undefined;
+        done();
+      });
+    }); // should yield error
+  
+  }); // with failing authorization code service
   
   describe('extend', function() {
     
