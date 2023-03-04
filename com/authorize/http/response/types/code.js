@@ -37,7 +37,7 @@ exports = module.exports = function(acs, logger, C) {
       var extensions = [];
       
       return new Promise(function(resolve, reject) {
-        var components = C.components('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters');
+        var components = C.components('module:oauth2orize.responseParametersFn');
       
         (function iter(i) {
           var component = components[i];
