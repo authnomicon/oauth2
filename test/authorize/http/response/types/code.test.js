@@ -483,117 +483,117 @@ describe('authorize/http/response/types/code', function() {
     
   }); // with one response parameter extension
   
-  
-  describe('extend', function() {
+  describe('with two response parameter extensions', function() {
+    var acs = new Object();
+    var fn1 = sinon.stub().yieldsAsync(null, { cow: 'moo' });
+    var fn2 = sinon.stub().yieldsAsync(null, { ping: 'oink' });
     
-    it('should extend with two extensions', function(done) {
-      var ext1 = function(txn, cb) {
-        expect(txn).to.deep.equal({
-          client: {
-            id: 's6BhdRkqt3',
-            name: 'My Example Client'
-          },
-          redirectURI: 'https://client.example.com/cb',
-          req: {
-            type: 'code',
-            clientID: 's6BhdRkqt3',
-            redirectURI: 'https://client.example.com/cb',
-            state: 'xyz'
-          },
-          user: {
-            id: '248289761001',
-            displayName: 'Jane Doe'
-          },
-          res: {
-            allow: true
-          }
-        });
-        
-        return cb(null, { cow: 'moo' });
-      };
-      var ext1Component = new Object();
-      ext1Component.create = sinon.stub().resolves(ext1);
-      
-      var ext2 = function(txn, cb) {
-        expect(txn).to.deep.equal({
-          client: {
-            id: 's6BhdRkqt3',
-            name: 'My Example Client'
-          },
-          redirectURI: 'https://client.example.com/cb',
-          req: {
-            type: 'code',
-            clientID: 's6BhdRkqt3',
-            redirectURI: 'https://client.example.com/cb',
-            state: 'xyz'
-          },
-          user: {
-            id: '248289761001',
-            displayName: 'Jane Doe'
-          },
-          res: {
-            allow: true
-          }
-        });
-        
-        return cb(null, { pig: 'oink' });
-      };
-      var ext2Component = new Object();
-      ext2Component.create = sinon.stub().resolves(ext2);
+    var extend;
+    
+    beforeEach(function(done) {
+      var fn1Component = new Object();
+      fn1Component.create = sinon.stub().resolves(fn1);
+      var fn2Component = new Object();
+      fn2Component.create = sinon.stub().resolves(fn2);
       
       var container = new Object();
       container.components = sinon.stub()
       container.components.withArgs('module:oauth2orize.Responder').returns([]);
-      container.components.withArgs('module:oauth2orize.responseParametersFn').returns([
-        ext1Component,
-        ext2Component
-      ]);
-      var acs = new Object();
+      container.components.withArgs('module:oauth2orize.responseParametersFn').returns([ fn1Component, fn2Component ]);
       acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
-    
+      
       var codeSpy = sinon.stub();
       var factory = $require('../../../../../com/authorize/http/response/types/code', {
         'oauth2orize': {
           grant: { code: codeSpy }
         }
       });
-    
+      
       factory(acs, logger, container)
-        .then(function(type) {
-          var extend = codeSpy.getCall(0).args[2];
-          var txn = {
-            client: {
-              id: 's6BhdRkqt3',
-              name: 'My Example Client'
-            },
-            redirectURI: 'https://client.example.com/cb',
-            req: {
-              type: 'code',
-              clientID: 's6BhdRkqt3',
-              redirectURI: 'https://client.example.com/cb',
-              state: 'xyz'
-            },
-            user: {
-              id: '248289761001',
-              displayName: 'Jane Doe'
-            },
-            res: {
-              allow: true
-            }
-          };
-          
-          extend(txn, function(err, params) {
-            if (err) { return done(err); }
-            expect(params).to.deep.equal({
-              cow: 'moo',
-              pig: 'oink'
-            });
-            done();
+        .then(function(processor) {
+          expect(codeSpy).to.be.calledOnceWith({
+            modes: {}
           });
+          
+          extend = codeSpy.getCall(0).args[2];
+          done();
         })
         .catch(done);
-    }); // should extend with two extensions
+    });
     
-  }); // extend
+    it('should extend response', function(done) {
+      var txn = {
+        client: {
+          id: 's6BhdRkqt3',
+          name: 'My Example Client'
+        },
+        redirectURI: 'https://client.example.com/cb',
+        req: {
+          type: 'code',
+          clientID: 's6BhdRkqt3',
+          redirectURI: 'https://client.example.com/cb',
+          state: 'xyz'
+        },
+        user: {
+          id: '248289761001',
+          displayName: 'Jane Doe'
+        },
+        res: {
+          allow: true
+        }
+      };
+      
+      extend(txn, function(err, params) {
+        if (err) { return done(err); }
+        
+        expect(fn1).to.be.calledOnceWith({
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'My Example Client'
+          },
+          redirectURI: 'https://client.example.com/cb',
+          req: {
+            type: 'code',
+            clientID: 's6BhdRkqt3',
+            redirectURI: 'https://client.example.com/cb',
+            state: 'xyz'
+          },
+          user: {
+            id: '248289761001',
+            displayName: 'Jane Doe'
+          },
+          res: {
+            allow: true
+          }
+        });
+        expect(fn2).to.be.calledOnceWith({
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'My Example Client'
+          },
+          redirectURI: 'https://client.example.com/cb',
+          req: {
+            type: 'code',
+            clientID: 's6BhdRkqt3',
+            redirectURI: 'https://client.example.com/cb',
+            state: 'xyz'
+          },
+          user: {
+            id: '248289761001',
+            displayName: 'Jane Doe'
+          },
+          res: {
+            allow: true
+          }
+        });
+        expect(params).to.deep.equal({
+          cow: 'moo',
+          ping: 'oink'
+        });
+        done();
+      });
+    }); // should extend response
+    
+  }); // with two response parameter extensions
   
 });
