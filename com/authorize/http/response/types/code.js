@@ -35,7 +35,7 @@ exports = module.exports = function(acs, logger, C) {
       });
     })
     .then(function(responders) {
-      var extensions = [];
+      var paramsExtFns = [];
       
       return new Promise(function(resolve, reject) {
         var components = C.components('module:oauth2orize.responseParametersFn');
@@ -43,13 +43,13 @@ exports = module.exports = function(acs, logger, C) {
         (function iter(i) {
           var component = components[i];
           if (!component) {
-            return resolve([ responders, extensions ]);
+            return resolve([ responders, paramsExtFns ]);
           }
           
           component.create()
-            .then(function(extension) {
+            .then(function(extFn) {
               logger.info('Loaded response parameter extension: ');
-              extensions.push(extension);
+              paramsExtFns.push(extFn);
               iter(i + 1);
             }, function(err) {
               var msg = 'Failed to load response parameter extension:\n';
@@ -62,7 +62,7 @@ exports = module.exports = function(acs, logger, C) {
     })
     .then(function(plugins) {
       var responders = plugins[0];
-      var extensions = plugins[1];
+      var paramsExtFns = plugins[1];
       
       return oauth2orize.grant.code({
         modes: responders
@@ -86,16 +86,15 @@ exports = module.exports = function(acs, logger, C) {
         var params = {};
         var i = 0;
         
-        (function iter(err, exparams) {
+        (function iter(err, xparams) {
           if (err) { return cb(err); }
-          if (exparams) { merge(params, exparams); }
+          if (xparams) { merge(params, xparams); }
           
-          var extension = extensions[i++];
-          if (!extension) {
+          var extFn = paramsExtFns[i++];
+          if (!extFn) {
             return cb(null, params);
           }
-          
-          extension(txn, iter);
+          extFn(txn, iter);
         })();
       });
     });
