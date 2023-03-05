@@ -25,22 +25,21 @@ describe('authorize/http/response/types/code', function() {
     debug: function(){}
   };
   
-  it('should create response type with response modes', function(done) {
-    var mode1 = function(){};
-    var mode1Component = new Object();
-    mode1Component.create = sinon.stub().resolves(mode1);
-    mode1Component.a = { '@mode': 'query' };
-    
-    var mode2 = function(){};
-    var mode2Component = new Object();
-    mode2Component.create = sinon.stub().resolves(mode2);
-    mode2Component.a = { '@mode': 'form_post' };
+  it('should create processor with responders', function(done) {
+    var queryResponder = function(){};
+    var queryResponderComponent = new Object();
+    queryResponderComponent.create = sinon.stub().resolves(queryResponder);
+    queryResponderComponent.a = { '@mode': 'query' };
+    var formPostResponder = function(){};
+    var formPostResponderComponent = new Object();
+    formPostResponderComponent.create = sinon.stub().resolves(formPostResponder);
+    formPostResponderComponent.a = { '@mode': 'form_post' };
     
     var container = new Object();
     container.components = sinon.stub();
     container.components.withArgs('module:oauth2orize.Responder').returns([
-      mode1Component,
-      mode2Component
+      queryResponderComponent,
+      formPostResponderComponent
     ]);
     container.components.withArgs('module:oauth2orize.responseParametersFn').returns([]);
     
@@ -52,18 +51,18 @@ describe('authorize/http/response/types/code', function() {
     });
     
     factory(null, logger, container)
-      .then(function(type) {
+      .then(function(processor) {
         expect(codeSpy).to.be.calledOnce;
         expect(codeSpy).to.be.calledWith({
           modes: {
-            query: mode1,
-            form_post: mode2
+            query: queryResponder,
+            form_post: formPostResponder
           }
         });
         done();
       })
       .catch(done);
-  }); // should create response type with response modes
+  }); // should create processor with responders
   
   describe('default behavior', function() {
     var acs = new Object();
