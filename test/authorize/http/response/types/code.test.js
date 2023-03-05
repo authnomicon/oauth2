@@ -394,13 +394,67 @@ describe('authorize/http/response/types/code', function() {
     
   }); // without parameter extensions
   
-  
-  
-  describe('extend', function() {
+  describe('with one response parameter extension', function() {
+    var acs = new Object();
+    var fn1 = sinon.stub().yieldsAsync(null, { session_state: 'c2a7f7f4842520527248dc8cfcfa2a70d786b47b1dc26f29dc1fa7f4069736f3.knrj4ZDIWFQpWAu-pLTTKg' });
     
-    it('should extend with one extension', function(done) {
-      var ext1 = function(txn, cb) {
-        expect(txn).to.deep.equal({
+    var extend;
+    
+    beforeEach(function(done) {
+      var fn1Component = new Object();
+      fn1Component.create = sinon.stub().resolves(fn1);
+      
+      var container = new Object();
+      container.components = sinon.stub()
+      container.components.withArgs('module:oauth2orize.Responder').returns([]);
+      container.components.withArgs('module:oauth2orize.responseParametersFn').returns([ fn1Component ]);
+      acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
+      
+      var codeSpy = sinon.stub();
+      var factory = $require('../../../../../com/authorize/http/response/types/code', {
+        'oauth2orize': {
+          grant: { code: codeSpy }
+        }
+      });
+      
+      factory(acs, logger, container)
+        .then(function(processor) {
+          expect(codeSpy).to.be.calledOnceWith({
+            modes: {}
+          });
+          
+          extend = codeSpy.getCall(0).args[2];
+          done();
+        })
+        .catch(done);
+    });
+    
+    it('should extend response', function(done) {
+      var txn = {
+        client: {
+          id: 's6BhdRkqt3',
+          name: 'My Example Client'
+        },
+        redirectURI: 'https://client.example.com/cb',
+        req: {
+          type: 'code',
+          clientID: 's6BhdRkqt3',
+          redirectURI: 'https://client.example.com/cb',
+          state: 'xyz'
+        },
+        user: {
+          id: '248289761001',
+          displayName: 'Jane Doe'
+        },
+        res: {
+          allow: true
+        }
+      };
+      
+      extend(txn, function(err, params) {
+        if (err) { return done(err); }
+        
+        expect(fn1).to.be.calledOnceWith({
           client: {
             id: 's6BhdRkqt3',
             name: 'My Example Client'
@@ -420,62 +474,17 @@ describe('authorize/http/response/types/code', function() {
             allow: true
           }
         });
-        
-        return cb(null, { session_state: 'c2a7f7f4842520527248dc8cfcfa2a70d786b47b1dc26f29dc1fa7f4069736f3.knrj4ZDIWFQpWAu-pLTTKg' });
-      };
-      var ext1Component = new Object();
-      ext1Component.create = sinon.stub().resolves(ext1);
-      
-      var container = new Object();
-      container.components = sinon.stub()
-      container.components.withArgs('module:oauth2orize.Responder').returns([]);
-      container.components.withArgs('module:oauth2orize.responseParametersFn').returns([
-        ext1Component
-      ]);
-      var acs = new Object();
-      acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
-    
-      var codeSpy = sinon.stub();
-      var factory = $require('../../../../../com/authorize/http/response/types/code', {
-        'oauth2orize': {
-          grant: { code: codeSpy }
-        }
+        expect(params).to.deep.equal({
+          session_state: 'c2a7f7f4842520527248dc8cfcfa2a70d786b47b1dc26f29dc1fa7f4069736f3.knrj4ZDIWFQpWAu-pLTTKg'
+        });
+        done();
       });
+    }); // should extend response
     
-      factory(acs, logger, container)
-        .then(function(type) {
-          var extend = codeSpy.getCall(0).args[2];
-          var txn = {
-            client: {
-              id: 's6BhdRkqt3',
-              name: 'My Example Client'
-            },
-            redirectURI: 'https://client.example.com/cb',
-            req: {
-              type: 'code',
-              clientID: 's6BhdRkqt3',
-              redirectURI: 'https://client.example.com/cb',
-              state: 'xyz'
-            },
-            user: {
-              id: '248289761001',
-              displayName: 'Jane Doe'
-            },
-            res: {
-              allow: true
-            }
-          };
-          
-          extend(txn, function(err, params) {
-            if (err) { return done(err); }
-            expect(params).to.deep.equal({
-              session_state: 'c2a7f7f4842520527248dc8cfcfa2a70d786b47b1dc26f29dc1fa7f4069736f3.knrj4ZDIWFQpWAu-pLTTKg'
-            });
-            done();
-          });
-        })
-        .catch(done);
-    }); // should extend with one extension
+  }); // with one response parameter extension
+  
+  
+  describe('extend', function() {
     
     it('should extend with two extensions', function(done) {
       var ext1 = function(txn, cb) {
