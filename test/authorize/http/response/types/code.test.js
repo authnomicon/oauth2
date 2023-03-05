@@ -13,7 +13,7 @@ describe('authorize/http/response/types/code', function() {
     expect(factory['@type']).to.equal('code');
   });
   
-  
+  // TODO: review this
   var logger = {
     emergency: function(){},
     alert: function(){},
