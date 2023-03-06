@@ -168,13 +168,13 @@ describe('authorize/http/response/types/token', function() {
       };
       var ares = {
         allow: true
-      }
+      };
       var areq = {
         type: 'code',
         clientID: 's6BhdRkqt3',
         redirectURI: 'https://client.example.com/cb',
         state: 'xyz'
-      }
+      };
       
       issue(client, user, ares, areq, {}, function(err, token) {
         if (err) { return done(err); }
@@ -206,13 +206,13 @@ describe('authorize/http/response/types/token', function() {
       var ares = {
         allow: true,
         scope: [ 'openid', 'profile', 'email' ]
-      }
+      };
       var areq = {
         type: 'code',
         clientID: 's6BhdRkqt3',
         redirectURI: 'https://client.example.org/cb',
         state: 'af0ifjsldkj'
-      }
+      };
       
       issue(client, user, ares, areq, {}, function(err, token) {
         if (err) { return done(err); }
@@ -294,13 +294,13 @@ describe('authorize/http/response/types/token', function() {
             { type: 'password', timestamp: new Date('2011-07-21T20:42:49.000Z') }
           ]
         }
-      }
+      };
       var areq = {
         type: 'code',
         clientID: 's6BhdRkqt3',
         redirectURI: 'https://client.example.org/cb',
         state: 'af0ifjsldkj'
-      }
+      };
       
       issue(client, user, ares, areq, {}, function(err, token) {
         if (err) { return done(err); }
@@ -328,5 +328,65 @@ describe('authorize/http/response/types/token', function() {
     }); // should issue access token with authentication context
   
   }); // default behavior
+  
+  describe('with failing access token service', function() {
+    var ats = new Object();
+    
+    var issue;
+    
+    beforeEach(function(done) {
+      var container = new Object();
+      container.components = sinon.stub()
+      container.components.withArgs('module:oauth2orize.Responder').returns([]);
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
+      ats.issue = sinon.stub().yieldsAsync(new Error('something went wrong'));
+      
+      var tokenSpy = sinon.stub();
+      var factory = $require('../../../../../com/authorize/http/response/types/token', {
+        'oauth2orize': {
+          grant: { token: tokenSpy }
+        }
+      });
+      
+      factory(ats, logger, container)
+        .then(function(processor) {
+          expect(tokenSpy).to.be.calledOnceWith({
+            modes: {}
+          });
+          
+          issue = tokenSpy.getCall(0).args[1];
+          done();
+        })
+        .catch(done);
+    });
+    
+    it('should yield error', function(done) {
+      var client = {
+        id: 's6BhdRkqt3',
+        name: 'My Example Client'
+      };
+      var user = {
+        id: '248289761001',
+        displayName: 'Jane Doe'
+      };
+      var ares = {
+        allow: true
+      };
+      var areq = {
+        type: 'code',
+        clientID: 's6BhdRkqt3',
+        redirectURI: 'https://client.example.com/cb',
+        state: 'xyz'
+      };
+      
+      issue(client, user, ares, areq, {}, function(err, token) {
+        expect(err).to.be.an.instanceof(Error);
+        expect(err.message).to.equal('something went wrong');
+        expect(token).to.be.undefined;
+        done();
+      });
+    }); // should yield error
+    
+  }); // with failing access token service
   
 });
