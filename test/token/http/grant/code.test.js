@@ -27,7 +27,7 @@ describe('token/http/grant/code', function() {
     debug: function(){}
   };
   
-  it('should create exchange without response parameters', function(done) {
+  it('should create handler without response parameter extensions', function(done) {
     var container = new Object();
     container.components = sinon.stub()
     container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([]);
@@ -45,9 +45,9 @@ describe('token/http/grant/code', function() {
         done();
       })
       .catch(done);
-  }); // should create exchange without response parameters
+  }); // should create handler without response parameter extensions
 
-  describe('issue', function() {
+  describe('default behavior', function() {
     var container = new Object();
     container.components = sinon.stub()
     container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([]);
