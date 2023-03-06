@@ -55,6 +55,7 @@ exports = module.exports = function(ats, logger, C) {
         modes: modes
       }, function(client, user, ares, areq, locals, cb) {
         var msg = {};
+        // TODO: Eliminate this or move this to locals?
         if (ares.issuer) { msg.issuer = ares.issuer; }
         msg.user = user;
         msg.client = client;

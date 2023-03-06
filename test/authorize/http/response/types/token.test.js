@@ -13,7 +13,7 @@ describe('authorize/http/response/types/token', function() {
     expect(factory['@type']).to.equal('token');
   });
   
-  
+  // TODO: review this
   var logger = {
     emergency: function(){},
     alert: function(){},
@@ -126,27 +126,31 @@ describe('authorize/http/response/types/token', function() {
       .catch(done);
   }); // should not create response type with query response mode
   
-  describe('issue', function() {
-    var container = new Object();
-    container.components = sinon.stub()
-    container.components.withArgs('module:oauth2orize.Responder').returns([]);
-    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
+  describe('default behavior', function() {
     var ats = new Object();
-    
-    var tokenSpy = sinon.stub();
-    var factory = $require('../../../../../com/authorize/http/response/types/token', {
-      'oauth2orize': {
-        grant: { token: tokenSpy }
-      }
-    });
     
     var issue;
     
     beforeEach(function(done) {
+      var container = new Object();
+      container.components = sinon.stub()
+      container.components.withArgs('module:oauth2orize.Responder').returns([]);
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
       ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
       
+      var tokenSpy = sinon.stub();
+      var factory = $require('../../../../../com/authorize/http/response/types/token', {
+        'oauth2orize': {
+          grant: { token: tokenSpy }
+        }
+      });
+      
       factory(ats, logger, container)
-        .then(function(type) {
+        .then(function(processor) {
+          expect(tokenSpy).to.be.calledOnceWith({
+            modes: {}
+          });
+          
           issue = tokenSpy.getCall(0).args[1];
           done();
         })
@@ -175,8 +179,7 @@ describe('authorize/http/response/types/token', function() {
       issue(client, user, ares, areq, {}, function(err, token) {
         if (err) { return done(err); }
         
-        expect(ats.issue.callCount).to.equal(1);
-        expect(ats.issue.getCall(0).args[0]).to.deep.equal({
+        expect(ats.issue).to.be.calledOnceWith({
           client: {
             id: 's6BhdRkqt3',
             name: 'My Example Client'
@@ -190,6 +193,35 @@ describe('authorize/http/response/types/token', function() {
         done();
       });
     }); // should issue access token
+  
+  }); // default behavior
+  
+  describe('issue', function() {
+    var container = new Object();
+    container.components = sinon.stub()
+    container.components.withArgs('module:oauth2orize.Responder').returns([]);
+    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
+    var ats = new Object();
+    
+    var tokenSpy = sinon.stub();
+    var factory = $require('../../../../../com/authorize/http/response/types/token', {
+      'oauth2orize': {
+        grant: { token: tokenSpy }
+      }
+    });
+    
+    var issue;
+    
+    beforeEach(function(done) {
+      ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
+      
+      factory(ats, logger, container)
+        .then(function(type) {
+          issue = tokenSpy.getCall(0).args[1];
+          done();
+        })
+        .catch(done);
+    });
     
     it('should issue access token with scope', function(done) {
       var client = {
