@@ -52,8 +52,7 @@ describe('authorize/http/response/types/code', function() {
     
     factory(null, logger, container)
       .then(function(processor) {
-        expect(codeSpy).to.be.calledOnce;
-        expect(codeSpy).to.be.calledWith({
+        expect(codeSpy).to.be.calledOnceWith({
           modes: {
             query: queryResponder,
             form_post: formPostResponder

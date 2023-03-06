@@ -25,11 +25,10 @@ describe('authorize/http/response/types/token', function() {
     debug: function(){}
   };
   
-  it('should create response type without response modes', function(done) {
+  it('should create processor without responders', function(done) {
     var container = new Object();
     container.components = sinon.stub();
     container.components.withArgs('module:oauth2orize.Responder').returns([]);
-    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
     
     var tokenSpy = sinon.stub();
     var factory = $require('../../../../../com/authorize/http/response/types/token', {
@@ -40,31 +39,30 @@ describe('authorize/http/response/types/token', function() {
     
     factory(null, logger, container)
       .then(function(type) {
-        expect(tokenSpy).to.be.calledOnce;
-        expect(tokenSpy).to.be.calledWith({ modes: {} });
+        expect(tokenSpy).to.be.calledOnceWith({
+          modes: {}
+        });
         done();
       })
       .catch(done);
-  }); // should create response type without response modes
+  }); // should create processor without responders
   
-  it('should create response type with response modes', function(done) {
-    var mode1 = function(){};
-    var mode1Component = new Object();
-    mode1Component.create = sinon.stub().resolves(mode1);
-    mode1Component.a = { '@mode': 'fragment' };
-    
-    var mode2 = function(){};
-    var mode2Component = new Object();
-    mode2Component.create = sinon.stub().resolves(mode2);
-    mode2Component.a = { '@mode': 'form_post' };
+  it('should create processor with responders', function(done) {
+    var fragmentResponder = function(){};
+    var fragmentResponderComponent = new Object();
+    fragmentResponderComponent.create = sinon.stub().resolves(fragmentResponder);
+    fragmentResponderComponent.a = { '@mode': 'fragment' };
+    var formPostResponder = function(){};
+    var formPostResponderComponent = new Object();
+    formPostResponderComponent.create = sinon.stub().resolves(formPostResponder);
+    formPostResponderComponent.a = { '@mode': 'form_post' };
     
     var container = new Object();
     container.components = sinon.stub();
     container.components.withArgs('module:oauth2orize.Responder').returns([
-      mode1Component,
-      mode2Component
+      fragmentResponderComponent,
+      formPostResponderComponent
     ]);
-    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
     
     var tokenSpy = sinon.stub();
     var factory = $require('../../../../../com/authorize/http/response/types/token', {
@@ -75,36 +73,33 @@ describe('authorize/http/response/types/token', function() {
     
     factory(null, logger, container)
       .then(function(type) {
-        expect(tokenSpy).to.be.calledOnce;
-        expect(tokenSpy).to.be.calledWith({
+        expect(tokenSpy).to.be.calledOnceWith({
           modes: {
-            fragment: mode1,
-            form_post: mode2
+            fragment: fragmentResponder,
+            form_post: formPostResponder
           }
         });
         done();
       })
       .catch(done);
-  }); // should create response type with response modes
+  }); // should create processor with responders
   
-  it('should not create response type with query response mode', function(done) {
-    var mode1 = function(){};
-    var mode1Component = new Object();
-    mode1Component.create = sinon.stub().resolves(mode1);
-    mode1Component.a = { '@mode': 'query' };
-    
-    var mode2 = function(){};
-    var mode2Component = new Object();
-    mode2Component.create = sinon.stub().resolves(mode2);
-    mode2Component.a = { '@mode': 'fragment' };
+  it('should create processor with responders but excluding query responder', function(done) {
+    var queryResponder = function(){};
+    var queryResponderComponent = new Object();
+    queryResponderComponent.create = sinon.stub().resolves(queryResponder);
+    queryResponderComponent.a = { '@mode': 'query' };
+    var fragmentResponder = function(){};
+    var fragmentResponderComponent = new Object();
+    fragmentResponderComponent.create = sinon.stub().resolves(fragmentResponder);
+    fragmentResponderComponent.a = { '@mode': 'fragment' };
     
     var container = new Object();
     container.components = sinon.stub();
     container.components.withArgs('module:oauth2orize.Responder').returns([
-      mode1Component,
-      mode2Component
+      queryResponderComponent,
+      fragmentResponderComponent
     ]);
-    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
     
     var tokenSpy = sinon.stub();
     var factory = $require('../../../../../com/authorize/http/response/types/token', {
@@ -115,16 +110,15 @@ describe('authorize/http/response/types/token', function() {
     
     factory(null, logger, container)
       .then(function(type) {
-        expect(tokenSpy).to.be.calledOnce;
-        expect(tokenSpy).to.be.calledWith({
+        expect(tokenSpy).to.be.calledOnceWith({
           modes: {
-            fragment: mode2
+            fragment: fragmentResponder
           }
         });
         done();
       })
       .catch(done);
-  }); // should not create response type with query response mode
+  }); // should create processor with responders but excluding query responder
   
   describe('default behavior', function() {
     var ats = new Object();
