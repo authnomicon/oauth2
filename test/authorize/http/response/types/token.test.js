@@ -193,35 +193,6 @@ describe('authorize/http/response/types/token', function() {
         done();
       });
     }); // should issue access token
-  
-  }); // default behavior
-  
-  describe('issue', function() {
-    var container = new Object();
-    container.components = sinon.stub()
-    container.components.withArgs('module:oauth2orize.Responder').returns([]);
-    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/ResponseParameters').returns([]);
-    var ats = new Object();
-    
-    var tokenSpy = sinon.stub();
-    var factory = $require('../../../../../com/authorize/http/response/types/token', {
-      'oauth2orize': {
-        grant: { token: tokenSpy }
-      }
-    });
-    
-    var issue;
-    
-    beforeEach(function(done) {
-      ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
-      
-      factory(ats, logger, container)
-        .then(function(type) {
-          issue = tokenSpy.getCall(0).args[1];
-          done();
-        })
-        .catch(done);
-    });
     
     it('should issue access token with scope', function(done) {
       var client = {
@@ -246,8 +217,7 @@ describe('authorize/http/response/types/token', function() {
       issue(client, user, ares, areq, {}, function(err, token) {
         if (err) { return done(err); }
         
-        expect(ats.issue.callCount).to.equal(1);
-        expect(ats.issue.getCall(0).args[0]).to.deep.equal({
+        expect(ats.issue).to.be.calledOnceWith({
           client: {
             id: 's6BhdRkqt3',
             name: 'My Example'
@@ -263,6 +233,7 @@ describe('authorize/http/response/types/token', function() {
       });
     }); // should issue access token with scope
     
+    // TODO: review this
     it('should issue access token with issuer', function(done) {
       var client = {
         id: 's6BhdRkqt3',
@@ -316,12 +287,11 @@ describe('authorize/http/response/types/token', function() {
       };
       var ares = {
         allow: true,
-        issuer: 'https://server.example.com',
         scope: [ 'openid', 'profile', 'email' ],
         authContext: {
           sessionID: 'YU7uoYRVAxF34TuoAodVfw-1eA13rhqW',
-          methods: [
-            { method: 'password', timestamp: new Date('2011-07-21T20:42:49.000Z') }
+          credentials: [
+            { type: 'password', timestamp: new Date('2011-07-21T20:42:49.000Z') }
           ]
         }
       }
@@ -335,9 +305,7 @@ describe('authorize/http/response/types/token', function() {
       issue(client, user, ares, areq, {}, function(err, token) {
         if (err) { return done(err); }
         
-        expect(ats.issue.callCount).to.equal(1);
-        expect(ats.issue.getCall(0).args[0]).to.deep.equal({
-          issuer: 'https://server.example.com',
+        expect(ats.issue).to.be.calledOnceWith({
           client: {
             id: 's6BhdRkqt3',
             name: 'My Example'
@@ -349,8 +317,8 @@ describe('authorize/http/response/types/token', function() {
           scope: [ 'openid', 'profile', 'email' ],
           authContext: {
             sessionID: 'YU7uoYRVAxF34TuoAodVfw-1eA13rhqW',
-            methods: [
-              { method: 'password', timestamp: new Date('2011-07-21T20:42:49.000Z') }
+            credentials: [
+              { type: 'password', timestamp: new Date('2011-07-21T20:42:49.000Z') }
             ]
           }
         });
@@ -358,7 +326,7 @@ describe('authorize/http/response/types/token', function() {
         done();
       });
     }); // should issue access token with authentication context
-    
-  }); // issue
+  
+  }); // default behavior
   
 });
