@@ -173,6 +173,82 @@ describe('token/http/grant/code', function() {
     }); // should issue access token
     
   }); // with authorization code service that encodes scope
+  
+  describe('with authorization code service that encodes authentication context', function() {
+    var acs = new Object();
+    var ats = new Object();
+    
+    var issue;
+    
+    beforeEach(function(done) {
+      var container = new Object();
+      container.components = sinon.stub()
+      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([]);
+      acs.verify = sinon.stub().yieldsAsync(null, {
+        client: { id: 's6BhdRkqt3' },
+        redirectURI: 'https://client.example.org/cb',
+        user: { id: '248289761001' },
+        scope: [ 'openid', 'profile', 'email' ],
+        authContext: {
+          sessionID: 'YU7uoYRVAxF34TuoAodVfw-1eA13rhqW',
+          credentials: [
+            { type: 'password', timestamp: new Date('2011-07-21T20:42:49.000Z') }
+          ]
+        }
+      });
+      ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
+      
+      var codeSpy = sinon.stub();
+      var factory = $require('../../../../com/token/http/grant/code', {
+        'oauth2orize': {
+          exchange: { code: codeSpy }
+        }
+      });
+      
+      factory(ats, acs, logger, container)
+        .then(function(handler) {
+          expect(codeSpy).to.be.calledOnce;
+          
+          issue = codeSpy.getCall(0).args[0];
+          done();
+        })
+        .catch(done);
+    });
+    
+    it('should issue access token', function(done) {
+      var client = {
+        id: 's6BhdRkqt3',
+        name: 'My Example',
+        redirectURIs: [ 'https://client.example.org/cb' ]
+      };
+      
+      issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.org/cb', {}, {}, function(err, token) {
+        if (err) { return done(err); }
+    
+        expect(acs.verify).to.be.calledOnceWith('SplxlOBeZQQYbYS6WxSbIA');
+        expect(ats.issue).to.be.calledOnceWith({
+          user: {
+            id: '248289761001'
+          },
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'My Example',
+            redirectURIs: [ 'https://client.example.org/cb' ]
+          },
+          scope: [ 'openid', 'profile', 'email' ],
+          authContext: {
+            sessionID: 'YU7uoYRVAxF34TuoAodVfw-1eA13rhqW',
+            credentials: [
+              { type: 'password', timestamp: new Date('2011-07-21T20:42:49.000Z') }
+            ]
+          }
+        });
+        expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
+        done();
+      });
+    }); // should issue access token
+    
+  }); // with authorization code service that encodes authentication context
 
   describe('default behavior x', function() {
     var container = new Object();
@@ -230,67 +306,6 @@ describe('token/http/grant/code', function() {
         })
         .catch(done);
     }); // should issue access token with issuer
-    
-    it('should issue access token with authentication context', function(done) {
-      var codeSpy = sinon.stub();
-      var factory = $require('../../../../com/token/http/grant/code', {
-        'oauth2orize': { exchange: { code: codeSpy } }
-      });
-      
-      var acs = new Object();
-      acs.verify = sinon.stub().yieldsAsync(null, {
-        client: { id: 's6BhdRkqt3' },
-        redirectURI: 'https://client.example.org/cb',
-        user: { id: '248289761001' },
-        scope: [ 'openid', 'profile', 'email' ],
-        authContext: {
-          sessionID: 'YU7uoYRVAxF34TuoAodVfw-1eA13rhqW',
-          methods: [
-            { method: 'password', timestamp: new Date('2011-07-21T20:42:49.000Z') }
-          ]
-        }
-      });
-      var ats = new Object();
-      ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
-      
-      factory(ats, acs, logger, container)
-        .then(function(exchange) {
-          var client = {
-            id: 's6BhdRkqt3',
-            name: 'My Example',
-            redirectURIs: [ 'https://client.example.org/cb' ]
-          };
-          
-          var issue = codeSpy.getCall(0).args[0];
-          issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.org/cb', {}, {}, function(err, token) {
-            if (err) { return done(err); }
-        
-            expect(acs.verify).to.be.calledOnce;
-            expect(acs.verify.getCall(0).args[0]).to.equal('SplxlOBeZQQYbYS6WxSbIA');
-            expect(ats.issue).to.be.calledOnce;
-            expect(ats.issue.getCall(0).args[0]).to.deep.equal({
-              user: {
-                id: '248289761001'
-              },
-              client: {
-                id: 's6BhdRkqt3',
-                name: 'My Example',
-                redirectURIs: [ 'https://client.example.org/cb' ]
-              },
-              scope: [ 'openid', 'profile', 'email' ],
-              authContext: {
-                sessionID: 'YU7uoYRVAxF34TuoAodVfw-1eA13rhqW',
-                methods: [
-                  { method: 'password', timestamp: new Date('2011-07-21T20:42:49.000Z') }
-                ]
-              }
-            });
-            expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
-            done();
-          });
-        })
-        .catch(done);
-    }); // should issue access token with authentication context
     
     it('should not issue access token when authorization code not issued to client', function(done) {
       var codeSpy = sinon.stub();
