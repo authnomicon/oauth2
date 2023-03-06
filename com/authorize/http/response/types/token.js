@@ -78,7 +78,7 @@ exports = module.exports = function(ats, logger, C) {
 exports['@implements'] = 'module:oauth2orize.RequestProcessor';
 exports['@type'] = 'token';
 exports['@require'] = [
-  'http://i.authnomicon.org/oauth2/AccessTokenService',
+  'module:@authnomicon/oauth2.AccessTokenService',
   'http://i.bixbyjs.org/Logger',
   '!container'
 ];
