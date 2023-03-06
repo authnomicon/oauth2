@@ -109,61 +109,77 @@ describe('token/http/grant/code', function() {
     }); // should issue access token
     
   }); // default behavior
-
-  describe('default behavior x', function() {
-    var container = new Object();
-    container.components = sinon.stub()
-    container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([]);
+  
+  describe('with authorization code service that encodes scope', function() {
+    var acs = new Object();
+    var ats = new Object();
     
-    it('should issue access token with scope', function(done) {
-      var codeSpy = sinon.stub();
-      var factory = $require('../../../../com/token/http/grant/code', {
-        'oauth2orize': { exchange: { code: codeSpy } }
-      });
-      
-      var acs = new Object();
+    var issue;
+    
+    beforeEach(function(done) {
+      var container = new Object();
+      container.components = sinon.stub()
+      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([]);
       acs.verify = sinon.stub().yieldsAsync(null, {
         client: { id: 's6BhdRkqt3' },
         redirectURI: 'https://client.example.org/cb',
         user: { id: '248289761001' },
         scope: [ 'openid', 'profile', 'email' ]
       });
-      var ats = new Object();
       ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
       
+      var codeSpy = sinon.stub();
+      var factory = $require('../../../../com/token/http/grant/code', {
+        'oauth2orize': {
+          exchange: { code: codeSpy }
+        }
+      });
+      
       factory(ats, acs, logger, container)
-        .then(function(exchange) {
-          var client = {
+        .then(function(handler) {
+          expect(codeSpy).to.be.calledOnce;
+          
+          issue = codeSpy.getCall(0).args[0];
+          done();
+        })
+        .catch(done);
+    });
+    
+    it('should issue access token', function(done) {
+      var client = {
+        id: 's6BhdRkqt3',
+        name: 'My Example',
+        redirectURIs: [ 'https://client.example.org/cb' ]
+      };
+      
+      issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.org/cb', {}, {}, function(err, token) {
+        if (err) { return done(err); }
+    
+        expect(acs.verify).to.be.calledOnceWith('SplxlOBeZQQYbYS6WxSbIA');
+        expect(ats.issue).to.be.calledOnceWith({
+          user: {
+            id: '248289761001'
+          },
+          client: {
             id: 's6BhdRkqt3',
             name: 'My Example',
             redirectURIs: [ 'https://client.example.org/cb' ]
-          };
-          
-          var issue = codeSpy.getCall(0).args[0];
-          issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.org/cb', {}, {}, function(err, token) {
-            if (err) { return done(err); }
-        
-            expect(acs.verify).to.be.calledOnce;
-            expect(acs.verify.getCall(0).args[0]).to.equal('SplxlOBeZQQYbYS6WxSbIA');
-            expect(ats.issue).to.be.calledOnce;
-            expect(ats.issue.getCall(0).args[0]).to.deep.equal({
-              user: {
-                id: '248289761001'
-              },
-              client: {
-                id: 's6BhdRkqt3',
-                name: 'My Example',
-                redirectURIs: [ 'https://client.example.org/cb' ]
-              },
-              scope: [ 'openid', 'profile', 'email' ]
-            });
-            expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
-            done();
-          });
-        })
-        .catch(done);
-    }); // should issue access token with scope
+          },
+          scope: [ 'openid', 'profile', 'email' ]
+        });
+        expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
+        done();
+      });
+    }); // should issue access token
     
+  }); // with authorization code service that encodes scope
+
+  describe('default behavior x', function() {
+    var container = new Object();
+    container.components = sinon.stub()
+    container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([]);
+    
+    // TODO: review this
     it('should issue access token with issuer', function(done) {
       var codeSpy = sinon.stub();
       var factory = $require('../../../../com/token/http/grant/code', {
