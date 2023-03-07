@@ -108,6 +108,23 @@ describe('token/http/grant/code', function() {
       });
     }); // should issue access token
     
+    it('should not issue access token when authorization code not issued to client', function(done) {
+      var client = {
+        id: 'XXXXXXXX',
+        name: 'My Example Client',
+        redirectURIs: [ 'https://client.example.com/cb' ]
+      };
+      
+      issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(err, token) {
+        if (err) { return done(err); }
+    
+        expect(acs.verify).to.be.calledOnceWith('SplxlOBeZQQYbYS6WxSbIA');
+        expect(ats.issue).to.not.be.called;
+        expect(token).to.be.false;
+        done();
+      });
+    }); // should not issue access token when authorization code not issued to client
+    
   }); // default behavior
   
   describe('with authorization code service that encodes scope', function() {
@@ -306,43 +323,6 @@ describe('token/http/grant/code', function() {
         })
         .catch(done);
     }); // should issue access token with issuer
-    
-    it('should not issue access token when authorization code not issued to client', function(done) {
-      var codeSpy = sinon.stub();
-      var factory = $require('../../../../com/token/http/grant/code', {
-        'oauth2orize': { exchange: { code: codeSpy } }
-      });
-      
-      var acs = new Object();
-      acs.verify = sinon.stub().yieldsAsync(null, {
-        client: { id: 's6BhdRkqt3' },
-        redirectURI: 'https://client.example.com/cb',
-        user: { id: '248289761001' }
-      });
-      var ats = new Object();
-      ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
-      
-      factory(ats, acs, logger, container)
-        .then(function(exchange) {
-          var client = {
-            id: 'XXXXXXXX',
-            name: 'My Example Client',
-            redirectURIs: [ 'https://client.example.com/cb' ]
-          };
-          
-          var issue = codeSpy.getCall(0).args[0];
-          issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(err, token) {
-            if (err) { return done(err); }
-        
-            expect(acs.verify).to.be.calledOnce;
-            expect(acs.verify.getCall(0).args[0]).to.equal('SplxlOBeZQQYbYS6WxSbIA');
-            expect(ats.issue).to.not.be.called;
-            expect(token).to.be.false;
-            done();
-          });
-        })
-        .catch(done);
-    }); // should not issue access token when authorization code not issued to client
     
     it('should not issue access token when redirect URI is not identical to initial authorization request', function(done) {
       var codeSpy = sinon.stub();
