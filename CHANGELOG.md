@@ -13,6 +13,8 @@ authorization request.
 and the storagerelay scheme.
 
 ### Changed
+- `token` request processor passes `ares` directly through to
+`AccessTokenService#issue`.
 - Renamed `http://i.authnomicon.org/oauth2/AuthorizationCodeService` interface
 to `module:@authnomicon/oauth2.AuthorizationCodeService`.
 - Renamed `http://i.authnomicon.org/oauth2/AccessTokenService` interface to
