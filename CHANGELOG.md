@@ -17,6 +17,8 @@ and the storagerelay scheme.
 `AuthorizationCodeService#issue`.
 - `token` request processor passes `ares` directly through to
 `AccessTokenService#issue`.
+- `authorization_code` token request processor passes `msg` directly through
+from `AuthorizationCodeService#verify` to `AccessTokenService#issue`.
 - Renamed `http://i.authnomicon.org/oauth2/AuthorizationCodeService` interface
 to `module:@authnomicon/oauth2.AuthorizationCodeService`.
 - Renamed `http://i.authnomicon.org/oauth2/AccessTokenService` interface to

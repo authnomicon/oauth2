@@ -53,12 +53,8 @@ exports = module.exports = function(ats, acs, logger, C) {
             return cb(new oauth2orize.TokenError('Mismatched redirect URI', 'invalid_grant'));
           }
   
-          var msg = {};
-          if (cmsg.issuer) { msg.issuer = cmsg.issuer; }
-          msg.user = cmsg.user;
+          var msg = cmsg;
           msg.client = client;
-          if (cmsg.scope) { msg.scope = cmsg.scope; }
-          if (cmsg.authContext) { msg.authContext = cmsg.authContext; }
           
           ats.issue(msg, function(err, token) {
             if (err) { return cb(err); }

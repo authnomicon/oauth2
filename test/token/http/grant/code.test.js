@@ -101,7 +101,8 @@ describe('token/http/grant/code', function() {
             id: 's6BhdRkqt3',
             name: 'My Example Client',
             redirectURIs: [ 'https://client.example.com/cb' ]
-          }
+          },
+          redirectURI: 'https://client.example.com/cb'
         });
         expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
         done();
@@ -199,6 +200,7 @@ describe('token/http/grant/code', function() {
             name: 'My Example',
             redirectURIs: [ 'https://client.example.org/cb' ]
           },
+          redirectURI: 'https://client.example.org/cb',
           scope: [ 'openid', 'profile', 'email' ]
         });
         expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
@@ -269,6 +271,7 @@ describe('token/http/grant/code', function() {
             name: 'My Example',
             redirectURIs: [ 'https://client.example.org/cb' ]
           },
+          redirectURI: 'https://client.example.org/cb',
           scope: [ 'openid', 'profile', 'email' ],
           authContext: {
             sessionID: 'YU7uoYRVAxF34TuoAodVfw-1eA13rhqW',
@@ -283,66 +286,8 @@ describe('token/http/grant/code', function() {
     }); // should issue access token
     
   }); // with authorization code service that encodes authentication context
-
-  describe('default behavior x', function() {
-    var container = new Object();
-    container.components = sinon.stub()
-    container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([]);
-    
-    // TODO: review this
-    it('should issue access token with issuer', function(done) {
-      var codeSpy = sinon.stub();
-      var factory = $require('../../../../com/token/http/grant/code', {
-        'oauth2orize': { exchange: { code: codeSpy } }
-      });
-      
-      var acs = new Object();
-      acs.verify = sinon.stub().yieldsAsync(null, {
-        issuer: 'https://server.example.com',
-        client: { id: 's6BhdRkqt3' },
-        redirectURI: 'https://client.example.org/cb',
-        user: { id: '248289761001' },
-        scope: [ 'openid', 'profile', 'email' ]
-      });
-      var ats = new Object();
-      ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
-      
-      factory(ats, acs, logger, container)
-        .then(function(exchange) {
-          var client = {
-            id: 's6BhdRkqt3',
-            name: 'My Example',
-            redirectURIs: [ 'https://client.example.org/cb' ]
-          };
-          
-          var issue = codeSpy.getCall(0).args[0];
-          issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.org/cb', {}, {}, function(err, token) {
-            if (err) { return done(err); }
-        
-            expect(acs.verify).to.be.calledOnce;
-            expect(acs.verify.getCall(0).args[0]).to.equal('SplxlOBeZQQYbYS6WxSbIA');
-            expect(ats.issue).to.be.calledOnce;
-            expect(ats.issue.getCall(0).args[0]).to.deep.equal({
-              issuer: 'https://server.example.com',
-              user: {
-                id: '248289761001'
-              },
-              client: {
-                id: 's6BhdRkqt3',
-                name: 'My Example',
-                redirectURIs: [ 'https://client.example.org/cb' ]
-              },
-              scope: [ 'openid', 'profile', 'email' ]
-            });
-            expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
-            done();
-          });
-        })
-        .catch(done);
-    }); // should issue access token with issuer
-    
-  }); // issue
   
+  // TODO: review this
   describe('extensions', function() {
     
     it('should accept message and yield parameters', function(done) {
@@ -353,6 +298,7 @@ describe('token/http/grant/code', function() {
             name: 'My Example',
             redirectURIs: [ 'https://client.example.org/cb' ]
           },
+          redirectURI: 'https://client.example.org/cb',
           user: {
             id: '248289761001'
           },
@@ -409,6 +355,7 @@ describe('token/http/grant/code', function() {
                 name: 'My Example',
                 redirectURIs: [ 'https://client.example.org/cb' ]
               },
+              redirectURI: 'https://client.example.org/cb',
               scope: [ 'openid', 'profile', 'email' ]
             });
             expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
@@ -428,6 +375,7 @@ describe('token/http/grant/code', function() {
             name: 'My Example',
             redirectURIs: [ 'https://client.example.org/cb' ]
           },
+          redirectURI: 'https://client.example.org/cb',
           user: {
             id: '248289761001'
           },
@@ -487,6 +435,7 @@ describe('token/http/grant/code', function() {
                 name: 'My Example',
                 redirectURIs: [ 'https://client.example.org/cb' ]
               },
+              redirectURI: 'https://client.example.org/cb',
               scope: [ 'openid', 'profile', 'email' ]
             });
             expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
@@ -506,6 +455,7 @@ describe('token/http/grant/code', function() {
             name: 'My Example',
             redirectURIs: [ 'https://client.example.org/cb' ]
           },
+          redirectURI: 'https://client.example.org/cb',
           user: {
             id: '248289761001'
           },
@@ -566,6 +516,7 @@ describe('token/http/grant/code', function() {
                 name: 'My Example',
                 redirectURIs: [ 'https://client.example.org/cb' ]
               },
+              redirectURI: 'https://client.example.org/cb',
               scope: [ 'openid', 'profile', 'email' ]
             });
             expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
