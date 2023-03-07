@@ -5,7 +5,7 @@ exports = module.exports = function(ats, acs, logger, C) {
   
   return Promise.resolve(null)
     .then(function() {
-      var extensions = [];
+      var paramsExtFns = [];
       
       return new Promise(function(resolve, reject) {
         var components = C.components('module:@authnomicon/oauth2.tokenResponseParametersFn');
@@ -13,24 +13,24 @@ exports = module.exports = function(ats, acs, logger, C) {
         (function iter(i) {
           var component = components[i];
           if (!component) {
-            return resolve(extensions);
+            return resolve(paramsExtFns);
           }
           
           component.create()
-            .then(function(extension) {
+            .then(function(extFn) {
               logger.info('Loaded response parameter extension: ');
-              extensions.push(extension);
+              paramsExtFns.push(extFn);
               iter(i + 1);
             }, function(err) {
               var msg = 'Failed to load response parameter extension:\n';
               msg += err.stack;
               logger.warning(msg);
-              return iter(i + 1);
+              iter(i + 1);
             })
         })(0);
       });
     })
-    .then(function(extensions) {
+    .then(function(paramsExtFns) {
       
       return oauth2orize.exchange.code(function(client, code, redirectURI, body, authInfo, cb) {
         // TODO: Pass self trust store to token verify, using list of issuers like `ca` to Node's http
@@ -63,23 +63,23 @@ exports = module.exports = function(ats, acs, logger, C) {
             var params = {};
             var i = 0;
             
-            (function iter(err, exparams) {
+            (function iter(err, xparams) {
               if (err) { return cb(err); }
-              if (exparams) { merge(params, exparams); }
+              if (xparams) { merge(params, xparams); }
           
-              var extension = extensions[i++];
-              if (!extension) {
+              var extFn = paramsExtFns[i++];
+              if (!extFn) {
                 return cb(null, token, null, params);
               }
           
-              var arity = extension.length;
+              var arity = extFn.length;
               if (arity == 4) {
                 // TODO: Eliminate the grant argument here, and make it an annotation.
-                extension(msg, bind, 'authorization_code', iter);
+                extFn(msg, bind, 'authorization_code', iter);
               } else if (arity == 3) {
-                extension(msg, bind, iter);
+                extFn(msg, bind, iter);
               } else {
-                extension(msg, iter);
+                extFn(msg, iter);
               }
             })();
           });
