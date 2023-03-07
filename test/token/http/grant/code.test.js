@@ -385,6 +385,10 @@ describe('token/http/grant/code', function() {
     
   }); // with failing access token service
   
+  describe('with one response parameter extension', function() {
+    
+  });
+  
   
   // TODO: review this
   describe('extensions', function() {

@@ -390,14 +390,14 @@ describe('authorize/http/response/types/code', function() {
       var txn = {
         client: {
           id: 's6BhdRkqt3',
-          name: 'My Example Client'
+          name: 'My Example'
         },
-        redirectURI: 'https://client.example.com/cb',
+        redirectURI: 'https://client.example.org/cb',
         req: {
           type: 'code',
           clientID: 's6BhdRkqt3',
-          redirectURI: 'https://client.example.com/cb',
-          state: 'xyz'
+          redirectURI: 'https://client.example.org/cb',
+          state: 'af0ifjsldkj'
         },
         user: {
           id: '248289761001',
@@ -414,14 +414,14 @@ describe('authorize/http/response/types/code', function() {
         expect(fn1).to.be.calledOnceWith({
           client: {
             id: 's6BhdRkqt3',
-            name: 'My Example Client'
+            name: 'My Example'
           },
-          redirectURI: 'https://client.example.com/cb',
+          redirectURI: 'https://client.example.org/cb',
           req: {
             type: 'code',
             clientID: 's6BhdRkqt3',
-            redirectURI: 'https://client.example.com/cb',
-            state: 'xyz'
+            redirectURI: 'https://client.example.org/cb',
+            state: 'af0ifjsldkj'
           },
           user: {
             id: '248289761001',
