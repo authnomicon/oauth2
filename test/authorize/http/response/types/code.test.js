@@ -404,7 +404,8 @@ describe('authorize/http/response/types/code', function() {
           displayName: 'Jane Doe'
         },
         res: {
-          allow: true
+          allow: true,
+          scope: [ 'openid', 'profile', 'email' ]
         }
       };
       
@@ -428,7 +429,8 @@ describe('authorize/http/response/types/code', function() {
             displayName: 'Jane Doe'
           },
           res: {
-            allow: true
+            allow: true,
+            scope: [ 'openid', 'profile', 'email' ]
           }
         });
         expect(params).to.deep.equal({
