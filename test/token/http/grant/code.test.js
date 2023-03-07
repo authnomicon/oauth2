@@ -386,89 +386,78 @@ describe('token/http/grant/code', function() {
   }); // with failing access token service
   
   describe('with one response parameter extension', function() {
+    var acs = new Object();
+    var ats = new Object();
+    var fn1 = sinon.stub().yieldsAsync(null, { id_token: 'eyJhbGci' });
     
-  });
-  
-  
-  // TODO: review this
-  describe('extensions', function() {
+    var issue;
     
-    it('should accept message and yield parameters', function(done) {
-      var ext1 = function(msg, cb) {
-        expect(msg).to.deep.equal({
-          client: {
-            id: 's6BhdRkqt3',
-            name: 'My Example',
-            redirectURIs: [ 'https://client.example.org/cb' ]
-          },
-          redirectURI: 'https://client.example.org/cb',
-          user: {
-            id: '248289761001'
-          },
-          scope: [ 'openid', 'profile', 'email' ]
-        });
-        
-        return cb(null, { id_token: 'eyJhbGci' });
-      };
-      var ext1Component = new Object();
-      ext1Component.create = sinon.stub().resolves(ext1);
+    beforeEach(function(done) {
+      var fn1Component = new Object();
+      fn1Component.create = sinon.stub().resolves(fn1);
       
       var container = new Object();
-      container.components = sinon.stub();
-      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([
-        ext1Component
-      ]);
-      
-      var codeSpy = sinon.stub();
-      var factory = $require('../../../../com/token/http/grant/code', {
-        'oauth2orize': { exchange: { code: codeSpy } }
-      });
-      
-      var acs = new Object();
+      container.components = sinon.stub()
+      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([ fn1Component ]);
       acs.verify = sinon.stub().yieldsAsync(null, {
         client: { id: 's6BhdRkqt3' },
         redirectURI: 'https://client.example.org/cb',
         user: { id: '248289761001' },
         scope: [ 'openid', 'profile', 'email' ]
       });
-      var ats = new Object();
       ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
       
+      var codeSpy = sinon.stub();
+      var factory = $require('../../../../com/token/http/grant/code', {
+        'oauth2orize': {
+          exchange: { code: codeSpy }
+        }
+      });
+      
       factory(ats, acs, logger, container)
-        .then(function(exchange) {
-          var client = {
+        .then(function(handler) {
+          expect(codeSpy).to.be.calledOnce;
+          
+          issue = codeSpy.getCall(0).args[0];
+          done();
+        })
+        .catch(done);
+    });
+    
+    it('should issue access token', function(done) {
+      var client = {
+        id: 's6BhdRkqt3',
+        name: 'My Example',
+        redirectURIs: [ 'https://client.example.org/cb' ]
+      };
+      
+      issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.org/cb', {}, {}, function(err, accessToken, refreshToken, params) {
+        if (err) { return done(err); }
+    
+        expect(fn1).to.be.calledOnceWith({
+          user: {
+            id: '248289761001'
+          },
+          client: {
             id: 's6BhdRkqt3',
             name: 'My Example',
             redirectURIs: [ 'https://client.example.org/cb' ]
-          };
-          
-          var issue = codeSpy.getCall(0).args[0];
-          issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.org/cb', {}, {}, function(err, token, refreshToken, params) {
-            if (err) { return done(err); }
-        
-            expect(acs.verify).to.be.calledOnce;
-            expect(acs.verify.getCall(0).args[0]).to.equal('SplxlOBeZQQYbYS6WxSbIA');
-            expect(ats.issue).to.be.calledOnce;
-            expect(ats.issue.getCall(0).args[0]).to.deep.equal({
-              user: {
-                id: '248289761001'
-              },
-              client: {
-                id: 's6BhdRkqt3',
-                name: 'My Example',
-                redirectURIs: [ 'https://client.example.org/cb' ]
-              },
-              redirectURI: 'https://client.example.org/cb',
-              scope: [ 'openid', 'profile', 'email' ]
-            });
-            expect(token).to.equal('2YotnFZFEjr1zCsicMWpAA');
-            expect(refreshToken).to.be.null;
-            expect(params).to.deep.equal({ id_token: 'eyJhbGci' });
-            done();
-          });
-        })
-        .catch(done);
-    }); // should accept message and yield parameters
+          },
+          redirectURI: 'https://client.example.org/cb',
+          scope: [ 'openid', 'profile', 'email' ]
+        });
+        expect(accessToken).to.equal('2YotnFZFEjr1zCsicMWpAA');
+        expect(refreshToken).to.be.null;
+        expect(params).to.deep.equal({ id_token: 'eyJhbGci' });
+        done();
+      });
+    }); // should issue access token
+    
+  }); // with one response parameter extension
+  
+  
+  // TODO: review this
+  describe('extensions', function() {
     
     it('should accept message and bind and yield parameters', function(done) {
       var ext1 = function(msg, bind, cb) {
