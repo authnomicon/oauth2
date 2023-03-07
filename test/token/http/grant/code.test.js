@@ -287,6 +287,54 @@ describe('token/http/grant/code', function() {
     
   }); // with authorization code service that encodes authentication context
   
+  describe('with failing authorization code service', function() {
+    var acs = new Object();
+    var ats = new Object();
+    
+    var issue;
+    
+    beforeEach(function(done) {
+      var container = new Object();
+      container.components = sinon.stub()
+      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([]);
+      acs.verify = sinon.stub().yieldsAsync(new Error('something went wrong'));
+      ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
+      
+      var codeSpy = sinon.stub();
+      var factory = $require('../../../../com/token/http/grant/code', {
+        'oauth2orize': {
+          exchange: { code: codeSpy }
+        }
+      });
+      
+      factory(ats, acs, logger, container)
+        .then(function(handler) {
+          expect(codeSpy).to.be.calledOnce;
+          
+          issue = codeSpy.getCall(0).args[0];
+          done();
+        })
+        .catch(done);
+    });
+    
+    it('should yield error', function(done) {
+      var client = {
+        id: 's6BhdRkqt3',
+        name: 'My Example Client',
+        redirectURIs: [ 'https://client.example.com/cb' ]
+      };
+      
+      issue(client, 'SplxlOBeZQQYbYS6WxSbIA', 'https://client.example.com/cb', {}, {}, function(err, token) {
+        expect(err).to.be.an.instanceof(Error);
+        expect(err.message).to.equal('something went wrong');
+        expect(token).to.be.undefined;
+        done();
+      });
+    }); // should issue access token
+    
+  }); // with failing authorization code service
+  
+  
   // TODO: review this
   describe('extensions', function() {
     
