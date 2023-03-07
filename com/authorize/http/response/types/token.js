@@ -55,8 +55,8 @@ exports = module.exports = function(ats, logger, C) {
         modes: responders
       }, function(client, user, ares, areq, locals, cb) {
         var msg = ares;
-        msg.user = user;
         msg.client = client;
+        msg.user = user;
         // TODO: Put a grant ID in here somehere
         // maybe not, since there's no refresh token here?
         //msg.grant = ares;

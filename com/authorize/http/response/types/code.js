@@ -67,16 +67,12 @@ exports = module.exports = function(acs, logger, C) {
       return oauth2orize.grant.code({
         modes: responders
       }, function(client, redirectURI, user, ares, areq, locals, cb) {
-        var msg = {};
-        // TODO: Eliminate this or move this to locals?
-        if (ares.issuer) { msg.issuer = ares.issuer; }
+        var msg = ares;
         msg.client = client;
         msg.redirectURI = redirectURI;
         msg.user = user;
         // TODO: Put a grant ID in here somehere
         //msg.grant = ares;
-        if (ares.scope) { msg.scope = ares.scope; }
-        if (ares.authContext) { msg.authContext = ares.authContext; }
     
         acs.issue(msg, function(err, code) {
           if (err) { return cb(err); }
