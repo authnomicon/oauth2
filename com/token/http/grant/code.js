@@ -76,10 +76,7 @@ exports = module.exports = function(ats, acs, logger, C) {
               }
           
               var arity = extFn.length;
-              if (arity == 4) {
-                // TODO: Eliminate the grant argument here, and make it an annotation.
-                extFn(msg, bind, 'authorization_code', iter);
-              } else if (arity == 3) {
+              if (arity == 3) {
                 extFn(msg, bind, iter);
               } else {
                 extFn(msg, iter);

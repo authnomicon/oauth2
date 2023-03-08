@@ -38,6 +38,10 @@ interface to `module:oauth2orize.responseParametersFn`.
 - Renamed `http://i.authnomicon.org/oauth2/token/http/ResponseParameters`
 interface to `module:@authnomicon/oauth2.tokenResponseParametersFn;grant_type=code`.
 
+### Removed
+- Removed 4-arity form of tokenResponseParametersFn which passed `grantType` as
+third argument.
+
 ## [0.0.4] - 2021-12-13
 ### Added
 - Added OAuth 2.0 error middleware to `/authorize` endpoint.
