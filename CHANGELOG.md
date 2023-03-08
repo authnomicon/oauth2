@@ -11,6 +11,8 @@ origin and specifies that origin as the value of `redirect_uri` in the
 authorization request.
 - Support for redirect URI schemes, enabling support for [IDP-IFrame-based Implict Flow](http://lists.openid.net/pipermail/openid-specs-ab/Week-of-Mon-20151116/005865.html)
 and the storagerelay scheme.
+- Support for `module:@authnomicon/oauth2.tokenResponseParametersFn;grant_type=code`
+implementation to yield a set of tokens for binding.
 
 ### Changed
 - `code` request processor passes `ares` directly through to
@@ -34,7 +36,7 @@ interface to `module:oauth2orize.responseParametersFn`.
 - Renamed `http://i.authnomicon.org/oauth2/token/http/GrantType` interface to
 `module:oauth2orize.tokenRequestHandler`.
 - Renamed `http://i.authnomicon.org/oauth2/token/http/ResponseParameters`
-interface to `module:@authnomicon/oauth2.tokenResponseParametersFn`.
+interface to `module:@authnomicon/oauth2.tokenResponseParametersFn;grant_type=code`.
 
 ## [0.0.4] - 2021-12-13
 ### Added

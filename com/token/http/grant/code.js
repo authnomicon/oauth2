@@ -10,7 +10,7 @@ exports = module.exports = function(ats, acs, logger, C) {
       return new Promise(function(resolve, reject) {
         // TODO: These need to be ordered for native SSO device secret to bind
         // id_token.   Bixby might be doing this already???
-        var components = C.components('module:@authnomicon/oauth2.tokenResponseParametersFn');
+        var components = C.components('module:@authnomicon/oauth2.tokenResponseParametersFn;grant_type=code');
       
         (function iter(i) {
           var component = components[i];
@@ -65,9 +65,10 @@ exports = module.exports = function(ats, acs, logger, C) {
             var params = {};
             var i = 0;
             
-            (function iter(err, xparams) {
+            (function iter(err, xparams, xbound) {
               if (err) { return cb(err); }
               if (xparams) { merge(params, xparams); }
+              if (xbound) { merge(bind, xbound); }
           
               var extFn = paramsExtFns[i++];
               if (!extFn) {

@@ -30,7 +30,7 @@ describe('token/http/grant/code', function() {
   it('should create handler without response parameter extensions', function(done) {
     var container = new Object();
     container.components = sinon.stub()
-    container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([]);
+    container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn;grant_type=code').returns([]);
     
     var codeSpy = sinon.stub();
     var factory = $require('../../../../com/token/http/grant/code', {
@@ -57,7 +57,7 @@ describe('token/http/grant/code', function() {
     beforeEach(function(done) {
       var container = new Object();
       container.components = sinon.stub()
-      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn;grant_type=code').returns([]);
       acs.verify = sinon.stub().yieldsAsync(null, {
         client: { id: 's6BhdRkqt3' },
         redirectURI: 'https://client.example.com/cb',
@@ -154,7 +154,7 @@ describe('token/http/grant/code', function() {
     beforeEach(function(done) {
       var container = new Object();
       container.components = sinon.stub()
-      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn;grant_type=code').returns([]);
       acs.verify = sinon.stub().yieldsAsync(null, {
         client: { id: 's6BhdRkqt3' },
         redirectURI: 'https://client.example.org/cb',
@@ -219,7 +219,7 @@ describe('token/http/grant/code', function() {
     beforeEach(function(done) {
       var container = new Object();
       container.components = sinon.stub()
-      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn;grant_type=code').returns([]);
       acs.verify = sinon.stub().yieldsAsync(null, {
         client: { id: 's6BhdRkqt3' },
         redirectURI: 'https://client.example.org/cb',
@@ -296,7 +296,7 @@ describe('token/http/grant/code', function() {
     beforeEach(function(done) {
       var container = new Object();
       container.components = sinon.stub()
-      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn;grant_type=code').returns([]);
       acs.verify = sinon.stub().yieldsAsync(new Error('something went wrong'));
       ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
       
@@ -343,7 +343,7 @@ describe('token/http/grant/code', function() {
     beforeEach(function(done) {
       var container = new Object();
       container.components = sinon.stub()
-      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn;grant_type=code').returns([]);
       acs.verify = sinon.stub().yieldsAsync(null, {
         client: { id: 's6BhdRkqt3' },
         redirectURI: 'https://client.example.com/cb',
@@ -388,7 +388,9 @@ describe('token/http/grant/code', function() {
   describe('with one response parameter extension', function() {
     var acs = new Object();
     var ats = new Object();
-    var fn1 = sinon.stub().yieldsAsync(null, { id_token: 'eyJhbGci' });
+    var fn1 = sinon.spy(function(msg, bind, cb) {
+      cb(null, { id_token: 'eyJhbGci' });
+    });
     
     var issue;
     
@@ -398,7 +400,7 @@ describe('token/http/grant/code', function() {
       
       var container = new Object();
       container.components = sinon.stub()
-      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([ fn1Component ]);
+      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn;grant_type=code').returns([ fn1Component ]);
       acs.verify = sinon.stub().yieldsAsync(null, {
         client: { id: 's6BhdRkqt3' },
         redirectURI: 'https://client.example.org/cb',
@@ -445,6 +447,8 @@ describe('token/http/grant/code', function() {
           },
           redirectURI: 'https://client.example.org/cb',
           scope: [ 'openid', 'profile', 'email' ]
+        }, {
+          accessToken: '2YotnFZFEjr1zCsicMWpAA',
         });
         expect(accessToken).to.equal('2YotnFZFEjr1zCsicMWpAA');
         expect(refreshToken).to.be.null;
@@ -458,8 +462,12 @@ describe('token/http/grant/code', function() {
   describe('with two response parameter extensions', function() {
     var acs = new Object();
     var ats = new Object();
-    var fn1 = sinon.stub().yieldsAsync(null, { device_secret: 'casdfgarfgasdfg' });
-    var fn2 = sinon.stub().yieldsAsync(null, { id_token: 'eyJhbGci' });
+    var fn1 = sinon.spy(function(msg, cb) {
+      cb(null, { device_secret: 'casdfgarfgasdfg' }, { deviceSecret: 'casdfgarfgasdfg' });
+    });
+    var fn2 = sinon.spy(function(msg, bound, cb) {
+      cb(null, { id_token: 'eyJhbGci' });
+    });
     
     var issue;
     
@@ -471,12 +479,12 @@ describe('token/http/grant/code', function() {
       
       var container = new Object();
       container.components = sinon.stub()
-      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([ fn1Component, fn2Component ]);
+      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn;grant_type=code').returns([ fn1Component, fn2Component ]);
       acs.verify = sinon.stub().yieldsAsync(null, {
         client: { id: 's6BhdRkqt3' },
         redirectURI: 'https://client.example.org/cb',
         user: { id: '248289761001' },
-        scope: [ 'openid', 'profile', 'email' ]
+        scope: [ 'openid', 'profile', 'email', 'device_sso' ]
       });
       ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
       
@@ -517,7 +525,22 @@ describe('token/http/grant/code', function() {
             redirectURIs: [ 'https://client.example.org/cb' ]
           },
           redirectURI: 'https://client.example.org/cb',
-          scope: [ 'openid', 'profile', 'email' ]
+          scope: [ 'openid', 'profile', 'email', 'device_sso' ]
+        });
+        expect(fn2).to.be.calledOnceWith({
+          user: {
+            id: '248289761001'
+          },
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'My Example',
+            redirectURIs: [ 'https://client.example.org/cb' ]
+          },
+          redirectURI: 'https://client.example.org/cb',
+          scope: [ 'openid', 'profile', 'email', 'device_sso' ]
+        }, {
+          accessToken: '2YotnFZFEjr1zCsicMWpAA',
+          deviceSecret: 'casdfgarfgasdfg'
         });
         expect(accessToken).to.equal('2YotnFZFEjr1zCsicMWpAA');
         expect(refreshToken).to.be.null;
@@ -560,7 +583,7 @@ describe('token/http/grant/code', function() {
       
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([
+      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn;grant_type=code').returns([
         ext1Component
       ]);
       
@@ -641,7 +664,7 @@ describe('token/http/grant/code', function() {
       
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn').returns([
+      container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn;grant_type=code').returns([
         ext1Component
       ]);
       
