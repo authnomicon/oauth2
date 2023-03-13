@@ -45,7 +45,9 @@
       "token/http/auth/none",
       "token/http/grant/code",
       "registration/http/service",
-      "http/middleware/errorhandler"
+      "http/middleware/errorhandler",
+      "authorize/http/middleware/evaluate",
+      "http/server"
     ]
   },
   "directories": {
