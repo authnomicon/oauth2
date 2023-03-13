@@ -1,3 +1,5 @@
+var express = require('express');
+
 /**
  * OAuth 2.0 authorization service.
  *
@@ -52,9 +54,7 @@
  * [2]: https://tools.ietf.org/html/rfc6749
 */
 exports = module.exports = function(authorizeHandler, continueHandler) {
-  var express = require('express');
-  
-  var router = new express.Router();
+  var router = express.Router();
   router.get('/', authorizeHandler);
   router.get('/continue', continueHandler);
   
