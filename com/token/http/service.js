@@ -1,3 +1,5 @@
+var express = require('express');
+
 /**
  * OAuth 2.0 token service.
  *
@@ -30,9 +32,7 @@
  * [3]: https://tools.ietf.org/html/rfc5988#section-4
  */
 exports = module.exports = function(tokenHandler) {
-  var express = require('express');
-  
-  var router = new express.Router();
+  var router = express.Router();
   router.post('/', tokenHandler);
   
   return router;
