@@ -58,7 +58,6 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
         authenticator.authenticate([ 'session', 'anonymous' ], { multi: true }),
         server.authorization(
           function validateClient(clientID, redirectURI, cb) {
-    
             clients.read(clientID, function(err, client) {
               if (err) { return cb(err); }
               if (!client) {
@@ -67,7 +66,6 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
               
               var responseURIs = [].concat(client.redirectURIs || [])
                                    .concat(client.webOrigins || []);
-              
               if (responseURIs.length == 0) {
                 // The client has not registered any redirection endpoints.  Such
                 // clients are not authorized to use the authorization endpoint.
@@ -87,7 +85,8 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
               var ruri = redirectURI || client.redirectURIs[0]
                 , uri = url.parse(ruri)
                 , proto = uri.protocol.slice(0, -1)
-                , scheme = schemes[proto], v, rtoRedirectURI, worig;
+                , scheme = schemes[proto], v
+                , rtoRedirectURI, rtoWebOrigin;
               
               if (scheme) {
                 v = scheme.verify(client, ruri);
@@ -106,11 +105,11 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
                 rtoRedirectURI = ruri;
               }
               if (client.webOrigins && client.webOrigins.indexOf(redirectURI) !== -1) {
-                worig = redirectURI;
+                rtoWebOrigin = redirectURI;
               }
               // FIXME: proper web origin support
               //worig = 'http://localhost:3001';
-              return cb(null, client, rtoRedirectURI, worig);
+              return cb(null, client, rtoRedirectURI, rtoWebOrigin);
             }); // clients.read
           },
           function(txn, cb) {
