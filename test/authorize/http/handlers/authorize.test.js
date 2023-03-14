@@ -389,7 +389,7 @@ describe('authorize/http/handlers/authorize', function() {
         .catch(done);
     }); // should reject request from client with multiple redirect URIs that omits redirect URI parameter
     
-    it('should evaluate request from client using redirect URI that is a registered redirect URI and a registered web origin', function(done) {
+    it('should evaluate request from client using redirect URI that is both a registered web origin and a registered redirect URI', function(done) {
       var container = new Object();
       container.components = sinon.stub();
       container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
@@ -431,9 +431,9 @@ describe('authorize/http/handlers/authorize', function() {
             .listen();
         })
         .catch(done);
-    }); // should evaluate request from client using redirect URI that is a registered redirect URI and a registered web origin
+    }); // should evaluate request from client using redirect URI that is both a registered web origin and a registered redirect URI
     
-    it('should evaluate request from client using redirect URI that is a registered redirect URI but not a registered web origin', function(done) {
+    it('should evaluate request from client using redirect URI that is not a registered web origin but is a registered redirect URI', function(done) {
       var container = new Object();
       container.components = sinon.stub();
       container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
@@ -480,7 +480,7 @@ describe('authorize/http/handlers/authorize', function() {
             .listen();
         })
         .catch(done);
-    }); // should evaluate request from client using redirect URI that is a registered redirect URI but not a registered web origin
+    }); // should evaluate request from client using redirect URI that is not a registered web origin but is a registered redirect URI
     
     it('should error when when querying client directory fails', function(done) {
       var container = new Object();
