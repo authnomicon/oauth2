@@ -389,7 +389,7 @@ describe('authorize/http/handlers/authorize', function() {
         .catch(done);
     }); // should reject request from client with multiple redirect URIs that omits redirect URI parameter
     
-    it('should error when error is encountered while querying directory', function(done) {
+    it('should error when when querying client directory fails', function(done) {
       var container = new Object();
       container.components = sinon.stub();
       container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
@@ -414,7 +414,7 @@ describe('authorize/http/handlers/authorize', function() {
             .listen()
         })
         .catch(done);
-    }); // should error when error is encountered while querying directory
+    }); // should error when when querying client directory fails
     
     it('should evaluate request from client using redirect URI that is a registered web origin', function(done) {
       var container = new Object();
