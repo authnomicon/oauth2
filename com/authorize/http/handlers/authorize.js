@@ -89,7 +89,7 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
                 , rtoRedirectURI, rtoWebOrigin;
                 
               if (scheme) {
-                ruri = scheme.verify(ruri);
+                ruri = scheme(ruri);
                 redirectURI = ruri;
               }
 

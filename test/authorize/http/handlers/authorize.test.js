@@ -668,12 +668,9 @@ describe('authorize/http/handlers/authorize', function() {
     }); // should error when when querying client directory fails
     
     it('should evaluate request from client that uses a redirect URI scheme', function(done) {
-      var scheme = {
-        verify: function(redirectURI) {
-          expect(redirectURI).to.equal('storagerelay://https/client.example.com?id=auth304970');
-          
-          return 'https://client.example.com';
-        }
+      var scheme = function(redirectURI) {
+        expect(redirectURI).to.equal('storagerelay://https/client.example.com?id=auth304970');
+        return 'https://client.example.com';
       };
       var schemeComponent = new Object();
       schemeComponent.create = sinon.stub().resolves(scheme);
@@ -722,10 +719,8 @@ describe('authorize/http/handlers/authorize', function() {
     }); // should evaluate request from client that uses a redirect URI scheme
     
     it('should reject request from client that uses an unverified redirect URI scheme', function(done) {
-      var scheme = {
-        verify: function(redirectURI) {
-          return 'https://client.example.test';
-        }
+      var scheme = function(redirectURI) {
+        return 'https://client.example.test';
       };
       var schemeComponent = new Object();
       schemeComponent.create = sinon.stub().resolves(scheme);
