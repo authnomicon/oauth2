@@ -669,16 +669,10 @@ describe('authorize/http/handlers/authorize', function() {
     
     it('should evaluate request from client that uses a redirect URI scheme', function(done) {
       var scheme = {
-        verify: function(client, redirectURI) {
-          expect(client).to.deep.equal({
-            id: 's6BhdRkqt3',
-            name: 'My Example Client',
-            redirectURIs: [ 'https://client.example.com/cb' ],
-            webOrigins: [ 'https://client.example.com' ]
-          });
+        verify: function(redirectURI) {
           expect(redirectURI).to.equal('storagerelay://https/client.example.com?id=auth304970');
           
-          return [ redirectURI, 'https://client.example.com' ]
+          return 'https://client.example.com';
         }
       };
       var schemeComponent = new Object();
@@ -715,7 +709,7 @@ describe('authorize/http/handlers/authorize', function() {
                 redirectURIs: [ 'https://client.example.com/cb' ],
                 webOrigins: [ 'https://client.example.com' ]
               });
-              expect(this.req.oauth2.redirectURI).to.equal('storagerelay://https/client.example.com?id=auth304970');
+              expect(this.req.oauth2.redirectURI).to.be.undefined;
               expect(this.req.oauth2.webOrigin).to.equal('https://client.example.com');
           
               expect(this.statusCode).to.equal(302);
@@ -729,8 +723,8 @@ describe('authorize/http/handlers/authorize', function() {
     
     it('should reject request from client that uses an unverified redirect URI scheme', function(done) {
       var scheme = {
-        verify: function(client, redirectURI) {
-          return false;
+        verify: function(redirectURI) {
+          return 'https://client.example.test';
         }
       };
       var schemeComponent = new Object();

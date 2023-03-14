@@ -87,13 +87,10 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
                 , proto = uri.protocol.slice(0, -1)
                 , scheme = schemes[proto], v
                 , rtoRedirectURI, rtoWebOrigin;
-              
+                
               if (scheme) {
-                v = scheme.verify(client, ruri);
-                if (!v) {
-                  return cb(new oauth2orize.AuthorizationError('Client not permitted to use redirect URI', 'unauthorized_client'));
-                }
-                return cb(null, client, v[0], v[1]);
+                ruri = scheme.verify(ruri);
+                redirectURI = ruri;
               }
 
 
@@ -104,8 +101,8 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
               if (client.redirectURIs && client.redirectURIs.indexOf(ruri) !== -1) {
                 rtoRedirectURI = ruri;
               }
-              if (client.webOrigins && client.webOrigins.indexOf(redirectURI) !== -1) {
-                rtoWebOrigin = redirectURI;
+              if (client.webOrigins && client.webOrigins.indexOf(ruri) !== -1) {
+                rtoWebOrigin = ruri;
               }
               // FIXME: proper web origin support
               //worig = 'http://localhost:3001';
