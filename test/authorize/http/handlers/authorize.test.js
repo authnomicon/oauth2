@@ -433,7 +433,7 @@ describe('authorize/http/handlers/authorize', function() {
         .catch(done);
     }); // should evaluate request from client using redirect URI that is a registered redirect URI and a registered web origin
     
-    it('should evaluate request from client using redirect URI that is a registered redirect URI not a registered web origin', function(done) {
+    it('should evaluate request from client using redirect URI that is a registered redirect URI but not a registered web origin', function(done) {
       var container = new Object();
       container.components = sinon.stub();
       container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
@@ -480,7 +480,7 @@ describe('authorize/http/handlers/authorize', function() {
             .listen();
         })
         .catch(done);
-    }); // should evaluate request from client using redirect URI that is a registered redirect URI not a registered web origin
+    }); // should evaluate request from client using redirect URI that is a registered redirect URI but not a registered web origin
     
     it('should error when when querying client directory fails', function(done) {
       var container = new Object();
