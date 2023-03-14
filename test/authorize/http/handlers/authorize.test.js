@@ -383,6 +383,131 @@ describe('authorize/http/handlers/authorize', function() {
         .catch(done);
     }); // should reject request from client with multiple redirect URIs that omits redirect URI parameter
     
+    it('should evaluate request from client with single web origin', function(done) {
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      
+      var clients = new Object();
+      clients.read = sinon.stub().yieldsAsync(null, {
+        id: 's6BhdRkqt3',
+        name: 'My Example Client',
+        webOrigins: [ 'https://client.example.com' ]
+      });
+      
+      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+        .then(function(handler) {
+          chai.express.use(handler)
+            .request(function(req, res) {
+              req.connection = {};
+              req.query = {
+                client_id: 's6BhdRkqt3',
+                redirect_uri: 'https://client.example.com',
+                response_mode: 'web_message'
+              };
+            })
+            .finish(function() {
+              expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
+              expect(this.req.oauth2.client).to.deep.equal({
+                id: 's6BhdRkqt3',
+                name: 'My Example Client',
+                webOrigins: [ 'https://client.example.com' ]
+              });
+              expect(this.req.oauth2.redirectURI).to.be.undefined;
+              expect(this.req.oauth2.webOrigin).to.equal('https://client.example.com');
+          
+              expect(this.statusCode).to.equal(302);
+              expect(this.getHeader('Location')).to.equal('/consent');
+              done()
+            })
+            .listen();
+        })
+        .catch(done);
+    }); // should evaluate request from client with single web origin
+    
+    it('should evaluate request from client with multiple web origins', function(done) {
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      
+      var clients = new Object();
+      clients.read = sinon.stub().yieldsAsync(null, {
+        id: 's6BhdRkqt3',
+        name: 'My Example Client',
+        webOrigins: [ 'https://client.example.com', 'https://client2.example.com' ]
+      });
+      
+      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+        .then(function(handler) {
+          chai.express.use(handler)
+            .request(function(req, res) {
+              req.connection = {};
+              req.query = {
+                client_id: 's6BhdRkqt3',
+                redirect_uri: 'https://client2.example.com',
+                response_mode: 'web_message'
+              };
+            })
+            .finish(function() {
+              expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
+              expect(this.req.oauth2.client).to.deep.equal({
+                id: 's6BhdRkqt3',
+                name: 'My Example Client',
+                webOrigins: [ 'https://client.example.com', 'https://client2.example.com' ]
+              });
+              expect(this.req.oauth2.redirectURI).to.be.undefined;
+              expect(this.req.oauth2.webOrigin).to.equal('https://client2.example.com');
+          
+              expect(this.statusCode).to.equal(302);
+              expect(this.getHeader('Location')).to.equal('/consent');
+              done()
+            })
+            .listen();
+        })
+        .catch(done);
+    }); // should evaluate request from client with multiple web origins
+    
+    it.skip('should evaluate request from client with single web origin that omits redirect URI parameter', function(done) {
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      
+      var clients = new Object();
+      clients.read = sinon.stub().yieldsAsync(null, {
+        id: 's6BhdRkqt3',
+        name: 'My Example Client',
+        webOrigins: [ 'https://client.example.com' ]
+      });
+      
+      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+        .then(function(handler) {
+          chai.express.use(handler)
+            .request(function(req, res) {
+              req.connection = {};
+              req.query = {
+                client_id: 's6BhdRkqt3',
+                response_mode: 'web_message'
+              };
+            })
+            .finish(function() {
+              expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
+              expect(this.req.oauth2.client).to.deep.equal({
+                id: 's6BhdRkqt3',
+                name: 'My Example Client',
+                webOrigins: [ 'https://client.example.com' ]
+              });
+              expect(this.req.oauth2.redirectURI).to.be.undefined;
+              expect(this.req.oauth2.webOrigin).to.equal('https://client.example.com');
+          
+              expect(this.statusCode).to.equal(302);
+              expect(this.getHeader('Location')).to.equal('/consent');
+              done()
+            })
+            .listen();
+        })
+        .catch(done);
+    }); // should evaluate request from client with single web origin that omits redirect URI parameter
+    
     it('should evaluate request from client using redirect URI that is both a registered web origin and a registered redirect URI', function(done) {
       var container = new Object();
       container.components = sinon.stub();
