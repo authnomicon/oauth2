@@ -87,7 +87,7 @@ describe('authorize/http/handlers/authorize', function() {
   
   describe('handler', function() {
     
-    it('should evaluate valid request from client with single redirect URI', function(done) {
+    it('should evaluate request from client with single redirect URI', function(done) {
       var container = new Object();
       container.components = sinon.stub();
       container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
@@ -126,7 +126,7 @@ describe('authorize/http/handlers/authorize', function() {
             .listen();
         })
         .catch(done);
-    }); // should evaluate valid request from client with single redirect URI
+    }); // should evaluate request from client with single redirect URI
     
     it('should evaluate request from client with multiple redirect URIs', function(done) {
       var container = new Object();
