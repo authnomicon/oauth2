@@ -508,7 +508,7 @@ describe('authorize/http/handlers/authorize', function() {
         .catch(done);
     }); // should evaluate request from client with single web origin that omits redirect URI parameter
     
-    it('should evaluate request from client using redirect URI that is both a registered web origin and a registered redirect URI', function(done) {
+    it('should evaluate request from client with redirect URI that is both a redirect URI and a web origin', function(done) {
       var container = new Object();
       container.components = sinon.stub();
       container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
@@ -550,9 +550,9 @@ describe('authorize/http/handlers/authorize', function() {
             .listen();
         })
         .catch(done);
-    }); // should evaluate request from client using redirect URI that is both a registered web origin and a registered redirect URI
+    }); // should evaluate request from client with redirect URI that is both a redirect URI and a web origin
     
-    it('should evaluate request from client using redirect URI that is a registered web origin but is not a registered redirect URI', function(done) {
+    it('should evaluate request from client with redirect URI that is a web origin but is not a redirect URI', function(done) {
       var container = new Object();
       container.components = sinon.stub();
       container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
@@ -594,9 +594,9 @@ describe('authorize/http/handlers/authorize', function() {
             .listen();
         })
         .catch(done);
-    }); // should evaluate request from client using redirect URI that is a registered web origin but is not a registered redirect URI
+    }); // should evaluate request from client with redirect URI that is a web origin but is not a redirect URI
     
-    it('should evaluate request from client using redirect URI that is not a registered web origin but is a registered redirect URI', function(done) {
+    it('should evaluate request from client with redirect URI that is not a web origin but is a redirect URI', function(done) {
       var container = new Object();
       container.components = sinon.stub();
       container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
@@ -605,8 +605,8 @@ describe('authorize/http/handlers/authorize', function() {
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
         name: 'My Example Client',
-        redirectURIs: [ 'https://client.example.com', 'https://client.example.io' ],
-        webOrigins: [ 'https://client.example.com' ]
+        redirectURIs: [ 'https://client.example.com' ],
+        webOrigins: [ 'https://client.example.test' ]
       });
       
       factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
@@ -616,7 +616,7 @@ describe('authorize/http/handlers/authorize', function() {
               req.connection = {};
               req.query = {
                 client_id: 's6BhdRkqt3',
-                redirect_uri: 'https://client.example.io',
+                redirect_uri: 'https://client.example.com',
                 response_mode: 'web_message'
               };
             })
@@ -625,10 +625,10 @@ describe('authorize/http/handlers/authorize', function() {
               expect(this.req.oauth2.client).to.deep.equal({
                 id: 's6BhdRkqt3',
                 name: 'My Example Client',
-                redirectURIs: [ 'https://client.example.com', 'https://client.example.io' ],
-                webOrigins: [ 'https://client.example.com' ]
+                redirectURIs: [ 'https://client.example.com' ],
+                webOrigins: [ 'https://client.example.test' ]
               });
-              expect(this.req.oauth2.redirectURI).to.equal('https://client.example.io');
+              expect(this.req.oauth2.redirectURI).to.equal('https://client.example.com');
               expect(this.req.oauth2.webOrigin).to.be.undefined;
           
               expect(this.statusCode).to.equal(302);
@@ -638,7 +638,7 @@ describe('authorize/http/handlers/authorize', function() {
             .listen();
         })
         .catch(done);
-    }); // should evaluate request from client using redirect URI that is not a registered web origin but is a registered redirect URI
+    }); // should evaluate request from client with redirect URI that is not a web origin but is a redirect URI
     
     it('should error when when querying client directory fails', function(done) {
       var container = new Object();
