@@ -65,7 +65,10 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
                 return cb(new oauth2orize.AuthorizationError('Unauthorized client', 'unauthorized_client'));
               }
               
-              if (!client.redirectURIs || !client.redirectURIs.length) {
+              var responseURIs = [].concat(client.redirectURIs || [])
+                                   .concat(client.webOrigins || []);
+              
+              if (responseURIs.length == 0) {
                 // The client has not registered any redirection endpoints.  Such
                 // clients are not authorized to use the authorization endpoint.
                 //
@@ -74,7 +77,7 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
                 // 3.1.2.2 of RFC 6749 for further details.
                 return cb(new oauth2orize.AuthorizationError('Client has no registered redirect URIs', 'unauthorized_client'));
               }
-              if (client.redirectURIs.length > 1 && !redirectURI) {
+              if (responseURIs.length > 1 && !redirectURI) {
                 // If multiple redirection URIs have been registered, the client must
                 // include a redirection URI with the authorization request.  Refer to
                 // Section 3.1.2.3 of RFC 6749 for further details.
@@ -84,7 +87,7 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
               var ruri = redirectURI || client.redirectURIs[0]
                 , uri = url.parse(ruri)
                 , proto = uri.protocol.slice(0, -1)
-                , scheme = schemes[proto], v, worig;
+                , scheme = schemes[proto], v, rtoRedirectURI, worig;
               
               if (scheme) {
                 v = scheme.verify(client, ruri);
@@ -95,14 +98,19 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
               }
 
 
-              if (redirectURI && client.redirectURIs.indexOf(redirectURI) == -1) {
+              if (redirectURI && responseURIs.indexOf(redirectURI) == -1) {
                 return cb(new oauth2orize.AuthorizationError('Client not permitted to use redirect URI', 'unauthorized_client'));
               }
               
+              if (client.redirectURIs && client.redirectURIs.indexOf(ruri) !== -1) {
+                rtoRedirectURI = ruri;
+              }
               if (client.webOrigins && client.webOrigins.indexOf(redirectURI) !== -1) {
                 worig = redirectURI;
               }
-              return cb(null, client, ruri, worig);
+              // FIXME: proper web origin support
+              //worig = 'http://localhost:3001';
+              return cb(null, client, rtoRedirectURI, worig);
             }); // clients.read
           },
           function(txn, cb) {
