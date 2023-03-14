@@ -389,34 +389,7 @@ describe('authorize/http/handlers/authorize', function() {
         .catch(done);
     }); // should reject request from client with multiple redirect URIs that omits redirect URI parameter
     
-    it('should error when when querying client directory fails', function(done) {
-      var container = new Object();
-      container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
-      
-      var clients = new Object();
-      clients.read = sinon.stub().yieldsAsync(new Error('something went wrong'));
-      
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
-        .then(function(handler) {
-          chai.express.use(handler)
-            .request(function(req, res) {
-              req.connection = {};
-              req.query = {
-                client_id: 's6BhdRkqt3'
-              };
-            })
-            .next(function(err, req, res) {
-              expect(err).to.be.an.instanceOf(Error);
-              expect(err.message).to.equal('something went wrong');
-              done();
-            })
-            .listen()
-        })
-        .catch(done);
-    }); // should error when when querying client directory fails
-    
-    it('should evaluate request from client using redirect URI that is a registered web origin', function(done) {
+    it('should evaluate request from client using redirect URI that is a registered redirect URI and a registered web origin', function(done) {
       var container = new Object();
       container.components = sinon.stub();
       container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
@@ -436,7 +409,8 @@ describe('authorize/http/handlers/authorize', function() {
               req.connection = {};
               req.query = {
                 client_id: 's6BhdRkqt3',
-                redirect_uri: 'https://client.example.com'
+                redirect_uri: 'https://client.example.com',
+                response_mode: 'web_message'
               };
             })
             .finish(function() {
@@ -457,9 +431,9 @@ describe('authorize/http/handlers/authorize', function() {
             .listen();
         })
         .catch(done);
-    }); // should evaluate request from client using redirect URI that is a registered web origin
+    }); // should evaluate request from client using redirect URI that is a registered redirect URI and a registered web origin
     
-    it('should evaluate request from client using redirect URI that is not a registered web origin', function(done) {
+    it('should evaluate request from client using redirect URI that is a registered redirect URI not a registered web origin', function(done) {
       var container = new Object();
       container.components = sinon.stub();
       container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
@@ -506,7 +480,34 @@ describe('authorize/http/handlers/authorize', function() {
             .listen();
         })
         .catch(done);
-    }); // should evaluate request from client using redirect URI that is not a registered web origin
+    }); // should evaluate request from client using redirect URI that is a registered redirect URI not a registered web origin
+    
+    it('should error when when querying client directory fails', function(done) {
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      
+      var clients = new Object();
+      clients.read = sinon.stub().yieldsAsync(new Error('something went wrong'));
+      
+      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+        .then(function(handler) {
+          chai.express.use(handler)
+            .request(function(req, res) {
+              req.connection = {};
+              req.query = {
+                client_id: 's6BhdRkqt3'
+              };
+            })
+            .next(function(err, req, res) {
+              expect(err).to.be.an.instanceOf(Error);
+              expect(err.message).to.equal('something went wrong');
+              done();
+            })
+            .listen()
+        })
+        .catch(done);
+    }); // should error when when querying client directory fails
     
     it('should evaluate request from client that uses a redirect URI scheme', function(done) {
       var scheme = {
