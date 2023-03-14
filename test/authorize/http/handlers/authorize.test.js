@@ -321,10 +321,7 @@ describe('authorize/http/handlers/authorize', function() {
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
         name: 'My Example Client',
-        redirectURIs: [
-          'https://client.example.com/cb',
-          'https://client.example.com/cb2'
-        ]
+        redirectURIs: [ 'https://client.example.com/cb', 'https://client.example.com/cb2' ]
       });
       
       factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
@@ -360,10 +357,7 @@ describe('authorize/http/handlers/authorize', function() {
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
         name: 'My Example Client',
-        redirectURIs: [
-          'https://client.example.com/cb',
-          'https://client.example.com/cb2'
-        ]
+        redirectURIs: [ 'https://client.example.com/cb', 'https://client.example.com/cb2' ]
       });
       
       factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
@@ -442,10 +436,7 @@ describe('authorize/http/handlers/authorize', function() {
       clients.read = sinon.stub().yieldsAsync(null, {
         id: 's6BhdRkqt3',
         name: 'My Example Client',
-        redirectURIs: [
-          'https://client.example.com',
-          'https://client.example.io'
-        ],
+        redirectURIs: [ 'https://client.example.com', 'https://client.example.io' ],
         webOrigins: [ 'https://client.example.com' ]
       });
       
@@ -456,7 +447,8 @@ describe('authorize/http/handlers/authorize', function() {
               req.connection = {};
               req.query = {
                 client_id: 's6BhdRkqt3',
-                redirect_uri: 'https://client.example.io'
+                redirect_uri: 'https://client.example.io',
+                response_mode: 'web_message'
               };
             })
             .finish(function() {
@@ -464,10 +456,7 @@ describe('authorize/http/handlers/authorize', function() {
               expect(this.req.oauth2.client).to.deep.equal({
                 id: 's6BhdRkqt3',
                 name: 'My Example Client',
-                redirectURIs: [
-                  'https://client.example.com',
-                  'https://client.example.io'
-                ],
+                redirectURIs: [ 'https://client.example.com', 'https://client.example.io' ],
                 webOrigins: [ 'https://client.example.com' ]
               });
               expect(this.req.oauth2.redirectURI).to.equal('https://client.example.io');
