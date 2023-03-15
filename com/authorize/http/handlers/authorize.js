@@ -21,35 +21,35 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
   
   return Promise.resolve(null)
     .then(function() {
-      var schemes = {};
+      var resolvers = {};
       
       return new Promise(function(resolve, reject) {
         var components = C.components('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme')
-          , key;
+          , scheme;
       
         (function iter(i) {
           var component = components[i];
           if (!component) {
-            return resolve(schemes);
+            return resolve(resolvers);
           }
           
-          key = component.a['@scheme'];
+          scheme = component.a['@scheme'];
           
           component.create()
-            .then(function(mode) {
-              logger.info("Loaded redirect URI scheme '" + key +  "'");
-              schemes[key] = mode;
+            .then(function(resolver) {
+              logger.info("Loaded redirect URI scheme '" + scheme +  "'");
+              resolvers[scheme] = resolver;
               iter(i + 1);
             }, function(err) {
               var msg = 'Failed to load redirect URI scheme:\n';
               msg += err.stack;
               logger.warning(msg);
-              return iter(i + 1);
+              iter(i + 1);
             })
         })(0);
       });
     })
-    .then(function(schemes) {
+    .then(function(resolvers) {
 
       return [
         //parseCookies(), // TODO: Put this at app level? Why?
@@ -82,14 +82,15 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
                 return cb(new oauth2orize.AuthorizationError('Missing required parameter: redirect_uri', 'invalid_request'));
               }
 
+              // WIP: clean this up
               var ruri = redirectURI || client.redirectURIs[0]
                 , uri = url.parse(ruri)
                 , proto = uri.protocol.slice(0, -1)
-                , scheme = schemes[proto], v
+                , resolver = resolvers[proto]
                 , rtoRedirectURI, rtoWebOrigin;
                 
-              if (scheme) {
-                ruri = scheme(ruri);
+              if (resolver) {
+                ruri = resolver(ruri);
                 redirectURI = ruri;
               }
 
@@ -123,7 +124,7 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
         server.authorizationError()
       ];
   
-  });
+    });
 };
 
 exports['@require'] = [
