@@ -62,7 +62,7 @@ describe('authorize/http/handlers/authorize', function() {
   it('should create handler', function(done) {
     var container = new Object();
     container.components = sinon.stub();
-    container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+    container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
     
     var authorizationErrorSpy = sinon.spy(server, 'authorizationError');
     var authorizationSpy = sinon.spy(server, 'authorization');
@@ -90,7 +90,7 @@ describe('authorize/http/handlers/authorize', function() {
     it('should evaluate request from client with single redirect URI', function(done) {
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
       
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
@@ -131,7 +131,7 @@ describe('authorize/http/handlers/authorize', function() {
     it('should evaluate request from client with multiple redirect URIs', function(done) {
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
       
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
@@ -172,7 +172,7 @@ describe('authorize/http/handlers/authorize', function() {
     it('should evaluate request from client with single redirect URI that omits redirect URI parameter', function(done) {
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
       
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
@@ -212,7 +212,7 @@ describe('authorize/http/handlers/authorize', function() {
     it('should reject request from unregistered client', function(done) {
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
       
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null);
@@ -244,7 +244,7 @@ describe('authorize/http/handlers/authorize', function() {
     it('should reject request from client with no registered redirect URIs', function(done) {
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
       
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
@@ -279,7 +279,7 @@ describe('authorize/http/handlers/authorize', function() {
     it('should reject request from client with no registered redirect URIs as indicated by empty array', function(done) {
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
       
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
@@ -315,7 +315,7 @@ describe('authorize/http/handlers/authorize', function() {
     it('should reject request from client using unregistered redirect URI', function(done) {
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
       
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
@@ -351,7 +351,7 @@ describe('authorize/http/handlers/authorize', function() {
     it('should reject request from client with multiple redirect URIs that omits redirect URI parameter', function(done) {
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
       
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
@@ -386,7 +386,7 @@ describe('authorize/http/handlers/authorize', function() {
     it('should evaluate request from client with single web origin', function(done) {
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
       
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
@@ -428,7 +428,7 @@ describe('authorize/http/handlers/authorize', function() {
     it('should evaluate request from client with multiple web origins', function(done) {
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
       
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
@@ -470,7 +470,7 @@ describe('authorize/http/handlers/authorize', function() {
     it.skip('should evaluate request from client with single web origin that omits redirect URI parameter', function(done) {
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
       
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
@@ -511,7 +511,7 @@ describe('authorize/http/handlers/authorize', function() {
     it('should evaluate request from client with redirect URI that is a redirect URI but is not a web origin', function(done) {
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
       
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
@@ -555,7 +555,7 @@ describe('authorize/http/handlers/authorize', function() {
     it('should evaluate request from client with redirect URI is not a redirect URI but is a web origin', function(done) {
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
       
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
@@ -599,7 +599,7 @@ describe('authorize/http/handlers/authorize', function() {
     it('should evaluate request from client with redirect URI that is both a redirect URI and a web origin', function(done) {
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
       
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
@@ -643,7 +643,7 @@ describe('authorize/http/handlers/authorize', function() {
     it('should error when when querying client directory fails', function(done) {
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([]);
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
       
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(new Error('something went wrong'));
@@ -678,7 +678,7 @@ describe('authorize/http/handlers/authorize', function() {
       
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([ schemeComponent ]);
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([ schemeComponent ]);
       
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {
@@ -728,7 +728,7 @@ describe('authorize/http/handlers/authorize', function() {
       
       var container = new Object();
       container.components = sinon.stub();
-      container.components.withArgs('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme').returns([ schemeComponent ]);
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([ schemeComponent ]);
       
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null, {

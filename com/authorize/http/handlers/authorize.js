@@ -24,7 +24,7 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
       var resolvers = {};
       
       return new Promise(function(resolve, reject) {
-        var components = C.components('http://i.authnomicon.org/oauth2/authorization/http/RedirectURIScheme')
+        var components = C.components('module:@authnomicon/oauth2.resolveRedirectURISchemeFn')
           , scheme;
       
         (function iter(i) {
