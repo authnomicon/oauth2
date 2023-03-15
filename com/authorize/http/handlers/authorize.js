@@ -83,10 +83,10 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
               }
 
               // WIP: clean this up
-              var ruri = redirectURI || client.redirectURIs[0]
+              var ruri = redirectURI || responseURIs[0]
                 , uri = url.parse(ruri)
-                , proto = uri.protocol.slice(0, -1)
-                , resolver = resolvers[proto]
+                , scheme = uri.protocol.slice(0, -1)
+                , resolver = resolvers[scheme]
                 , rtoRedirectURI, rtoWebOrigin;
                 
               if (resolver) {
