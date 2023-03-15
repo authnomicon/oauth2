@@ -83,15 +83,15 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
               }
 
               // WIP: clean this up
-              var ruri = redirectURI || responseURIs[0]
-                , uri = url.parse(ruri)
+              var responseURI = redirectURI || responseURIs[0]
+                , uri = url.parse(responseURI)
                 , scheme = uri.protocol.slice(0, -1)
                 , resolver = resolvers[scheme]
                 , rtoRedirectURI, rtoWebOrigin;
                 
               if (resolver) {
-                ruri = resolver(ruri);
-                redirectURI = ruri;
+                responseURI = resolver(responseURI);
+                redirectURI = responseURI;
               }
 
 
@@ -99,11 +99,11 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
                 return cb(new oauth2orize.AuthorizationError('Client not permitted to use redirect URI', 'unauthorized_client'));
               }
               
-              if (client.redirectURIs && client.redirectURIs.indexOf(ruri) !== -1) {
-                rtoRedirectURI = ruri;
+              if (client.redirectURIs && client.redirectURIs.indexOf(responseURI) !== -1) {
+                rtoRedirectURI = responseURI;
               }
-              if (client.webOrigins && client.webOrigins.indexOf(ruri) !== -1) {
-                rtoWebOrigin = ruri;
+              if (client.webOrigins && client.webOrigins.indexOf(responseURI) !== -1) {
+                rtoWebOrigin = responseURI;
               }
               // FIXME: proper web origin support
               //worig = 'http://localhost:3001';
