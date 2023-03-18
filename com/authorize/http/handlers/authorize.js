@@ -1,3 +1,4 @@
+var aaa = require('triplea');
 
 /**
  * OAuth 2.0 request validation.
@@ -14,7 +15,7 @@
  * redirect the user to an invalid redirection URI.
  */
 
-exports = module.exports = function(evaluate, clients, server, authenticator, store, logger, C) {
+exports = module.exports = function(service, evaluate, clients, server, authenticator, store, logger, C) {
   var oauth2orize = require('oauth2orize')
     , url = require('url');
   
@@ -111,6 +112,44 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
             }); // clients.read
           },
           function(txn, cb) {
+            console.log('EVAL TRANSACTION');
+            console.log(txn);
+            
+            var zreq = new aaa.Request(txn.client, txn.req, txn.user);
+            service(zreq, function(err, zres) {
+              if (err) { return cb(err); }
+              
+              if (zres.allow === true) {
+                var ares = {};
+                ares.scope = zres.grant;
+                
+                // FIXME: remove this
+                ares.issuer = 'http://localhost:8085'
+                
+                console.log('ARES:');
+                console.log(ares);
+                
+                /*
+                // TODO: put a normalized grant on here, if it exists
+                // TODO: normalize this into standard grant object.
+                // https://openid.bitbucket.io/fapi/oauth-v2-grant-management.html
+                //if (Array.isArray(zres.grant) // TODO: check for array of strings only.
+                
+                grant.scopes = [ { scope: zres.grant } ];
+                console.log(grant)
+                */
+                
+                return cb(null, true, ares);
+              } else {
+                console.log('TODO: prompting...');
+              }
+              
+              
+            });
+            
+            return;
+            
+            
             // TODO: Filter out "internal" response modes by erroring here?
         
             // Immediate mode callback.  Always, false, deferring transaction processing to 
@@ -128,6 +167,7 @@ exports = module.exports = function(evaluate, clients, server, authenticator, st
 };
 
 exports['@require'] = [
+  'http://i.authnomicon.org/oauth2/AuthorizationService',
   '../middleware/evaluate',
   'http://i.authnomicon.org/oauth2/ClientDirectory',
   '../../../http/server',
