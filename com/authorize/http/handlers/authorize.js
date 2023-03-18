@@ -15,7 +15,7 @@ var aaa = require('triplea');
  * redirect the user to an invalid redirection URI.
  */
 
-exports = module.exports = function(service, evaluate, clients, server, authenticator, store, logger, C) {
+exports = module.exports = function(prompts, service, evaluate, clients, server, authenticator, store, logger, C) {
   var oauth2orize = require('oauth2orize')
     , url = require('url');
   
@@ -142,9 +142,13 @@ exports = module.exports = function(service, evaluate, clients, server, authenti
                 return cb(null, true, ares);
               } else {
                 console.log('TODO: prompting...');
+                console.log(zres);
+                
+                //var aprompt = {};
+                //aprompt.name = zres.prompt;
+                
+                return cb(null, false, { prompt: zres.prompt, params: zres.params });
               }
-              
-              
             });
             
             return;
@@ -157,6 +161,22 @@ exports = module.exports = function(service, evaluate, clients, server, authenti
             return cb(null, false);
           }
         ),
+        function(req, res, next) {
+          console.log('NEED TO PROMPT!!!');
+          console.log(req.oauth2)
+          
+          // FIXME: Put this back
+          /*
+      if (azreq.prompt.indexOf('none') != -1) {
+        // FIXME: Need to popState here?
+        return next(new oauth2orize.AuthorizationError('Interaction required', 'interaction_required'));
+      }
+          */
+          
+          // FIXME: Merge rather than overwrite
+          res.locals = req.oauth2.info.params || {};
+          prompts.dispatch(req.oauth2.info.prompt, req, res, next);
+        },
         evaluate,
         // TODO: Add error handling middleware here
         // TODO: Check that this is right and not reloading the txn
@@ -167,6 +187,7 @@ exports = module.exports = function(service, evaluate, clients, server, authenti
 };
 
 exports['@require'] = [
+  'http://i.authnomicon.org/prompts/http/Router',
   'http://i.authnomicon.org/oauth2/AuthorizationService',
   '../middleware/evaluate',
   'http://i.authnomicon.org/oauth2/ClientDirectory',
