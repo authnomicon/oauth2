@@ -15,7 +15,7 @@ var aaa = require('triplea');
  * redirect the user to an invalid redirection URI.
  */
 
-exports = module.exports = function(prompts, service, evaluate, clients, server, authenticator, store, logger, C) {
+exports = module.exports = function(prompts, service, clients, server, authenticator, store, logger, C) {
   var oauth2orize = require('oauth2orize')
     , url = require('url');
   
@@ -177,7 +177,6 @@ exports = module.exports = function(prompts, service, evaluate, clients, server,
           res.locals = req.oauth2.info.params || {};
           prompts.dispatch(req.oauth2.info.prompt, req, res, next);
         },
-        evaluate,
         // TODO: Add error handling middleware here
         // TODO: Check that this is right and not reloading the txn
         server.authorizationError()
@@ -189,7 +188,6 @@ exports = module.exports = function(prompts, service, evaluate, clients, server,
 exports['@require'] = [
   'http://i.authnomicon.org/prompts/http/Router',
   'http://i.authnomicon.org/oauth2/AuthorizationService',
-  '../middleware/evaluate',
   'http://i.authnomicon.org/oauth2/ClientDirectory',
   '../../../http/server',
   'module:@authnomicon/session.Authenticator',
