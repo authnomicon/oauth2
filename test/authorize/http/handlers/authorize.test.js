@@ -13,6 +13,15 @@ describe('authorize/http/handlers/authorize', function() {
     res.redirect('/consent')
   };
   
+  var service = function(req, cb) {
+    return cb(null, req.prompt('consent'));
+  }
+  var dispatcher = new Object();
+  dispatcher.dispatch = function(prompt, req, res, next) {
+    res.redirect('/' + prompt);
+  };
+  
+  
   var server = {
     authorization: function(validate, immediate) {
       return function(req, res, next) {
@@ -24,9 +33,10 @@ describe('authorize/http/handlers/authorize', function() {
             webOrigin: webOrigin
           };
         
-          immediate(req.oauth2, function(err, allow) {
+          immediate(req.oauth2, function(err, allow, info) {
             if (err) { return next(err); }
             if (allow) { return res.redirect(req.oauth2.redirectURI); }
+            req.oauth2.info = info;
             return next();
           })
         })
@@ -69,7 +79,7 @@ describe('authorize/http/handlers/authorize', function() {
     var authenticateSpy = sinon.spy(authenticate);
     
     // TODO: Add state store
-    factory(evaluate, null, server, { authenticate: authenticateSpy }, undefined, logger, container)
+    factory(undefined, undefined, evaluate, null, server, { authenticate: authenticateSpy }, undefined, logger, container)
       .then(function(handler) {
         //expect(stateSpy).to.be.calledOnce;
         //expect(stateSpy).to.be.calledWithExactly({ external: true });
@@ -99,7 +109,7 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: [ 'https://client.example.com/cb' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+      factory(dispatcher, service, evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -140,7 +150,7 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: [ 'https://client.example.com/cb', 'https://client.example.com/cb2' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+      factory(dispatcher, service, evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -181,7 +191,7 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: [ 'https://client.example.com/cb' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+      factory(dispatcher, service, evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -217,7 +227,7 @@ describe('authorize/http/handlers/authorize', function() {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(null);
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+      factory(dispatcher, service, evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -252,7 +262,7 @@ describe('authorize/http/handlers/authorize', function() {
         name: 'My Example Client'
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+      factory(dispatcher, service, evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -288,7 +298,7 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: []
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+      factory(dispatcher, service, evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -324,7 +334,7 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: [ 'https://client.example.com/cb', 'https://client.example.com/cb2' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+      factory(dispatcher, service, evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -360,7 +370,7 @@ describe('authorize/http/handlers/authorize', function() {
         redirectURIs: [ 'https://client.example.com/cb', 'https://client.example.com/cb2' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+      factory(dispatcher, service, evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -395,7 +405,7 @@ describe('authorize/http/handlers/authorize', function() {
         webOrigins: [ 'https://client.example.com' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+      factory(dispatcher, service, evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -437,7 +447,7 @@ describe('authorize/http/handlers/authorize', function() {
         webOrigins: [ 'https://client.example.com', 'https://client2.example.com' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+      factory(dispatcher, service, evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -479,7 +489,7 @@ describe('authorize/http/handlers/authorize', function() {
         webOrigins: [ 'https://client.example.com' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+      factory(dispatcher, service, evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -521,7 +531,7 @@ describe('authorize/http/handlers/authorize', function() {
         webOrigins: [ 'https://client.example.test' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+      factory(dispatcher, service, evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -565,7 +575,7 @@ describe('authorize/http/handlers/authorize', function() {
         webOrigins: [ 'https://client.example.com' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+      factory(dispatcher, service, evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -609,7 +619,7 @@ describe('authorize/http/handlers/authorize', function() {
         webOrigins: [ 'https://client.example.com' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+      factory(dispatcher, service, evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -648,7 +658,7 @@ describe('authorize/http/handlers/authorize', function() {
       var clients = new Object();
       clients.read = sinon.stub().yieldsAsync(new Error('something went wrong'));
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+      factory(dispatcher, service, evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -688,7 +698,7 @@ describe('authorize/http/handlers/authorize', function() {
         webOrigins: [ 'https://client.example.com' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+      factory(dispatcher, service, evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
@@ -738,7 +748,7 @@ describe('authorize/http/handlers/authorize', function() {
         webOrigins: [ 'https://client.example.com' ]
       });
       
-      factory(evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
+      factory(dispatcher, service, evaluate, clients, server, { authenticate: authenticate }, undefined, logger, container)
         .then(function(handler) {
           chai.express.use(handler)
             .request(function(req, res) {
