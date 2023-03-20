@@ -112,9 +112,6 @@ exports = module.exports = function(prompts, service, clients, server, authentic
             }); // clients.read
           },
           function(txn, cb) {
-            //console.log('EVAL TRANSACTION');
-            //console.log(txn);
-            
             var zreq = new aaa.Request(txn.client, txn.req, txn.user);
             service(zreq, function(err, zres) {
               if (err) { return cb(err); }
@@ -125,9 +122,6 @@ exports = module.exports = function(prompts, service, clients, server, authentic
                 
                 // FIXME: remove this
                 ares.issuer = 'http://localhost:8085'
-                
-                //console.log('ARES:');
-                //console.log(ares);
                 
                 /*
                 // TODO: put a normalized grant on here, if it exists
@@ -141,30 +135,12 @@ exports = module.exports = function(prompts, service, clients, server, authentic
                 
                 return cb(null, true, ares);
               } else {
-                //console.log('TODO: prompting...');
-                //console.log(zres);
-                
-                //var aprompt = {};
-                //aprompt.name = zres.prompt;
-                
                 return cb(null, false, { prompt: zres.prompt, params: zres.params });
               }
             });
-            
-            return;
-            
-            
-            // TODO: Filter out "internal" response modes by erroring here?
-        
-            // Immediate mode callback.  Always, false, deferring transaction processing to 
-            // HTTP handler below where all context is available.
-            return cb(null, false);
           }
         ),
         function(req, res, next) {
-          //console.log('NEED TO PROMPT!!!');
-          //console.log(req.oauth2)
-          
           // FIXME: Put this back
           /*
       if (azreq.prompt.indexOf('none') != -1) {
@@ -173,7 +149,6 @@ exports = module.exports = function(prompts, service, clients, server, authentic
       }
           */
           
-          // FIXME: Merge rather than overwrite
           req.params = req.oauth2.info.params || {};
           prompts.dispatch(req.oauth2.info.prompt, req, res, next);
         },
