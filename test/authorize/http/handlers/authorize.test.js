@@ -128,7 +128,8 @@ describe('authorize/http/handlers/authorize', function() {
               });
               expect(this.req.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb');
               expect(this.req.oauth2.webOrigin).to.be.undefined;
-          
+              expect(this.req.params).to.deep.equal({});
+              
               expect(this.statusCode).to.equal(302);
               expect(this.getHeader('Location')).to.equal('/consent');
               done()
@@ -169,6 +170,7 @@ describe('authorize/http/handlers/authorize', function() {
               });
               expect(this.req.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb2');
               expect(this.req.oauth2.webOrigin).to.be.undefined;
+              expect(this.req.params).to.deep.equal({});
           
               expect(this.statusCode).to.equal(302);
               expect(this.getHeader('Location')).to.equal('/consent');
@@ -209,6 +211,7 @@ describe('authorize/http/handlers/authorize', function() {
               });
               expect(this.req.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb');
               expect(this.req.oauth2.webOrigin).to.be.undefined;
+              expect(this.req.params).to.deep.equal({});
           
               expect(this.statusCode).to.equal(302);
               expect(this.getHeader('Location')).to.equal('/consent');
@@ -425,6 +428,7 @@ describe('authorize/http/handlers/authorize', function() {
               });
               expect(this.req.oauth2.redirectURI).to.be.undefined;
               expect(this.req.oauth2.webOrigin).to.equal('https://client.example.com');
+              expect(this.req.params).to.deep.equal({});
           
               expect(this.statusCode).to.equal(302);
               expect(this.getHeader('Location')).to.equal('/consent');
@@ -467,6 +471,7 @@ describe('authorize/http/handlers/authorize', function() {
               });
               expect(this.req.oauth2.redirectURI).to.be.undefined;
               expect(this.req.oauth2.webOrigin).to.equal('https://client2.example.com');
+              expect(this.req.params).to.deep.equal({});
           
               expect(this.statusCode).to.equal(302);
               expect(this.getHeader('Location')).to.equal('/consent');
@@ -508,6 +513,7 @@ describe('authorize/http/handlers/authorize', function() {
               });
               expect(this.req.oauth2.redirectURI).to.be.undefined;
               expect(this.req.oauth2.webOrigin).to.equal('https://client.example.com');
+              expect(this.req.params).to.deep.equal({});
           
               expect(this.statusCode).to.equal(302);
               expect(this.getHeader('Location')).to.equal('/consent');
@@ -552,6 +558,7 @@ describe('authorize/http/handlers/authorize', function() {
               });
               expect(this.req.oauth2.redirectURI).to.equal('https://client.example.com');
               expect(this.req.oauth2.webOrigin).to.be.undefined;
+              expect(this.req.params).to.deep.equal({});
           
               expect(this.statusCode).to.equal(302);
               expect(this.getHeader('Location')).to.equal('/consent');
@@ -596,6 +603,7 @@ describe('authorize/http/handlers/authorize', function() {
               });
               expect(this.req.oauth2.redirectURI).to.be.undefined;
               expect(this.req.oauth2.webOrigin).to.equal('https://client.example.com');
+              expect(this.req.params).to.deep.equal({});
           
               expect(this.statusCode).to.equal(302);
               expect(this.getHeader('Location')).to.equal('/consent');
@@ -640,6 +648,7 @@ describe('authorize/http/handlers/authorize', function() {
               });
               expect(this.req.oauth2.redirectURI).to.equal('https://client.example.com');
               expect(this.req.oauth2.webOrigin).to.equal('https://client.example.com');
+              expect(this.req.params).to.deep.equal({});
           
               expect(this.statusCode).to.equal(302);
               expect(this.getHeader('Location')).to.equal('/consent');
@@ -718,6 +727,7 @@ describe('authorize/http/handlers/authorize', function() {
               });
               expect(this.req.oauth2.redirectURI).to.be.undefined;
               expect(this.req.oauth2.webOrigin).to.equal('https://client.example.com');
+              expect(this.req.params).to.deep.equal({});
           
               expect(this.statusCode).to.equal(302);
               expect(this.getHeader('Location')).to.equal('/consent');
@@ -775,13 +785,12 @@ describe('authorize/http/handlers/authorize', function() {
     
   }); // with authorization service that prompts user
   
-  describe('with authorization service that responds immediately', function() {
-    
+  describe('with authorization service that responds immediately with scope', function() {
     var service = function(req, cb) {
       return cb(null, req.permit([ 'openid', 'profile', 'email' ]));
     }
     
-    it('should evaluate request from client with single redirect URI', function(done) {
+    it('should respond to client', function(done) {
       var container = new Object();
       container.components = sinon.stub();
       container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
@@ -827,6 +836,6 @@ describe('authorize/http/handlers/authorize', function() {
         .catch(done);
     }); // should evaluate request from client with single redirect URI
     
-  });
+  }); // with authorization service that responds immediately with scope
   
 });
