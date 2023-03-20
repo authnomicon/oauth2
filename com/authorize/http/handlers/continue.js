@@ -67,7 +67,7 @@ exports = module.exports = function(prompts, service, server, authenticator, sto
       */
       
       // FIXME: Merge rather than overwrite
-      res.locals = req.oauth2.info.params || {};
+      req.params = req.oauth2.info.params || {};
       prompts.dispatch(req.oauth2.info.prompt, req, res, next);
     },
     // TODO: Add error handling middleware here

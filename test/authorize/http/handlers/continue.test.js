@@ -27,7 +27,11 @@ describe('authorize/http/handlers/continue', function() {
       return function(req, res, next) {
         immediate(req.oauth2, function(err, allow, info) {
           if (err) { return next(err); }
-          if (allow) { return res.redirect(req.oauth2.redirectURI); }
+          if (allow) {
+            req.oauth2.res = info || {};
+            req.oauth2.res.allow = true;
+            return res.redirect(req.oauth2.redirectURI);
+          }
           req.oauth2.info = info;
           return next();
         })
@@ -54,7 +58,7 @@ describe('authorize/http/handlers/continue', function() {
     //expect(authenticateSpy).to.be.calledAfter(stateSpy);
   });
   
-  describe('handler', function() {
+  describe('with authorization service that prompts user', function() {
     
     it('should evaluate request', function(done) {
       var handler = factory(dispatcher, service, server, { authenticate: authenticate }, undefined);
@@ -63,8 +67,11 @@ describe('authorize/http/handlers/continue', function() {
         .request(function(req, res) {
           req.connection = {};
           req.oauth2 = {};
+          req.oauth2.redirectURI = 'https://client.example.com/cb';
         })
         .finish(function() {
+          expect(this.req.params).to.deep.equal({});
+          
           expect(this.statusCode).to.equal(302);
           expect(this.getHeader('Location')).to.equal('/consent');
           done()
@@ -72,6 +79,62 @@ describe('authorize/http/handlers/continue', function() {
         .listen();
     }); // should evaluate request
     
-  }); // handler
+  }); // with authorization service that prompts user
+  
+  describe('with authorization service that prompts user with parameters', function() {
+    var service = function(req, cb) {
+      return cb(null, req.prompt('login', { phishingResistant: true }));
+    }
+    
+    it('should evaluate request', function(done) {
+      var handler = factory(dispatcher, service, server, { authenticate: authenticate }, undefined);
+      
+      chai.express.use(handler)
+        .request(function(req, res) {
+          req.connection = {};
+          req.oauth2 = {};
+          req.oauth2.redirectURI = 'https://client.example.com/cb';
+        })
+        .finish(function() {
+          expect(this.req.params).to.deep.equal({ phishingResistant: true });
+          
+          expect(this.statusCode).to.equal(302);
+          expect(this.getHeader('Location')).to.equal('/login');
+          done()
+        })
+        .listen();
+    }); // should evaluate request
+    
+  }); // with authorization service that prompts user with parameters
+  
+  describe('with authorization service that responds immediately with scope', function() {
+    var service = function(req, cb) {
+      return cb(null, req.permit([ 'openid', 'profile', 'email' ]));
+    }
+    
+    it('should evaluate request', function(done) {
+      var handler = factory(dispatcher, service, server, { authenticate: authenticate }, undefined);
+      
+      chai.express.use(handler)
+        .request(function(req, res) {
+          req.connection = {};
+          req.oauth2 = {};
+          req.oauth2.redirectURI = 'https://client.example.com/cb';
+        })
+        .finish(function() {
+          expect(this.req.oauth2.res).to.deep.equal({
+            allow: true,
+            issuer: 'http://localhost:8085',
+            scope: [ 'openid', 'profile', 'email' ]
+          });
+          
+          expect(this.statusCode).to.equal(302);
+          expect(this.getHeader('Location')).to.equal('https://client.example.com/cb');
+          done();
+        })
+        .listen();
+    }); // should evaluate request
+    
+  }); // with authorization service that responds immediately with scope
   
 });
