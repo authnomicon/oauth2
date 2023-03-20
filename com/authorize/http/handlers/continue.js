@@ -1,6 +1,6 @@
 var aaa = require('triplea');
 
-exports = module.exports = function(prompts, service, evaluate, server, authenticator, store) {
+exports = module.exports = function(prompts, service, server, authenticator, store) {
   
   return [
     // parseCookies(),// TODO: Put this at app level? Why?
@@ -70,7 +70,6 @@ exports = module.exports = function(prompts, service, evaluate, server, authenti
       res.locals = req.oauth2.info.params || {};
       prompts.dispatch(req.oauth2.info.prompt, req, res, next);
     },
-    evaluate
     // TODO: Add error handling middleware here
   ];
 };
@@ -78,7 +77,6 @@ exports = module.exports = function(prompts, service, evaluate, server, authenti
 exports['@require'] = [
   'http://i.authnomicon.org/prompts/http/Router',
   'http://i.authnomicon.org/oauth2/AuthorizationService',
-  '../middleware/evaluate',
   '../../../http/server',
   'module:@authnomicon/session.Authenticator',
   'module:flowstate.Store'

@@ -14,10 +14,6 @@ describe('authorize/http/handlers/continue', function() {
   });
   
   
-  function evaluate(req, res, next) {
-    res.redirect('/consent')
-  };
-  
   var service = function(req, cb) {
     return cb(null, req.prompt('consent'));
   }
@@ -48,7 +44,7 @@ describe('authorize/http/handlers/continue', function() {
   it('should create handler', function() {
     var authenticateSpy = sinon.spy(authenticate);
     
-    var handler = factory(undefined, undefined, evaluate, server, { authenticate: authenticateSpy }, undefined);
+    var handler = factory(undefined, undefined, server, { authenticate: authenticateSpy }, undefined);
     
     //expect(stateSpy).to.be.calledOnce;
     //expect(stateSpy).to.be.calledWithExactly();
@@ -61,7 +57,7 @@ describe('authorize/http/handlers/continue', function() {
   describe('handler', function() {
     
     it('should evaluate request', function(done) {
-      var handler = factory(dispatcher, service, evaluate, server, { authenticate: authenticate }, undefined);
+      var handler = factory(dispatcher, service, server, { authenticate: authenticate }, undefined);
       
       chai.express.use(handler)
         .request(function(req, res) {
