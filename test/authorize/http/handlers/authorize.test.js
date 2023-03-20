@@ -91,7 +91,7 @@ describe('authorize/http/handlers/authorize', function() {
       .catch(done);
   });
   
-  describe('handler', function() {
+  describe('with authorization service that prompts user', function() {
     
     it('should evaluate request from client with single redirect URI', function(done) {
       var container = new Object();
@@ -473,7 +473,7 @@ describe('authorize/http/handlers/authorize', function() {
         .catch(done);
     }); // should evaluate request from client with multiple web origins
     
-    it.skip('should evaluate request from client with single web origin that omits redirect URI parameter', function(done) {
+    it('should evaluate request from client with single web origin that omits redirect URI parameter', function(done) {
       var container = new Object();
       container.components = sinon.stub();
       container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
@@ -674,10 +674,9 @@ describe('authorize/http/handlers/authorize', function() {
     }); // should error when when querying client directory fails
     
     it('should evaluate request from client that uses a redirect URI scheme', function(done) {
-      var scheme = function(redirectURI) {
-        expect(redirectURI).to.equal('storagerelay://https/client.example.com?id=auth304970');
+      var scheme = sinon.spy(function(redirectURI) {
         return 'https://client.example.com';
-      };
+      });
       var schemeComponent = new Object();
       schemeComponent.create = sinon.stub().resolves(scheme);
       schemeComponent.a = { '@scheme': 'storagerelay' };
@@ -706,6 +705,7 @@ describe('authorize/http/handlers/authorize', function() {
             })
             .finish(function() {
               expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
+              expect(scheme).to.have.been.calledOnceWith('storagerelay://https/client.example.com?id=auth304970');
               expect(this.req.oauth2.client).to.deep.equal({
                 id: 's6BhdRkqt3',
                 name: 'My Example Client',
@@ -724,10 +724,10 @@ describe('authorize/http/handlers/authorize', function() {
         .catch(done);
     }); // should evaluate request from client that uses a redirect URI scheme
     
-    it('should reject request from client that uses an unverified redirect URI scheme', function(done) {
-      var scheme = function(redirectURI) {
+    it('should reject request from client that uses a redirect URI scheme that resolves to an unregistered redirect URI', function(done) {
+      var scheme = sinon.spy(function(redirectURI) {
         return 'https://client.example.test';
-      };
+      });
       var schemeComponent = new Object();
       schemeComponent.create = sinon.stub().resolves(scheme);
       schemeComponent.a = { '@scheme': 'storagerelay' };
@@ -751,7 +751,7 @@ describe('authorize/http/handlers/authorize', function() {
               req.connection = {};
               req.query = {
                 client_id: 's6BhdRkqt3',
-                redirect_uri: 'storagerelay://https/client.example.com?id=auth304970'
+                redirect_uri: 'storagerelay://https/client.example.test?id=auth304970'
               };
             })
             .next(function(err, req, res) {
@@ -761,13 +761,14 @@ describe('authorize/http/handlers/authorize', function() {
               expect(err.status).to.equal(403);
           
               expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
+              expect(scheme).to.have.been.calledOnceWith('storagerelay://https/client.example.test?id=auth304970');
               done();
             })
             .listen();
         })
         .catch(done);
-    }); // should reject request from client that uses an unverified redirect URI scheme
+    }); // should reject request from client that uses a redirect URI scheme that resolves to an unregistered redirect URI
     
-  }); // handler
+  }); // with authorization service that prompts user
   
 });

@@ -112,8 +112,8 @@ exports = module.exports = function(prompts, service, clients, server, authentic
             }); // clients.read
           },
           function(txn, cb) {
-            console.log('EVAL TRANSACTION');
-            console.log(txn);
+            //console.log('EVAL TRANSACTION');
+            //console.log(txn);
             
             var zreq = new aaa.Request(txn.client, txn.req, txn.user);
             service(zreq, function(err, zres) {
@@ -126,8 +126,8 @@ exports = module.exports = function(prompts, service, clients, server, authentic
                 // FIXME: remove this
                 ares.issuer = 'http://localhost:8085'
                 
-                console.log('ARES:');
-                console.log(ares);
+                //console.log('ARES:');
+                //console.log(ares);
                 
                 /*
                 // TODO: put a normalized grant on here, if it exists
@@ -141,8 +141,8 @@ exports = module.exports = function(prompts, service, clients, server, authentic
                 
                 return cb(null, true, ares);
               } else {
-                console.log('TODO: prompting...');
-                console.log(zres);
+                //console.log('TODO: prompting...');
+                //console.log(zres);
                 
                 //var aprompt = {};
                 //aprompt.name = zres.prompt;
@@ -162,8 +162,8 @@ exports = module.exports = function(prompts, service, clients, server, authentic
           }
         ),
         function(req, res, next) {
-          console.log('NEED TO PROMPT!!!');
-          console.log(req.oauth2)
+          //console.log('NEED TO PROMPT!!!');
+          //console.log(req.oauth2)
           
           // FIXME: Put this back
           /*

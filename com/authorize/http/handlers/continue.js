@@ -20,8 +20,8 @@ exports = module.exports = function(prompts, service, server, authenticator, sto
             // FIXME: remove this
             ares.issuer = 'http://localhost:8085'
             
-            console.log('ARES:');
-            console.log(ares);
+            //console.log('ARES:');
+            //console.log(ares);
             
             /*
             // TODO: put a normalized grant on here, if it exists
@@ -35,8 +35,8 @@ exports = module.exports = function(prompts, service, server, authenticator, sto
             
             return cb(null, true, ares);
           } else {
-            console.log('TODO: prompting...');
-            console.log(zres);
+            //console.log('TODO: prompting...');
+            //console.log(zres);
             
             //var aprompt = {};
             //aprompt.name = zres.prompt;
@@ -55,8 +55,8 @@ exports = module.exports = function(prompts, service, server, authenticator, sto
       }
     ),
     function(req, res, next) {
-      console.log('NEED TO PROMPT!!!');
-      console.log(req.oauth2)
+      //console.log('NEED TO PROMPT!!!');
+      //console.log(req.oauth2)
       
       // FIXME: Put this back
       /*
