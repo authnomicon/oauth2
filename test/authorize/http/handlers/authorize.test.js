@@ -785,6 +785,55 @@ describe('authorize/http/handlers/authorize', function() {
     
   }); // with authorization service that prompts user
   
+  describe('with authorization service that prompts user with parameters', function() {
+    var service = function(req, cb) {
+      return cb(null, req.prompt('login', { phishingResistant: true }));
+    }
+    
+    it('should evaluate request from client', function(done) {
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
+      
+      var clients = new Object();
+      clients.read = sinon.stub().yieldsAsync(null, {
+        id: 's6BhdRkqt3',
+        name: 'My Example Client',
+        redirectURIs: [ 'https://client.example.com/cb' ]
+      });
+      
+      factory(dispatcher, service, clients, server, { authenticate: authenticate }, undefined, logger, container)
+        .then(function(handler) {
+          chai.express.use(handler)
+            .request(function(req, res) {
+              req.connection = {};
+              req.query = {
+                client_id: 's6BhdRkqt3',
+                redirect_uri: 'https://client.example.com/cb'
+              };
+            })
+            .finish(function() {
+              expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
+              expect(this.req.oauth2.client).to.deep.equal({
+                id: 's6BhdRkqt3',
+                name: 'My Example Client',
+                redirectURIs: [ 'https://client.example.com/cb' ]
+              });
+              expect(this.req.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb');
+              expect(this.req.oauth2.webOrigin).to.be.undefined;
+              expect(this.req.params).to.deep.equal({ phishingResistant: true });
+              
+              expect(this.statusCode).to.equal(302);
+              expect(this.getHeader('Location')).to.equal('/login');
+              done()
+            })
+            .listen();
+        })
+        .catch(done);
+    }); // should evaluate request from client
+    
+  }); // with authorization service that prompts user with parameters
+  
   describe('with authorization service that responds immediately with scope', function() {
     var service = function(req, cb) {
       return cb(null, req.permit([ 'openid', 'profile', 'email' ]));
