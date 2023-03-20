@@ -31,7 +31,11 @@ describe('authorize/http/handlers/authorize', function() {
         
           immediate(req.oauth2, function(err, allow, info) {
             if (err) { return next(err); }
-            if (allow) { return res.redirect(req.oauth2.redirectURI); }
+            if (allow) {
+              req.oauth2.res = info || {};
+              req.oauth2.res.allow = true;
+              return res.redirect(req.oauth2.redirectURI);
+            }
             req.oauth2.info = info;
             return next();
           })
@@ -770,5 +774,59 @@ describe('authorize/http/handlers/authorize', function() {
     }); // should reject request from client that uses a redirect URI scheme that resolves to an unregistered redirect URI
     
   }); // with authorization service that prompts user
+  
+  describe('with authorization service that responds immediately', function() {
+    
+    var service = function(req, cb) {
+      return cb(null, req.permit([ 'openid', 'profile', 'email' ]));
+    }
+    
+    it('should evaluate request from client with single redirect URI', function(done) {
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
+      
+      var clients = new Object();
+      clients.read = sinon.stub().yieldsAsync(null, {
+        id: 's6BhdRkqt3',
+        name: 'My Example Client',
+        redirectURIs: [ 'https://client.example.com/cb' ]
+      });
+      
+      factory(dispatcher, service, clients, server, { authenticate: authenticate }, undefined, logger, container)
+        .then(function(handler) {
+          chai.express.use(handler)
+            .request(function(req, res) {
+              req.connection = {};
+              req.query = {
+                client_id: 's6BhdRkqt3',
+                redirect_uri: 'https://client.example.com/cb'
+              };
+            })
+            .finish(function() {
+              expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
+              expect(this.req.oauth2.client).to.deep.equal({
+                id: 's6BhdRkqt3',
+                name: 'My Example Client',
+                redirectURIs: [ 'https://client.example.com/cb' ]
+              });
+              expect(this.req.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb');
+              expect(this.req.oauth2.webOrigin).to.be.undefined;
+              expect(this.req.oauth2.res).to.deep.equal({
+                allow: true,
+                issuer: 'http://localhost:8085',
+                scope: [ 'openid', 'profile', 'email' ]
+              });
+          
+              expect(this.statusCode).to.equal(302);
+              expect(this.getHeader('Location')).to.equal('https://client.example.com/cb');
+              done()
+            })
+            .listen();
+        })
+        .catch(done);
+    }); // should evaluate request from client with single redirect URI
+    
+  });
   
 });
