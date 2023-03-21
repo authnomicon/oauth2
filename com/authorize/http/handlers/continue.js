@@ -4,7 +4,6 @@ exports = module.exports = function(prompts, service, server, authenticator, sto
   
   return [
     // parseCookies(),// TODO: Put this at app level? Why?
-    //state(),
     require('flowstate')({ store: store }),
     authenticator.authenticate([ 'session' ], { multi: true }),
     server.resume(
@@ -20,9 +19,6 @@ exports = module.exports = function(prompts, service, server, authenticator, sto
             // FIXME: remove this
             ares.issuer = 'http://localhost:8085'
             
-            //console.log('ARES:');
-            //console.log(ares);
-            
             /*
             // TODO: put a normalized grant on here, if it exists
             // TODO: normalize this into standard grant object.
@@ -35,38 +31,12 @@ exports = module.exports = function(prompts, service, server, authenticator, sto
             
             return cb(null, true, ares);
           } else {
-            //console.log('TODO: prompting...');
-            //console.log(zres);
-            
-            //var aprompt = {};
-            //aprompt.name = zres.prompt;
-            
             return cb(null, false, { prompt: zres.prompt, params: zres.params });
           }
         });
-        
-        return;
-        
-        
-        
-        // Immediate mode callback.  Always, false, deferring transaction processing to 
-        // HTTP handler below where all context is available.
-        return cb(null, false);
       }
     ),
-    function(req, res, next) {
-      //console.log('NEED TO PROMPT!!!');
-      //console.log(req.oauth2)
-      
-      // FIXME: Put this back
-      /*
-  if (azreq.prompt.indexOf('none') != -1) {
-    // FIXME: Need to popState here?
-    return next(new oauth2orize.AuthorizationError('Interaction required', 'interaction_required'));
-  }
-      */
-      
-      // FIXME: Merge rather than overwrite
+    function prompt(req, res, next) {
       req.params = req.oauth2.info.params || {};
       prompts.dispatch(req.oauth2.info.prompt, req, res, next);
     },
