@@ -262,4 +262,41 @@ describe('TransactionStore', function() {
     
   }); // #store
   
+  describe('#update', function() {
+    
+    it('should continue state', function(done) {
+      var req = new Object();
+      req.state = new Object();
+      Object.defineProperty(req.state, 'continue', {
+        configurable: true,
+        enumerable: false,
+        value: sinon.spy(),
+        writable: true
+      });
+      
+      var txn = {
+        client: {
+          id: 's6BhdRkqt3',
+          name: 'My Example Client'
+        },
+        redirectURI: 'https://client.example.com/cb',
+        req: {
+          type: 'code',
+          clientID: 's6BhdRkqt3',
+          redirectURI: 'https://client.example.org/cb',
+          state: 'af0ifjsldkj'
+        }
+      };
+      
+      store.update(req, undefined, txn, function(err) {
+        if (err) { return done(err); }
+        
+        expect(req.state.continue).to.have.been.called;
+        done();
+      });
+        
+    }); // should continue state
+    
+  }); // #update
+  
 });

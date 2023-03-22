@@ -28,49 +28,6 @@ describe('transactionstore', function() {
   describe('TransactionStore', function() {
     var store = new TransactionStore();
     
-    describe('#update', function() {
-      
-      it('updating transaction', function(done) {
-        var req = new Object();
-        req.state = new Object();
-        
-        var txn = {
-          client: {
-            id: 's6BhdRkqt3',
-            name: 'My Example Client'
-          },
-          redirectURI: 'https://client.example.com/cb',
-          req: {
-            type: 'code',
-            clientID: 's6BhdRkqt3',
-            redirectURI: 'https://client.example.org/cb',
-            state: 'af0ifjsldkj'
-          }
-        };
-        
-        store.update(req, undefined, txn, function(err) {
-          if (err) { return done(err); }
-          
-          expect(req.state).to.deep.equal({
-            client: {
-              id: 's6BhdRkqt3',
-              name: 'My Example Client'
-            },
-            redirectURI: 'https://client.example.com/cb',
-            request: {
-              type: 'code',
-              clientID: 's6BhdRkqt3',
-              redirectURI: 'https://client.example.org/cb',
-              state: 'af0ifjsldkj'
-            }
-          });
-          done();
-        });
-          
-      }); // updating transaction
-      
-    }); // #update
-    
   }); // TransactionStore
   
 });
