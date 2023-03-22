@@ -299,4 +299,43 @@ describe('TransactionStore', function() {
     
   }); // #update
   
+  describe('#remove', function() {
+    
+    it('should destroy state', function(done) {
+      var req = new Object();
+      req.state = new Object();
+      Object.defineProperty(req.state, 'destroy', {
+        configurable: true,
+        enumerable: false,
+        value: sinon.spy(function(cb) {
+          process.nextTick(cb);
+        }),
+        writable: true
+      });
+      
+      var txn = {
+        client: {
+          id: 's6BhdRkqt3',
+          name: 'My Example Client'
+        },
+        redirectURI: 'https://client.example.com/cb',
+        req: {
+          type: 'code',
+          clientID: 's6BhdRkqt3',
+          redirectURI: 'https://client.example.org/cb',
+          state: 'af0ifjsldkj'
+        }
+      };
+      
+      store.remove(req, undefined, function(err) {
+        if (err) { return done(err); }
+        
+        expect(req.state.destroy).to.have.been.called;
+        done();
+      });
+        
+    }); // should destroy state
+    
+  }); // #remove
+  
 });
