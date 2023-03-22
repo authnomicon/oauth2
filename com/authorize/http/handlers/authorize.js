@@ -133,6 +133,10 @@ exports = module.exports = function(prompts, service, clients, server, authentic
                 return cb(null, false, { prompt: zres.prompt, params: zres.params });
               }
             });
+          },
+          function(req, txn, cb) {
+            req.state.complete();
+            process.nextTick(cb);
           }
         ),
         function(req, res, next) {

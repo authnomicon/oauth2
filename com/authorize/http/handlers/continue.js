@@ -4,7 +4,7 @@ exports = module.exports = function(prompts, service, server, authenticator, sto
   
   return [
     // parseCookies(),// TODO: Put this at app level? Why?
-    require('flowstate')({ store: store }),
+    require('flowstate')({ store: store }), // WIP: require state
     authenticator.authenticate([ 'session' ], { multi: true }),
     server.resume(
       function(txn, cb) {
@@ -34,6 +34,10 @@ exports = module.exports = function(prompts, service, server, authenticator, sto
             return cb(null, false, { prompt: zres.prompt, params: zres.params });
           }
         });
+      },
+      function(req, txn, cb) {
+        req.state.complete();
+        process.nextTick(cb);
       }
     ),
     function prompt(req, res, next) {
