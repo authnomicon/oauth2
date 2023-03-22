@@ -1,4 +1,6 @@
-var aaa = require('triplea');
+var oauth2orize = require('oauth2orize')
+  , aaa = require('triplea')
+  , url = require('url');
 
 /**
  * OAuth 2.0 request validation.
@@ -16,9 +18,6 @@ var aaa = require('triplea');
  */
 
 exports = module.exports = function(prompts, service, clients, server, authenticator, store, logger, C) {
-  var oauth2orize = require('oauth2orize')
-    , url = require('url');
-  
   
   return Promise.resolve(null)
     .then(function() {
@@ -53,8 +52,6 @@ exports = module.exports = function(prompts, service, clients, server, authentic
     .then(function(resolvers) {
 
       return [
-        //parseCookies(), // TODO: Put this at app level? Why?
-        //state({ external: true }),
         require('flowstate')({ external: true, store: store }),
         authenticator.authenticate([ 'session', 'anonymous' ], { multi: true }),
         server.authorization(
@@ -106,8 +103,6 @@ exports = module.exports = function(prompts, service, clients, server, authentic
               if (client.webOrigins && client.webOrigins.indexOf(responseURI) !== -1) {
                 rtoWebOrigin = responseURI;
               }
-              // FIXME: proper web origin support
-              //worig = 'http://localhost:3001';
               return cb(null, client, rtoRedirectURI, rtoWebOrigin);
             }); // clients.read
           },
