@@ -1,4 +1,4 @@
-var aaa = require('triplea');
+var aaa = require('aaatrio');
 
 exports = module.exports = function(prompts, service, server, authenticator, store) {
   

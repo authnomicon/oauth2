@@ -1,5 +1,5 @@
 var oauth2orize = require('oauth2orize')
-  , aaa = require('triplea')
+  , aaa = require('aaatrio')
   , url = require('url');
 
 /**

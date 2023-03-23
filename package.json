@@ -54,6 +54,7 @@
     "com": "com"
   },
   "dependencies": {
+    "aaatrio": "0.0.2",
     "express": "^4.17.1",
     "oauth2orize": "^1.11.1",
     "oauth2orize-fprm": "^0.2.1",
