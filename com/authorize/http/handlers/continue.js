@@ -8,7 +8,9 @@ exports = module.exports = function(prompts, service, server, authenticator, sto
     authenticator.authenticate([ 'session' ], { multi: true }),
     server.resume(
       function(txn, cb) {
-        var zreq = new aaa.Request(txn.client, txn.req, txn.user);
+        var zreq = new aaa.Request(txn.client);
+        zreq.user = txn.user;
+        
         service(zreq, function(err, zres) {
           if (err) { return cb(err); }
           
