@@ -15,7 +15,7 @@ describe('revoke/handlers/revoke', function() {
   
   describe('handler', function() {
     
-    it.only('should do something', function(done) {
+    it('should do something', function(done) {
       var handler = factory();
       
       chai.express.use(handler)
