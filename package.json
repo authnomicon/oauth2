@@ -44,6 +44,7 @@
       "token/http/auth/post",
       "token/http/auth/none",
       "token/http/grant/code",
+      "revoke/service",
       "registration/http/service",
       "http/middleware/errorhandler",
       "http/server"
