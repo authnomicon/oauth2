@@ -37,7 +37,8 @@ describe('TransactionStore', function() {
             clientID: 's6BhdRkqt3',
             redirectURI: 'https://client.example.com/cb',
             state: 'xyz'
-          }
+          },
+          ctx: {}
         });
         done();
       });
@@ -75,7 +76,8 @@ describe('TransactionStore', function() {
             clientID: 's6BhdRkqt3',
             redirectURI: 'https://client.example.com',
             state: 'xyz'
-          }
+          },
+          ctx: {}
         });
         done();
       });
@@ -115,11 +117,52 @@ describe('TransactionStore', function() {
             clientID: 's6BhdRkqt3',
             redirectURI: 'https://client.example.com',
             state: 'xyz'
-          }
+          },
+          ctx: {}
         });
         done();
       });
     }); // should load transaction with both redirect URI and web origin
+    
+    it('should load transaction with selected session', function(done) {
+      var req = new Object();
+      req.state = {
+        client: {
+          id: 's6BhdRkqt3',
+          name: 'My Example Client'
+        },
+        redirectURI: 'https://client.example.com/cb',
+        request: {
+          type: 'code',
+          clientID: 's6BhdRkqt3',
+          redirectURI: 'https://client.example.com/cb',
+          state: 'xyz'
+        },
+        selectSession: '0'
+      };
+      
+      store.load(req, function(err, txn) {
+        if (err) { return done(err); }
+        
+        expect(txn).to.deep.equal({
+          client: {
+            id: 's6BhdRkqt3',
+            name: 'My Example Client'
+          },
+          redirectURI: 'https://client.example.com/cb',
+          req: {
+            type: 'code',
+            clientID: 's6BhdRkqt3',
+            redirectURI: 'https://client.example.com/cb',
+            state: 'xyz'
+          },
+          ctx: {
+            selectedSession: true
+          }
+        });
+        done();
+      });
+    }); // should load transaction with selected session
     
     it('should yield error when state middleware is not in use', function(done) {
       var req = new Object();
