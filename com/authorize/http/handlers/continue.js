@@ -6,12 +6,23 @@ exports = module.exports = function(prompts, service, server, authenticator, sto
     // parseCookies(),// TODO: Put this at app level? Why?
     require('flowstate')({ store: store }), // WIP: require state
     authenticator.authenticate([ 'session' ], { multi: true }),
+    function(req, res, next) {
+      if (req.query.select_session) {
+        // TODO: Does this interfere with immediate responses completing state?  Check it out.
+        req.state.selectSession = req.query.select_session;
+      }
+      next();
+    },
     server.resume(
       function(txn, cb) {
         var zreq = new aaa.Request(txn.client);
         zreq.user = txn.user;
+        zreq.prompts = txn.req.prompt;
         
-        service(zreq, function(err, zres) {
+        var zctx = {};
+        zctx.selectedSession = txn.ctx.selectedSession || false;
+        
+        service(zreq, zctx, function(err, zres) {
           if (err) { return cb(err); }
           
           if (zres.allow === true) {
@@ -20,6 +31,7 @@ exports = module.exports = function(prompts, service, server, authenticator, sto
             
             // FIXME: remove this
             ares.issuer = 'http://localhost:8085'
+            //ares.issuer = 'http://localhost:3000'
             
             /*
             // TODO: put a normalized grant on here, if it exists
