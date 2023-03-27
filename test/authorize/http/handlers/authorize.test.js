@@ -9,9 +9,9 @@ var oauth2orize = require('oauth2orize');
 
 describe.only('authorize/http/handlers/authorize', function() {
   
-  var service = function(req, cb) {
+  var service = sinon.spy(function(req, cb) {
     return cb(null, req.prompt('consent'));
-  }
+  });
   var dispatcher = new Object();
   dispatcher.dispatch = function(prompt, req, res, next) {
     res.redirect('/' + prompt);
@@ -137,6 +137,15 @@ describe.only('authorize/http/handlers/authorize', function() {
               expect(this.req.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb');
               expect(this.req.oauth2.webOrigin).to.be.undefined;
               expect(this.req.params).to.deep.equal({});
+              
+              expect(service).to.have.been.calledOnce;
+              expect(service.getCall(0).args[0].client).to.deep.equal({
+                id: 's6BhdRkqt3',
+                name: 'My Example Client',
+                redirectURIs: [ 'https://client.example.com/cb' ]
+              });
+              expect(service.getCall(0).args[0].user).to.be.undefined;
+              expect(service.getCall(0).args[0].prompts).to.be.undefined;
               
               expect(this.statusCode).to.equal(302);
               expect(this.getHeader('Location')).to.equal('/consent');
