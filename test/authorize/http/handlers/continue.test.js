@@ -91,7 +91,7 @@ describe('authorize/http/handlers/continue', function() {
           expect(service.getCall(0).args[0].user).to.be.undefined;
           expect(service.getCall(0).args[0].prompts).to.be.undefined;
           expect(service.getCall(0).args[1]).to.deep.equal({
-            selectedSession: false
+            selectedAccount: false
           });
           
           expect(this.statusCode).to.equal(302);
@@ -175,7 +175,7 @@ describe('authorize/http/handlers/continue', function() {
             prompt: [ 'consent' ]
           };
           req.oauth2.ctx = {
-            selectedSession: true
+            selectedAccount: true
           };
         })
         .finish(function() {
@@ -190,7 +190,7 @@ describe('authorize/http/handlers/continue', function() {
           expect(service.getCall(0).args[0].user).to.be.undefined;
           expect(service.getCall(0).args[0].prompts).to.deep.equal([ 'consent' ]);
           expect(service.getCall(0).args[1]).to.deep.equal({
-            selectedSession: true
+            selectedAccount: true
           });
           
           expect(this.statusCode).to.equal(302);

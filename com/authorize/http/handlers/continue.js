@@ -20,7 +20,7 @@ exports = module.exports = function(prompts, service, server, authenticator, sto
         zreq.prompts = txn.req.prompt;
         
         var zctx = {};
-        zctx.selectedSession = txn.ctx.selectedSession || false;
+        zctx.selectedAccount = txn.ctx.selectedAccount || false;
         
         service(zreq, zctx, function(err, zres) {
           if (err) { return cb(err); }

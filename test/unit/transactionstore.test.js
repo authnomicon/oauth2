@@ -157,7 +157,7 @@ describe('TransactionStore', function() {
             state: 'xyz'
           },
           ctx: {
-            selectedSession: true
+            selectedAccount: true
           }
         });
         done();
