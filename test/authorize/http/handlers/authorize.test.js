@@ -7,7 +7,7 @@ var factory = require('../../../../com/authorize/http/handlers/authorize');
 var oauth2orize = require('oauth2orize');
 
 
-describe('authorize/http/handlers/authorize', function() {
+describe.only('authorize/http/handlers/authorize', function() {
   
   var service = function(req, cb) {
     return cb(null, req.prompt('consent'));
@@ -28,6 +28,14 @@ describe('authorize/http/handlers/authorize', function() {
             redirectURI: redirectURI,
             webOrigin: webOrigin
           };
+          req.oauth2.req = {
+            clientID: req.query.client_id,
+            redirectURI: req.query.redirect_uri
+          };
+          if (req.query.prompt) {
+            req.oauth2.req.prompt = req.query.prompt.split(' ');
+          }
+          req.oauth2.user = req.user;
         
           immediate(req.oauth2, function(err, allow, info) {
             if (err) { return next(err); }
@@ -835,9 +843,9 @@ describe('authorize/http/handlers/authorize', function() {
   }); // with authorization service that prompts user with parameters
   
   describe('with authorization service that responds immediately with scope', function() {
-    var service = function(req, cb) {
+    var service = sinon.spy(function(req, cb) {
       return cb(null, req.permit([ 'openid', 'profile', 'email' ]));
-    }
+    });
     
     it('should respond to client', function(done) {
       var container = new Object();
@@ -860,6 +868,10 @@ describe('authorize/http/handlers/authorize', function() {
                 client_id: 's6BhdRkqt3',
                 redirect_uri: 'https://client.example.com/cb'
               };
+              req.user = {
+                id: '248289761001',
+                displayName: 'Jane Doe'
+              };
             })
             .finish(function() {
               expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
@@ -870,6 +882,18 @@ describe('authorize/http/handlers/authorize', function() {
               });
               expect(this.req.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb');
               expect(this.req.oauth2.webOrigin).to.be.undefined;
+              
+              expect(service).to.have.been.calledOnce;
+              expect(service.getCall(0).args[0].client).to.deep.equal({
+                id: 's6BhdRkqt3',
+                name: 'My Example Client',
+                redirectURIs: [ 'https://client.example.com/cb' ]
+              });
+              expect(service.getCall(0).args[0].user).to.deep.equal({
+                id: '248289761001',
+                displayName: 'Jane Doe'
+              });
+              
               expect(this.req.oauth2.res).to.deep.equal({
                 allow: true,
                 issuer: 'http://localhost:8085',
