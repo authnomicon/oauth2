@@ -156,6 +156,63 @@ describe.only('authorize/http/handlers/authorize', function() {
         .catch(done);
     }); // should evaluate request from client with single redirect URI
     
+    // TODO: reorganize this
+    it('should evaluate request with prompt', function(done) {
+      var service = sinon.spy(function(req, cb) {
+        return cb(null, req.prompt('consent'));
+      });
+      
+      var container = new Object();
+      container.components = sinon.stub();
+      container.components.withArgs('module:@authnomicon/oauth2.resolveRedirectURISchemeFn').returns([]);
+      
+      var clients = new Object();
+      clients.read = sinon.stub().yieldsAsync(null, {
+        id: 's6BhdRkqt3',
+        name: 'My Example Client',
+        redirectURIs: [ 'https://client.example.com/cb' ]
+      });
+      
+      factory(dispatcher, service, clients, server, { authenticate: authenticate }, undefined, logger, container)
+        .then(function(handler) {
+          chai.express.use(handler)
+            .request(function(req, res) {
+              req.connection = {};
+              req.query = {
+                client_id: 's6BhdRkqt3',
+                redirect_uri: 'https://client.example.com/cb',
+                prompt: 'consent'
+              };
+            })
+            .finish(function() {
+              expect(clients.read).to.have.been.calledOnceWith('s6BhdRkqt3');
+              expect(this.req.oauth2.client).to.deep.equal({
+                id: 's6BhdRkqt3',
+                name: 'My Example Client',
+                redirectURIs: [ 'https://client.example.com/cb' ]
+              });
+              expect(this.req.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb');
+              expect(this.req.oauth2.webOrigin).to.be.undefined;
+              expect(this.req.params).to.deep.equal({});
+              
+              expect(service).to.have.been.calledOnce;
+              expect(service.getCall(0).args[0].client).to.deep.equal({
+                id: 's6BhdRkqt3',
+                name: 'My Example Client',
+                redirectURIs: [ 'https://client.example.com/cb' ]
+              });
+              expect(service.getCall(0).args[0].user).to.be.undefined;
+              expect(service.getCall(0).args[0].prompts).to.deep.equal([ 'consent' ]);
+              
+              expect(this.statusCode).to.equal(302);
+              expect(this.getHeader('Location')).to.equal('/consent');
+              done()
+            })
+            .listen();
+        })
+        .catch(done);
+    }); // should evaluate request with prompt
+    
     it('should evaluate request from client with multiple redirect URIs', function(done) {
       var container = new Object();
       container.components = sinon.stub();

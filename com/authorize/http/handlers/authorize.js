@@ -109,6 +109,7 @@ exports = module.exports = function(prompts, service, clients, server, authentic
           function(txn, cb) {
             var zreq = new aaa.Request(txn.client);
             zreq.user = txn.user;
+            zreq.prompts = txn.req.prompt;
             
             service(zreq, function(err, zres) {
               if (err) { return cb(err); }
@@ -119,6 +120,7 @@ exports = module.exports = function(prompts, service, clients, server, authentic
                 
                 // FIXME: remove this
                 ares.issuer = 'http://localhost:8085'
+                //ares.issuer = 'http://localhost:3000'
                 
                 /*
                 // TODO: put a normalized grant on here, if it exists
