@@ -6,7 +6,7 @@ var sinon = require('sinon');
 var factory = require('../../../../com/authorize/http/handlers/continue');
 
 
-describe('authorize/http/handlers/continue', function() {
+describe.only('authorize/http/handlers/continue', function() {
   
   it('should be annotated', function() {
     expect(factory['@implements']).to.be.undefined;
@@ -14,9 +14,9 @@ describe('authorize/http/handlers/continue', function() {
   });
   
   
-  var service = function(req, cb) {
+  var service = sinon.spy(function(req, ctx, cb) {
     return cb(null, req.prompt('consent'));
-  }
+  });
   var dispatcher = new Object();
   dispatcher.dispatch = function(prompt, req, res, next) {
     res.redirect('/' + prompt);
@@ -67,10 +67,28 @@ describe('authorize/http/handlers/continue', function() {
         .request(function(req, res) {
           req.connection = {};
           req.oauth2 = {};
+          req.oauth2.client = {
+            id: 's6BhdRkqt3',
+            name: 'My Example Client',
+            redirectURIs: [ 'https://client.example.com/cb' ]
+          };
           req.oauth2.redirectURI = 'https://client.example.com/cb';
+          req.oauth2.req =  {
+            clientID: 's6BhdRkqt3',
+            redirectURI: 'https://client.example.com/cb'
+          };
         })
         .finish(function() {
           expect(this.req.params).to.deep.equal({});
+          
+          expect(service).to.have.been.calledOnce;
+          expect(service.getCall(0).args[0].client).to.deep.equal({
+            id: 's6BhdRkqt3',
+            name: 'My Example Client',
+            redirectURIs: [ 'https://client.example.com/cb' ]
+          });
+          expect(service.getCall(0).args[0].user).to.be.undefined;
+          expect(service.getCall(0).args[0].prompts).to.be.undefined;
           
           expect(this.statusCode).to.equal(302);
           expect(this.getHeader('Location')).to.equal('/consent');
@@ -81,8 +99,54 @@ describe('authorize/http/handlers/continue', function() {
     
   }); // with authorization service that prompts user
   
+  // TODO: reorganize this
+  describe('with authorization service that prompts user with prompt param', function() {
+    var service = sinon.spy(function(req, ctx, cb) {
+      return cb(null, req.prompt('consent'));
+    });
+    
+    it('should evaluate request', function(done) {
+      var handler = factory(dispatcher, service, server, { authenticate: authenticate }, undefined);
+      
+      chai.express.use(handler)
+        .request(function(req, res) {
+          req.connection = {};
+          req.oauth2 = {};
+          req.oauth2.client = {
+            id: 's6BhdRkqt3',
+            name: 'My Example Client',
+            redirectURIs: [ 'https://client.example.com/cb' ]
+          };
+          req.oauth2.redirectURI = 'https://client.example.com/cb';
+          req.oauth2.req =  {
+            clientID: 's6BhdRkqt3',
+            redirectURI: 'https://client.example.com/cb',
+            prompt: [ 'consent' ]
+          };
+        })
+        .finish(function() {
+          expect(this.req.params).to.deep.equal({});
+          
+          expect(service).to.have.been.calledOnce;
+          expect(service.getCall(0).args[0].client).to.deep.equal({
+            id: 's6BhdRkqt3',
+            name: 'My Example Client',
+            redirectURIs: [ 'https://client.example.com/cb' ]
+          });
+          expect(service.getCall(0).args[0].user).to.be.undefined;
+          expect(service.getCall(0).args[0].prompts).to.deep.equal([ 'consent' ]);
+          
+          expect(this.statusCode).to.equal(302);
+          expect(this.getHeader('Location')).to.equal('/consent');
+          done()
+        })
+        .listen();
+    }); // should evaluate request
+    
+  }); // with authorization service that prompts user with prompt param
+  
   describe('with authorization service that prompts user with parameters', function() {
-    var service = function(req, cb) {
+    var service = function(req, ctx, cb) {
       return cb(null, req.prompt('login', { phishingResistant: true }));
     }
     
@@ -94,6 +158,10 @@ describe('authorize/http/handlers/continue', function() {
           req.connection = {};
           req.oauth2 = {};
           req.oauth2.redirectURI = 'https://client.example.com/cb';
+          req.oauth2.req =  {
+            clientID: 's6BhdRkqt3',
+            redirectURI: 'https://client.example.com/cb'
+          };
         })
         .finish(function() {
           expect(this.req.params).to.deep.equal({ phishingResistant: true });
@@ -108,7 +176,7 @@ describe('authorize/http/handlers/continue', function() {
   }); // with authorization service that prompts user with parameters
   
   describe('with authorization service that responds immediately with scope', function() {
-    var service = function(req, cb) {
+    var service = function(req, ctx, cb) {
       return cb(null, req.permit([ 'openid', 'profile', 'email' ]));
     }
     
@@ -120,6 +188,10 @@ describe('authorize/http/handlers/continue', function() {
           req.connection = {};
           req.oauth2 = {};
           req.oauth2.redirectURI = 'https://client.example.com/cb';
+          req.oauth2.req =  {
+            clientID: 's6BhdRkqt3',
+            redirectURI: 'https://client.example.com/cb'
+          };
         })
         .finish(function() {
           expect(this.req.oauth2.res).to.deep.equal({

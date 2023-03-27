@@ -7,7 +7,7 @@ var factory = require('../../../../com/authorize/http/handlers/authorize');
 var oauth2orize = require('oauth2orize');
 
 
-describe.only('authorize/http/handlers/authorize', function() {
+describe('authorize/http/handlers/authorize', function() {
   
   var service = sinon.spy(function(req, cb) {
     return cb(null, req.prompt('consent'));
