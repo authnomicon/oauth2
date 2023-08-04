@@ -66,6 +66,6 @@ exports['@require'] = [
   'http://i.authnomicon.org/prompts/http/Router',
   'http://i.authnomicon.org/oauth2/AuthorizationService',
   '../../../http/server',
-  'module:@authnomicon/session.Authenticator',
+  'module:passport.Authenticator',
   'module:flowstate.Store'
 ];
