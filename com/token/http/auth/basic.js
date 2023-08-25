@@ -19,7 +19,7 @@ exports = module.exports = function(secrets, clients) {
   });
 };
 
-exports['@implements'] = 'http://i.bixbyjs.org/http/auth/Scheme';
+exports['@implements'] = 'module:passport.Strategy';
 exports['@scheme'] = 'oauth2-client-authentication/client_secret_basic';
 exports['@require'] = [
   'http://i.authnomicon.org/oauth2/ClientSecretService',
