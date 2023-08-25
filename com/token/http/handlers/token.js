@@ -5,7 +5,7 @@ exports = module.exports = function(IoC, server, authenticator, /*errorLogging,*
   
   var stack = [
     require('body-parser').urlencoded({ extended: false }),
-    authenticator.authenticate(['oauth2-client-authentication/client_secret_basic', 'oauth2-client-authentication/client_secret_post', 'oauth2-client-authentication/none']),
+    authenticator.authenticate(['oauth2-client-authentication/client_secret_basic', 'oauth2-client-authentication/client_secret_post', 'oauth2-client-authentication/none'], { session: false }),
     server.token()
   ];
   
@@ -30,7 +30,7 @@ exports = module.exports = function(IoC, server, authenticator, /*errorLogging,*
 exports['@require'] = [
   '!container',
   '../../../http/server',
-  'module:bixby-express.Authenticator', // TODO: make an oauth2-specific authenticator
+  'module:passport.Authenticator', // TODO: make an oauth2-specific authenticator
   //'http://i.bixbyjs.org/http/middleware/errorLogging',
   'http://i.bixbyjs.org/Logger'
 ];
