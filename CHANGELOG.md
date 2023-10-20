@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.0.5] - 2023-10-20
+
+TODO: Review this for accuracy.
+
 ### Added
 - Support for web origin-bound responses, if the client has a registered web
 origin and specifies that origin as the value of `redirect_uri` in the
