@@ -56,7 +56,7 @@
   "dependencies": {
     "aaatrio": "0.0.2",
     "express": "^4.17.1",
-    "oauth2orize": "^1.11.1",
+    "oauth2orize": "^1.12.0",
     "oauth2orize-fprm": "^0.2.1",
     "oauth2orize-response-mode": "^0.1.0",
     "oauth2orize-wmrm": "0.0.3",
