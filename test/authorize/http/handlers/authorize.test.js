@@ -895,7 +895,7 @@ describe('authorize/http/handlers/authorize', function() {
               });
               expect(this.req.oauth2.redirectURI).to.deep.equal('https://client.example.com/cb');
               expect(this.req.oauth2.webOrigin).to.be.undefined;
-              expect(this.req.params).to.deep.equal({ phishingResistant: true });
+              expect(this.locals).to.deep.equal({ phishingResistant: true });
               
               expect(this.statusCode).to.equal(302);
               expect(this.getHeader('Location')).to.equal('/login');

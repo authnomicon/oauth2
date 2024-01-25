@@ -1,6 +1,7 @@
 var oauth2orize = require('oauth2orize')
   , aaa = require('aaatrio')
-  , url = require('url');
+  , url = require('url')
+  , merge = require('utils-merge');
 
 /**
  * OAuth 2.0 request validation.
@@ -110,6 +111,7 @@ exports = module.exports = function(prompts, service, clients, server, authentic
             var zreq = new aaa.Request(txn.client);
             zreq.user = txn.user;
             zreq.prompts = txn.req.prompt;
+            zreq.loginHint = txn.req.loginHint;
             
             service(zreq, function(err, zres) {
               if (err) { return cb(err); }
@@ -152,7 +154,9 @@ exports = module.exports = function(prompts, service, clients, server, authentic
       }
           */
           
-          req.params = req.oauth2.info.params || {};
+          if (req.oauth2.info.params) {
+            merge(res.locals, req.oauth2.info.params);
+          }
           prompts.dispatch(req.oauth2.info.prompt, req, res, next);
         },
         // TODO: Add error handling middleware here
