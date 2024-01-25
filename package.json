@@ -1,6 +1,6 @@
 {
   "name": "@authnomicon/oauth2",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "OAuth 2.0 components for the Authnomicon project.",
   "keywords": [
     "oauth2"
