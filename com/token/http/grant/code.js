@@ -40,6 +40,7 @@ exports = module.exports = function(ats, acs, logger, C) {
 
         acs.verify(code, function(err, cmsg) {
           if (err) { return cb(err); }
+          // TODO: handle case where cmsg is false
           
           // Verify that the authorization code was issued to the client that is
           // attempting to exchange it for an access token.
