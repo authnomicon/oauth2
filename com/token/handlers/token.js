@@ -29,7 +29,7 @@ exports = module.exports = function(IoC, server, authenticator, /*errorLogging,*
 
 exports['@require'] = [
   '!container',
-  '../../../http/server',
+  '../../http/server',
   'module:passport.Authenticator', // TODO: make an oauth2-specific authenticator
   //'http://i.bixbyjs.org/http/middleware/errorLogging',
   'http://i.bixbyjs.org/Logger'
