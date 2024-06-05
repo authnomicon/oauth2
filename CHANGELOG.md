@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Moved `authorize/http/service`, and associated files, to `authorization/service`.
+- Moved `token/http/service`, and associated files, to `token/service`.
 
 ### Removed
 - Removed `registration/http/service` component.  In the future, this will be

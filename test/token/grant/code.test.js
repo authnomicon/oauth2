@@ -3,7 +3,7 @@
 var $require = require('proxyquire');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var factory = require('../../../../com/token/http/grant/code');
+var factory = require('../../../com/token/grant/code');
 var oauth2orize = require('oauth2orize');
 
 
@@ -33,7 +33,7 @@ describe('token/http/grant/code', function() {
     container.components.withArgs('module:@authnomicon/oauth2.tokenResponseParametersFn;grant_type=code').returns([]);
     
     var codeSpy = sinon.stub();
-    var factory = $require('../../../../com/token/http/grant/code', {
+    var factory = $require('../../../com/token/grant/code', {
       'oauth2orize': {
         exchange: { code: codeSpy }
       }
@@ -66,7 +66,7 @@ describe('token/http/grant/code', function() {
       ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
       
       var codeSpy = sinon.stub();
-      var factory = $require('../../../../com/token/http/grant/code', {
+      var factory = $require('../../../com/token/grant/code', {
         'oauth2orize': {
           exchange: { code: codeSpy }
         }
@@ -164,7 +164,7 @@ describe('token/http/grant/code', function() {
       ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
       
       var codeSpy = sinon.stub();
-      var factory = $require('../../../../com/token/http/grant/code', {
+      var factory = $require('../../../com/token/grant/code', {
         'oauth2orize': {
           exchange: { code: codeSpy }
         }
@@ -235,7 +235,7 @@ describe('token/http/grant/code', function() {
       ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
       
       var codeSpy = sinon.stub();
-      var factory = $require('../../../../com/token/http/grant/code', {
+      var factory = $require('../../../com/token/grant/code', {
         'oauth2orize': {
           exchange: { code: codeSpy }
         }
@@ -301,7 +301,7 @@ describe('token/http/grant/code', function() {
       ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
       
       var codeSpy = sinon.stub();
-      var factory = $require('../../../../com/token/http/grant/code', {
+      var factory = $require('../../../com/token/grant/code', {
         'oauth2orize': {
           exchange: { code: codeSpy }
         }
@@ -352,7 +352,7 @@ describe('token/http/grant/code', function() {
       ats.issue = sinon.stub().yieldsAsync(new Error('something went wrong'));
       
       var codeSpy = sinon.stub();
-      var factory = $require('../../../../com/token/http/grant/code', {
+      var factory = $require('../../../com/token/grant/code', {
         'oauth2orize': {
           exchange: { code: codeSpy }
         }
@@ -410,7 +410,7 @@ describe('token/http/grant/code', function() {
       ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
       
       var codeSpy = sinon.stub();
-      var factory = $require('../../../../com/token/http/grant/code', {
+      var factory = $require('../../../com/token/grant/code', {
         'oauth2orize': {
           exchange: { code: codeSpy }
         }
@@ -489,7 +489,7 @@ describe('token/http/grant/code', function() {
       ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
       
       var codeSpy = sinon.stub();
-      var factory = $require('../../../../com/token/http/grant/code', {
+      var factory = $require('../../../com/token/grant/code', {
         'oauth2orize': {
           exchange: { code: codeSpy }
         }
