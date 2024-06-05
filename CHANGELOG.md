@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Moved `authorize/http/service`, and associated files, to `authorization/service`.
 
+### Removed
+- Removed `registration/http/service` component.  In the future, this will be
+provided in a separate package.
+
 ## [0.0.6] - 2024-01-25
 ### Added
 - Added `loginHint` property to `request` passed to `AuthorizationService`.
