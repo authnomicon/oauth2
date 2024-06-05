@@ -171,7 +171,7 @@ exports['@require'] = [
   'http://i.authnomicon.org/prompts/http/Router',
   'http://i.authnomicon.org/oauth2/AuthorizationService',
   'http://i.authnomicon.org/oauth2/ClientDirectory',
-  '../../../http/server',
+  '../../http/server',
   'module:passport.Authenticator',
   'module:flowstate.Store',
   'http://i.bixbyjs.org/Logger',

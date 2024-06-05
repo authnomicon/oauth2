@@ -3,7 +3,7 @@
 var expect = require('chai').expect;
 var $require = require('proxyquire');
 var sinon = require('sinon');
-var factory = require('../../../../../com/authorize/http/response/types/token');
+var factory = require('../../../../com/authorization/response/types/token');
 
 
 describe('authorize/http/response/types/token', function() {
@@ -31,7 +31,7 @@ describe('authorize/http/response/types/token', function() {
     container.components.withArgs('module:oauth2orize.Responder').returns([]);
     
     var tokenSpy = sinon.stub();
-    var factory = $require('../../../../../com/authorize/http/response/types/token', {
+    var factory = $require('../../../../com/authorization/response/types/token', {
       'oauth2orize': {
         grant: { token: tokenSpy }
       }
@@ -65,7 +65,7 @@ describe('authorize/http/response/types/token', function() {
     ]);
     
     var tokenSpy = sinon.stub();
-    var factory = $require('../../../../../com/authorize/http/response/types/token', {
+    var factory = $require('../../../../com/authorization/response/types/token', {
       'oauth2orize': {
         grant: { token: tokenSpy }
       }
@@ -102,7 +102,7 @@ describe('authorize/http/response/types/token', function() {
     ]);
     
     var tokenSpy = sinon.stub();
-    var factory = $require('../../../../../com/authorize/http/response/types/token', {
+    var factory = $require('../../../../com/authorization/response/types/token', {
       'oauth2orize': {
         grant: { token: tokenSpy }
       }
@@ -133,7 +133,7 @@ describe('authorize/http/response/types/token', function() {
       ats.issue = sinon.stub().yieldsAsync(null, '2YotnFZFEjr1zCsicMWpAA');
       
       var tokenSpy = sinon.stub();
-      var factory = $require('../../../../../com/authorize/http/response/types/token', {
+      var factory = $require('../../../../com/authorization/response/types/token', {
         'oauth2orize': {
           grant: { token: tokenSpy }
         }
@@ -296,7 +296,7 @@ describe('authorize/http/response/types/token', function() {
       ats.issue = sinon.stub().yieldsAsync(new Error('something went wrong'));
       
       var tokenSpy = sinon.stub();
-      var factory = $require('../../../../../com/authorize/http/response/types/token', {
+      var factory = $require('../../../../com/authorization/response/types/token', {
         'oauth2orize': {
           grant: { token: tokenSpy }
         }

@@ -3,7 +3,7 @@
 var expect = require('chai').expect;
 var chai = require('chai');
 var sinon = require('sinon');
-var factory = require('../../../../com/authorize/http/handlers/continue');
+var factory = require('../../../com/authorization/handlers/continue');
 
 
 describe('authorize/http/handlers/continue', function() {

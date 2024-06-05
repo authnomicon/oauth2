@@ -1,14 +1,14 @@
 /* global describe, it */
 
 var expect = require('chai').expect;
-var factory = require('../../../../../com/authorize/http/response/modes/webmessage');
+var factory = require('../../../../com/authorization/response/modes/formpost');
 
 
-describe('authorize/http/response/modes/webmessage', function() {
+describe('authorize/http/response/modes/formpost', function() {
   
   it('should be annotated', function() {
     expect(factory['@implements']).to.equal('module:oauth2orize.Responder');
-    expect(factory['@mode']).to.equal('web_message');
+    expect(factory['@mode']).to.equal('form_post');
   });
   
   it('should create responder', function() {

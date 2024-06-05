@@ -3,7 +3,7 @@
 var expect = require('chai').expect;
 var $require = require('proxyquire');
 var sinon = require('sinon');
-var factory = require('../../../../../com/authorize/http/response/types/code');
+var factory = require('../../../../com/authorization/response/types/code');
 
 
 describe('authorize/http/response/types/code', function() {
@@ -44,7 +44,7 @@ describe('authorize/http/response/types/code', function() {
     container.components.withArgs('module:oauth2orize.responseParametersFn').returns([]);
     
     var codeSpy = sinon.stub();
-    var factory = $require('../../../../../com/authorize/http/response/types/code', {
+    var factory = $require('../../../../com/authorization/response/types/code', {
       'oauth2orize': {
         grant: { code: codeSpy }
       }
@@ -76,7 +76,7 @@ describe('authorize/http/response/types/code', function() {
       acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
       
       var codeSpy = sinon.stub();
-      var factory = $require('../../../../../com/authorize/http/response/types/code', {
+      var factory = $require('../../../../com/authorization/response/types/code', {
         'oauth2orize': {
           grant: { code: codeSpy }
         }
@@ -242,7 +242,7 @@ describe('authorize/http/response/types/code', function() {
       acs.issue = sinon.stub().yieldsAsync(new Error('something went wrong'));
       
       var codeSpy = sinon.stub();
-      var factory = $require('../../../../../com/authorize/http/response/types/code', {
+      var factory = $require('../../../../com/authorization/response/types/code', {
         'oauth2orize': {
           grant: { code: codeSpy }
         }
@@ -302,7 +302,7 @@ describe('authorize/http/response/types/code', function() {
       acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
       
       var codeSpy = sinon.stub();
-      var factory = $require('../../../../../com/authorize/http/response/types/code', {
+      var factory = $require('../../../../com/authorization/response/types/code', {
         'oauth2orize': {
           grant: { code: codeSpy }
         }
@@ -368,7 +368,7 @@ describe('authorize/http/response/types/code', function() {
       acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
       
       var codeSpy = sinon.stub();
-      var factory = $require('../../../../../com/authorize/http/response/types/code', {
+      var factory = $require('../../../../com/authorization/response/types/code', {
         'oauth2orize': {
           grant: { code: codeSpy }
         }
@@ -462,7 +462,7 @@ describe('authorize/http/response/types/code', function() {
       acs.issue = sinon.stub().yieldsAsync(null, 'SplxlOBeZQQYbYS6WxSbIA');
       
       var codeSpy = sinon.stub();
-      var factory = $require('../../../../../com/authorize/http/response/types/code', {
+      var factory = $require('../../../../com/authorization/response/types/code', {
         'oauth2orize': {
           grant: { code: codeSpy }
         }
