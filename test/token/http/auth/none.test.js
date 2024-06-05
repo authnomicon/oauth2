@@ -14,7 +14,7 @@ describe('token/http/auth/none', function() {
   });
   
   it('should be annotated', function() {
-    expect(factory['@implements']).to.equal('http://i.bixbyjs.org/http/auth/Scheme');
+    expect(factory['@implements']).to.equal('module:passport.Strategy');
     expect(factory['@scheme']).to.equal('oauth2-client-authentication/none');
     expect(factory['@singleton']).to.be.undefined;
   });
