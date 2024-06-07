@@ -170,7 +170,7 @@ exports = module.exports = function(prompts, service, clients, server, authentic
 exports['@require'] = [
   'http://i.authnomicon.org/prompts/http/Router',
   'http://i.authnomicon.org/oauth2/AuthorizationService',
-  'http://i.authnomicon.org/oauth2/ClientDirectory',
+  'module:@authnomicon/oauth2.ClientDirectory',
   '../../http/server',
   'module:passport.Authenticator',
   'module:flowstate.Store',

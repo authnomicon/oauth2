@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Moved `authorize/http/service`, and associated files, to `authorization/service`.
 - Moved `token/http/service`, and associated files, to `token/service`.
+- Renamed `http://i.authnomicon.org/oauth2/ClientDirectory` interface
+to `module:@authnomicon/oauth2.ClientDirectory`.
 
 ### Removed
 - Removed `registration/http/service` component.  In the future, this will be

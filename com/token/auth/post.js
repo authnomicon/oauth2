@@ -23,5 +23,5 @@ exports['@implements'] = 'module:passport.Strategy';
 exports['@scheme'] = 'oauth2-client-authentication/client_secret_post';
 exports['@require'] = [
   'http://i.authnomicon.org/oauth2/ClientSecretService',
-  'http://i.authnomicon.org/oauth2/ClientDirectory'
+  'module:@authnomicon/oauth2.ClientDirectory'
 ];

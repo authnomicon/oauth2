@@ -22,5 +22,5 @@ exports = module.exports = function(clients) {
 exports['@implements'] = 'module:passport.Strategy';
 exports['@scheme'] = 'oauth2-client-authentication/none';
 exports['@require'] = [
-  'http://i.authnomicon.org/oauth2/ClientDirectory'
+  'module:@authnomicon/oauth2.ClientDirectory'
 ];
