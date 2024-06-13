@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved `token/http/service`, and associated files, to `token/service`.
 - Renamed `http://i.authnomicon.org/oauth2/ClientDirectory` interface
 to `module:@authnomicon/oauth2.ClientDirectory`.
+- Renamed `http://i.authnomicon.org/prompts/http/Router` interface
+to `module:@authnomicon/prompts.Router`.
 
 ### Removed
 - Removed `registration/http/service` component.  In the future, this will be
